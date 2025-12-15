@@ -3,13 +3,28 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import { getCategoryUrl } from "@utils/url-utils.ts";
 
-// // Retrieve posts and sort them by publication date
+// // Retrieve posts and sort them by pin status and publication date
 async function getRawSortedPosts() {
 	const allBlogPosts = await getCollection("posts", ({ data }) => {
 		return import.meta.env.PROD ? data.draft !== true : true;
 	});
 
 	const sorted = allBlogPosts.sort((a, b) => {
+		// First sort by pin status
+		const aIsPinned = a.data.pin === true;
+		const bIsPinned = b.data.pin === true;
+		
+		if (aIsPinned && !bIsPinned) return -1;
+		if (!aIsPinned && bIsPinned) return 1;
+		
+		// If both are pinned or both are not pinned, sort by pinOrder (if available)
+		if (aIsPinned && bIsPinned) {
+			const aPinOrder = a.data.pinOrder || 999;
+			const bPinOrder = b.data.pinOrder || 999;
+			if (aPinOrder !== bPinOrder) return aPinOrder - bPinOrder;
+		}
+		
+		// Finally, sort by publication date
 		const dateA = new Date(a.data.published);
 		const dateB = new Date(b.data.published);
 		return dateA > dateB ? -1 : 1;
