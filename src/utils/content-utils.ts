@@ -46,6 +46,23 @@ export async function getSortedPosts() {
 
 	return sorted;
 }
+
+// Get the articles displayed on the homepage (excluding hidden articles)
+export async function getVisiblePosts() {
+	const allPosts = await getRawSortedPosts();
+	const visiblePosts = allPosts.filter((post) => post.data.hidden !== true);
+
+	for (let i = 1; i < visiblePosts.length; i++) {
+		visiblePosts[i].data.nextSlug = visiblePosts[i - 1].slug;
+		visiblePosts[i].data.nextTitle = visiblePosts[i - 1].data.title;
+	}
+	for (let i = 0; i < visiblePosts.length - 1; i++) {
+		visiblePosts[i].data.prevSlug = visiblePosts[i + 1].slug;
+		visiblePosts[i].data.prevTitle = visiblePosts[i + 1].data.title;
+	}
+
+	return visiblePosts;
+}
 export type PostForList = {
 	slug: string;
 	data: CollectionEntry<"posts">["data"];

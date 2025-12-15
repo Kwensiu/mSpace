@@ -1,35 +1,36 @@
 ---
-title: Markdown Example
+title: Markdown 示例
 published: 2023-10-01
-description: A simple example of a Markdown blog post.
-tags: [Markdown, Blogging, Demo]
-category: Examples
-draft: false
+description: 一个简单的Markdown博客文章的示例。
+tags: [Markdown, 博客, 演示]
+category: 示例
+draft: true
+hidden: true
 ---
 
-# An h1 header
+# 一个 h1 头部
 
-Paragraphs are separated by a blank line.
+段落之间用一个空行隔开。
 
-2nd paragraph. _Italic_, **bold**, and `monospace`. Itemized lists
-look like:
+第二段， _斜体_, **粗体**, 和 `等宽`.  
+分项列表看起来像:
 
-- this one
-- that one
-- the other one
+- 你好
+- 我好
+- 大家好
 
-Note that --- not considering the asterisk --- the actual text
-content starts at 4-columns in.
+请注意，在实际文本 --- 不考虑星号 ---  
+内容从4列开始  
 
-> Block quotes are
-> written like so.
->
-> They can span multiple paragraphs,
-> if you like.
+> 单引号是，  
+> 写起来长这样  
+>  
+> 它们可以跨越多个段落，  
+> 如果你喜欢的话  
 
-Use 3 dashes for an em-dash. Use 2 dashes for ranges (ex., "it's all
-in chapters 12--14"). Three dots ... will be converted to an ellipsis.
-Unicode is supported. ☺
+破折需要用连续3个破折号。 两个破折号用于显示范围 (例如, "内容在12-14章内")。 
+三个点 ... 会被转换为省略号  
+Unicode 也是支持的 ☺  
 
 ## An h2 header
 

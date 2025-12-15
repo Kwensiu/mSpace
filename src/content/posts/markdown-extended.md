@@ -1,95 +1,98 @@
 ---
-title: Markdown Extended Features
+title: Markdown 拓展功能
 published: 2024-05-01
 updated: 2024-11-29
-description: 'Read more about Markdown features in Fuwari'
+description: '在Fuwari中阅读有关Markdown功能的更多信息'
 image: ''
-tags: [Demo, Example, Markdown, Fuwari]
-category: 'Examples'
-draft: false 
+tags: [示例, Markdown, Fuwari]
+category: '示例'
+draft: true
+hidden: true
 ---
 
-## GitHub Repository Cards
-You can add dynamic cards that link to GitHub repositories, on page load, the repository information is pulled from the GitHub API. 
+## GitHub 仓库卡片
+
+你可以添加链接到 GitHub 仓库的动态卡片，页面加载时，仓库信息会通过 GitHub API 拉取。  
 
 ::github{repo="Fabrizz/MMM-OnSpotify"}
 
-Create a GitHub repository card with the code `::github{repo="<owner>/<repo>"}`.
+使用代码 `::github{repo="<owner>/<repo>"}` 创建 GitHub 仓库卡片。
 
 ```markdown
 ::github{repo="saicaca/fuwari"}
 ```
 
-## Admonitions
+## 警示框（Admonitions）
 
-Following types of admonitions are supported: `note` `tip` `important` `warning` `caution`
+支持以下类型的警示框：`note`（注意）、`tip`（提示）、`important`（重要）、`warning`（警告）、`caution`（谨慎）  
 
+:::note  
+强调用户即使略读也应考虑的信息。  
+:::  
+
+:::tip  
+帮助用户更成功的可选信息。  
+:::  
+
+:::important  
+用户成功所需的**关键**信息。  
+:::  
+
+:::warning  
+因潜在风险需要用户**立即关注**的关键内容。  
+:::  
+
+:::caution  
+某行为可能导致的**负面潜在后果**。  
+:::  
+
+
+### 基础语法
+
+```markdown
 :::note
-Highlights information that users should take into account, even when skimming.
+强调用户即使略读也应考虑的信息。
 :::
 
 :::tip
-Optional information to help a user be more successful.
-:::
-
-:::important
-Crucial information necessary for users to succeed.
-:::
-
-:::warning
-Critical content demanding immediate user attention due to potential risks.
-:::
-
-:::caution
-Negative potential consequences of an action.
-:::
-
-### Basic Syntax
-
-```markdown
-:::note
-Highlights information that users should take into account, even when skimming.
-:::
-
-:::tip
-Optional information to help a user be more successful.
+帮助用户更成功的可选信息。
 :::
 ```
 
-### Custom Titles
+### 自定义标题
 
-The title of the admonition can be customized.
+警示框的标题可以自定义。  
 
-:::note[MY CUSTOM TITLE]
-This is a note with a custom title.
+:::note[MY CUSTOM TITLE]  
+这是一个带自定义标题的注意框。  
 :::
 
 ```markdown
 :::note[MY CUSTOM TITLE]
-This is a note with a custom title.
+这是一个带自定义标题的注意框。
 :::
 ```
 
-### GitHub Syntax
+### GitHub 语法
 
 > [!TIP]
-> [The GitHub syntax](https://github.com/orgs/community/discussions/16925) is also supported.
+> [GitHub 语法](https://github.com/orgs/community/discussions/16925) 也受支持。
 
 ```
 > [!NOTE]
-> The GitHub syntax is also supported.
+> GitHub 语法也受支持。
 
 > [!TIP]
-> The GitHub syntax is also supported.
+> GitHub 语法也受支持。
 ```
 
-### Spoiler
+### 剧透内容
 
-You can add spoilers to your text. The text also supports **Markdown** syntax.
+你可以给文本添加剧透（内容会被隐藏），且文本支持 **Markdown** 语法。
 
-The content :spoiler[is hidden **ayyy**]!
+示例内容：剧透里藏着**加粗文字**哦！:spoiler[是隐藏的 **ayyy**]!
 
 ```markdown
-The content :spoiler[is hidden **ayyy**]!
+示例内容：剧透里藏着加粗文字哦！:spoiler[是隐藏的 ayyy]!
 
 ```
