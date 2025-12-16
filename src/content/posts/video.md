@@ -4,7 +4,7 @@ published: 2023-08-01
 description: 将在这里介绍如何在贴文内嵌入视频
 tags: [示例, 视频]
 category: 示例
-draft: true
+draft: false
 hidden: true
 ---
 

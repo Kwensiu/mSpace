@@ -7,9 +7,12 @@ import ImageWrapper from "../misc/ImageWrapper.astro";
 const config = profileConfig;
 ---
 <div class="card-base p-3">
+
+    <div class="flex flex-row items-center justify-center lg:flex-col lg:gap-3 md:flex-row md:items-center md:gap-0">
+
     <a aria-label="Go to About Page" href={url('/about/')}
-       class="group block relative mx-auto mt-1 lg:mx-0 lg:mt-0 mb-3
-       max-w-[12rem] lg:max-w-none overflow-hidden rounded-xl active:scale-95">
+       class="group block relative mx-10 mt-3 md:mr-20 lg:mx-0 lg:mt-0 mb-3
+       max-w-[12rem] lg:max-w-none overflow-hidden rounded-lg active:scale-95">
         <div class="absolute transition pointer-events-none group-hover:bg-black/30 group-active:bg-black/50
         w-full h-full z-50 flex items-center justify-center">
             <Icon name="fa6-regular:address-card"

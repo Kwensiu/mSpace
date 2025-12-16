@@ -17,7 +17,7 @@ const fakeResult: SearchResult[] = [
 	{
 		url: url("/"),
 		meta: {
-			title: "This Is a Fake Search Result",
+			title: "Never Gonna Give You Up",
 		},
 		excerpt:
 			"Because the search cannot work in the <mark>dev</mark> environment.",
@@ -33,7 +33,16 @@ const fakeResult: SearchResult[] = [
 
 const togglePanel = () => {
 	const panel = document.getElementById("search-panel");
+	const isClosed = panel?.classList.contains("float-panel-closed");
 	panel?.classList.toggle("float-panel-closed");
+	if (isClosed) {
+		setTimeout(() => {
+			const input = document.querySelector("#search-bar-inside input") as HTMLInputElement;
+			if (input) {
+				input.focus();
+			}
+		},0)
+	}
 };
 
 const setPanelVisibility = (show: boolean, isDesktop: boolean): void => {
