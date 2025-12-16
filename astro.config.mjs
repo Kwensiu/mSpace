@@ -24,12 +24,12 @@ import { remarkExcerpt } from "./src/plugins/remark-excerpt.js";
 import { remarkReadingTime } from "./src/plugins/remark-reading-time.mjs";
 import { pluginCustomCopyButton } from "./src/plugins/expressive-code/custom-copy-button.js";
 
-import vercel from "@astrojs/vercel";
+import vercel_static from "@astrojs/vercel/static";
 
 // https://astro.build/config
 export default defineConfig({
-  site: "https://kwensiu.vercel.app/",
-  base: "/",
+  site: "https://kwensiu.github.io/mSpace",
+  base: "/mSpace",
   trailingSlash: "always",
 
   integrations: [
@@ -175,5 +175,5 @@ export default defineConfig({
       },
 	},
 
-  adapter: vercel(),
+  adapter: vercel_static(),
 });
