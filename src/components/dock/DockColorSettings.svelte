@@ -55,7 +55,7 @@ onDestroy(() => {
   on:click|stopPropagation={toggleVisibility}
   aria-label="Color Settings"
 >
-  <Icon icon="material-symbols:palette-outline" class="text-[1.25rem]" />
+  <Icon icon="material-symbols:palette-outline" class="text-[1.5rem]" />
 </button>
 
 <div 
@@ -111,7 +111,7 @@ onDestroy(() => {
 <style lang="stylus">
   #dock-display-setting input[type="range"] {
     -webkit-appearance: none;
-    height: 1.25rem;
+    height: 1.5rem;
     background-image: var(--color-selection-bar);
     transition: background-image 0.15s ease-in-out;
     border-radius: 0.25rem;
