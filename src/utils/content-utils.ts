@@ -13,17 +13,17 @@ async function getRawSortedPosts() {
 		// First sort by pin status
 		const aIsPinned = a.data.pin === true;
 		const bIsPinned = b.data.pin === true;
-		
+
 		if (aIsPinned && !bIsPinned) return -1;
 		if (!aIsPinned && bIsPinned) return 1;
-		
+
 		// If both are pinned or both are not pinned, sort by pinOrder (if available)
 		if (aIsPinned && bIsPinned) {
 			const aPinOrder = a.data.pinOrder || 999;
 			const bPinOrder = b.data.pinOrder || 999;
 			if (aPinOrder !== bPinOrder) return aPinOrder - bPinOrder;
 		}
-		
+
 		// Finally, sort by publication date
 		const dateA = new Date(a.data.published);
 		const dateB = new Date(b.data.published);

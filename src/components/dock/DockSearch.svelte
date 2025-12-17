@@ -1,243 +1,238 @@
 <script lang="ts">
-  // 库和模块导入
-  import I18nKey from "@i18n/i18nKey";
-  import { i18n } from "@i18n/translation";
-  import Icon from "@iconify/svelte";
-  import { url } from "@utils/url-utils.ts";
-  import { onMount, onDestroy } from "svelte";
-  import type { SearchResult } from "@/global";
+// 库和模块导入
+import I18nKey from "@i18n/i18nKey";
+import { i18n } from "@i18n/translation";
+import Icon from "@iconify/svelte";
+import { url } from "@utils/url-utils.ts";
+import { onMount, onDestroy } from "svelte";
+import type { SearchResult } from "@/global";
 
-  // 状态定义
-  let keyword = "";
-  let result: SearchResult[] = [];
-  let isSearching = false;
-  let pagefindLoaded = false;
-  let initialized = false;
-  let isVisible = false;
+// 状态定义
+let keyword = "";
+let result: SearchResult[] = [];
+let isSearching = false;
+let pagefindLoaded = false;
+let initialized = false;
+let isVisible = false;
 
-  // 常量定义
-  const fakeResult: SearchResult[] = [
-    {
-      url: url("/"),
-      meta: {
-        title: "Never Gonna Give You Up",
-      },
-      excerpt:
-        "Because the search cannot work in the <mark>dev</mark> environment.",
-    },
-    {
-      url: url("/"),
-      meta: {
-        title: "If You Want to Test the Search",
-      },
-      excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
-    },
-  ];
+// 常量定义
+const fakeResult: SearchResult[] = [
+	{
+		url: url("/"),
+		meta: {
+			title: "Never Gonna Give You Up",
+		},
+		excerpt:
+			"Because the search cannot work in the <mark>dev</mark> environment.",
+	},
+	{
+		url: url("/"),
+		meta: {
+			title: "If You Want to Test the Search",
+		},
+		excerpt: "Try running <mark>npm build && npm preview</mark> instead.",
+	},
+];
 
-  // UI 交互函数
-  function toggleVisibility(): void {
-    isVisible = !isVisible;
-    if (isVisible) {
-      // 稍微延迟聚焦，确保DOM已经渲染
-      setTimeout(() => {
-        const input = document.querySelector(
-          "#dock-search-input",
-        ) as HTMLInputElement;
-        if (input) {
-          input.focus();
-        }
-      }, 10);
-    } else {
-      // 隐藏时清除搜索结果
-      result = [];
-      keyword = "";
-    }
-  }
+// UI 交互函数
+function toggleVisibility(): void {
+	isVisible = !isVisible;
+	if (isVisible) {
+		// 稍微延迟聚焦，确保DOM已经渲染
+		setTimeout(() => {
+			const input = document.querySelector(
+				"#dock-search-input",
+			) as HTMLInputElement;
+			if (input) {
+				input.focus();
+			}
+		}, 10);
+	} else {
+		// 隐藏时清除搜索结果
+		result = [];
+		keyword = "";
+	}
+}
 
-  function hide(): void {
-    isVisible = false;
-    result = [];
-    keyword = "";
-  }
+function hide(): void {
+	isVisible = false;
+	result = [];
+	keyword = "";
+}
 
-  function navigateToResult(event: Event, itemUrl: string): void {
-    event.preventDefault();
-    hide(); // 隐藏搜索面板
-    if (window.swup) {
-      // 使用 Swup 进行平滑导航
-      window.swup.navigate(itemUrl);
-    } else {
-      // 备用方案：如果 Swup 不可用，使用普通导航
-      window.location.href = itemUrl;
-    }
-  }
+function navigateToResult(event: Event, itemUrl: string): void {
+	event.preventDefault();
+	hide(); // 隐藏搜索面板
+	if (window.swup) {
+		// 使用 Swup 进行平滑导航
+		window.swup.navigate(itemUrl);
+	} else {
+		// 备用方案：如果 Swup 不可用，使用普通导航
+		window.location.href = itemUrl;
+	}
+}
 
-  // 事件处理函数
-  function handleClickOutside(event: Event): void {
-    const target = event.target as HTMLElement;
-    const panel = document.getElementById("dock-search-panel");
-    const button = document.getElementById("dock-search-button");
+// 事件处理函数
+function handleClickOutside(event: Event): void {
+	const target = event.target as HTMLElement;
+	const panel = document.getElementById("dock-search-panel");
+	const button = document.getElementById("dock-search-button");
 
-    if (
-      panel &&
-      button &&
-      !panel.contains(target) &&
-      !button.contains(target)
-    ) {
-      isVisible = false;
-      result = [];
-      keyword = "";
-    }
-  }
+	if (panel && button && !panel.contains(target) && !button.contains(target)) {
+		isVisible = false;
+		result = [];
+		keyword = "";
+	}
+}
 
-  // 搜索处理函数
-  async function search(): Promise<void> {
-    if (!keyword) {
-      result = [];
-      return;
-    }
+// 搜索处理函数
+async function search(): Promise<void> {
+	if (!keyword) {
+		result = [];
+		return;
+	}
 
-    if (!initialized) {
-      return;
-    }
+	if (!initialized) {
+		return;
+	}
 
-    isSearching = true;
+	isSearching = true;
 
-    try {
-      let searchResults: SearchResult[] = [];
+	try {
+		let searchResults: SearchResult[] = [];
 
-      if (import.meta.env.PROD && pagefindLoaded && window.pagefind) {
-        const response = await window.pagefind.search(keyword);
-        searchResults = await Promise.all(
-          response.results.map((item) => item.data()),
-        );
-      } else if (import.meta.env.DEV) {
-        searchResults = fakeResult;
-      } else {
-        searchResults = [];
-        console.error("Pagefind is not available in production environment.");
-      }
+		if (import.meta.env.PROD && pagefindLoaded && window.pagefind) {
+			const response = await window.pagefind.search(keyword);
+			searchResults = await Promise.all(
+				response.results.map((item) => item.data()),
+			);
+		} else if (import.meta.env.DEV) {
+			searchResults = fakeResult;
+		} else {
+			searchResults = [];
+			console.error("Pagefind is not available in production environment.");
+		}
 
-      result = searchResults;
-    } catch (error) {
-      console.error("Search error:", error);
-      result = [];
-    } finally {
-      isSearching = false;
-    }
-  }
+		result = searchResults;
+	} catch (error) {
+		console.error("Search error:", error);
+		result = [];
+	} finally {
+		isSearching = false;
+	}
+}
 
-  $: hasResults = result.length > 0;
+$: hasResults = result.length > 0;
 
-  // 计算搜索面板宽度
-  let panelWidth = "30rem"; // 默认宽度
+// 计算搜索面板宽度
+let panelWidth = "30rem"; // 默认宽度
 
-  // 响应式更新面板宽度
-  $: {
-    // 未搜索状态 - 保持较短的宽度
-    if (!keyword || keyword.trim() === "") {
-      panelWidth = "30rem";
-    }
-    // 有搜索结果状态 - 根据内容长度调整宽度
-    else if (hasResults) {
-      // 计算最长标题的估算宽度
-      let maxLength = 0;
-      for (const item of result) {
-        // 标题长度 + 摘要长度的加权计算
-        const estimatedLength =
-          item.meta.title.length * 1.2 + (item.excerpt?.length || 0) * 0.3;
-        maxLength = Math.max(maxLength, estimatedLength);
-      }
+// 响应式更新面板宽度
+$: {
+	// 未搜索状态 - 保持较短的宽度
+	if (!keyword || keyword.trim() === "") {
+		panelWidth = "30rem";
+	}
+	// 有搜索结果状态 - 根据内容长度调整宽度
+	else if (hasResults) {
+		// 计算最长标题的估算宽度
+		let maxLength = 0;
+		for (const item of result) {
+			// 标题长度 + 摘要长度的加权计算
+			const estimatedLength =
+				item.meta.title.length * 1.2 + (item.excerpt?.length || 0) * 0.3;
+			maxLength = Math.max(maxLength, estimatedLength);
+		}
 
-      // 根据内容长度计算宽度，设置最小和最大限制
-      const minWidth = 35; // rem
-      const maxWidth = 55; // rem
-      const calculatedWidth = Math.min(
-        Math.max(minWidth, maxLength / 10),
-        maxWidth,
-      );
-      panelWidth = `${calculatedWidth}rem`;
-    }
-    // 正在搜索中或无结果状态 - 中等宽度
-    else {
-      panelWidth = "35rem";
-    }
-  }
+		// 根据内容长度计算宽度，设置最小和最大限制
+		const minWidth = 35; // rem
+		const maxWidth = 55; // rem
+		const calculatedWidth = Math.min(
+			Math.max(minWidth, maxLength / 10),
+			maxWidth,
+		);
+		panelWidth = `${calculatedWidth}rem`;
+	}
+	// 正在搜索中或无结果状态 - 中等宽度
+	else {
+		panelWidth = "35rem";
+	}
+}
 
-  // 设置CSS变量
-  $: {
-    if (typeof document !== "undefined") {
-      document.documentElement.style.setProperty(
-        "--search-panel-width",
-        panelWidth,
-      );
-    }
-  }
+// 设置CSS变量
+$: {
+	if (typeof document !== "undefined") {
+		document.documentElement.style.setProperty(
+			"--search-panel-width",
+			panelWidth,
+		);
+	}
+}
 
-  // 生命周期管理
-  onMount(() => {
-    document.addEventListener("click", handleClickOutside);
+// 生命周期管理
+onMount(() => {
+	document.addEventListener("click", handleClickOutside);
 
-    // 初始化CSS变量
-    if (typeof document !== "undefined") {
-      document.documentElement.style.setProperty(
-        "--search-panel-width",
-        panelWidth,
-      );
-    }
+	// 初始化CSS变量
+	if (typeof document !== "undefined") {
+		document.documentElement.style.setProperty(
+			"--search-panel-width",
+			panelWidth,
+		);
+	}
 
-    const initializeSearch = (): void => {
-      initialized = true;
-      pagefindLoaded =
-        typeof window !== "undefined" &&
-        !!window.pagefind &&
-        typeof window.pagefind.search === "function";
-      console.log("Pagefind status on init:", pagefindLoaded);
-      if (keyword) search();
-    };
+	const initializeSearch = (): void => {
+		initialized = true;
+		pagefindLoaded =
+			typeof window !== "undefined" &&
+			!!window.pagefind &&
+			typeof window.pagefind.search === "function";
+		console.log("Pagefind status on init:", pagefindLoaded);
+		if (keyword) search();
+	};
 
-    if (import.meta.env.DEV) {
-      console.log(
-        "Pagefind is not available in development mode. Using mock data.",
-      );
-      initializeSearch();
-    } else {
-      document.addEventListener("pagefindready", () => {
-        console.log("Pagefind ready event received.");
-        initializeSearch();
-      });
-      document.addEventListener("pagefindloaderror", () => {
-        console.warn(
-          "Pagefind load error event received. Search functionality will be limited.",
-        );
-        initializeSearch(); // Initialize with pagefindLoaded as false
-      });
+	if (import.meta.env.DEV) {
+		console.log(
+			"Pagefind is not available in development mode. Using mock data.",
+		);
+		initializeSearch();
+	} else {
+		document.addEventListener("pagefindready", () => {
+			console.log("Pagefind ready event received.");
+			initializeSearch();
+		});
+		document.addEventListener("pagefindloaderror", () => {
+			console.warn(
+				"Pagefind load error event received. Search functionality will be limited.",
+			);
+			initializeSearch(); // Initialize with pagefindLoaded as false
+		});
 
-      // Fallback in case events are not caught or pagefind is already loaded by the time this script runs
-      setTimeout(() => {
-        if (!initialized) {
-          console.log("Fallback: Initializing search after timeout.");
-          initializeSearch();
-        }
-      }, 2000); // Adjust timeout as needed
-    }
+		// Fallback in case events are not caught or pagefind is already loaded by the time this script runs
+		setTimeout(() => {
+			if (!initialized) {
+				console.log("Fallback: Initializing search after timeout.");
+				initializeSearch();
+			}
+		}, 2000); // Adjust timeout as needed
+	}
 
-    // 清理函数
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  });
+	// 清理函数
+	return () => {
+		document.removeEventListener("click", handleClickOutside);
+	};
+});
 
-  onDestroy(() => {
-    document.removeEventListener("click", handleClickOutside);
-  });
+onDestroy(() => {
+	document.removeEventListener("click", handleClickOutside);
+});
 
-  // 响应式搜索
-  $: if (initialized && keyword) {
-    (async () => {
-      await search();
-    })();
-  }
+// 响应式搜索
+$: if (initialized && keyword) {
+	(async () => {
+		await search();
+	})();
+}
 </script>
 
 <button

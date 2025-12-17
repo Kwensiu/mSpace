@@ -37,11 +37,13 @@ const togglePanel = () => {
 	panel?.classList.toggle("float-panel-closed");
 	if (isClosed) {
 		setTimeout(() => {
-			const input = document.querySelector("#search-bar-inside input") as HTMLInputElement;
+			const input = document.querySelector(
+				"#search-bar-inside input",
+			) as HTMLInputElement;
 			if (input) {
 				input.focus();
 			}
-		},0)
+		}, 0);
 	}
 };
 

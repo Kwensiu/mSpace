@@ -11,7 +11,7 @@ const postsCollection = defineCollection({
 		tags: z.array(z.string()).optional().default([]),
 		category: z.string().optional().nullable().default(""),
 		lang: z.string().optional().default(""),
-		
+
 		/* Pin functionality */
 		pin: z.boolean().optional().default(false),
 		pinOrder: z.number().optional().default(999),

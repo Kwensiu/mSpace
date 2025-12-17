@@ -13,11 +13,11 @@ function resetHue() {
 }
 
 function toggleVisibility() {
-  isVisible = !isVisible;
+	isVisible = !isVisible;
 }
 
 function hide() {
-  isVisible = false;
+	isVisible = false;
 }
 
 $: if (hue || hue === 0) {
@@ -26,26 +26,24 @@ $: if (hue || hue === 0) {
 
 // 点击外部区域隐藏面板
 function handleClickOutside(event: Event) {
-  const target = event.target as HTMLElement;
-  const panel = document.getElementById("dock-display-setting");
-  const button = document.getElementById("dock-color-settings-button");
-  
-  if (panel && button && 
-      !panel.contains(target) && 
-      !button.contains(target)) {
-    isVisible = false;
-  }
+	const target = event.target as HTMLElement;
+	const panel = document.getElementById("dock-display-setting");
+	const button = document.getElementById("dock-color-settings-button");
+
+	if (panel && button && !panel.contains(target) && !button.contains(target)) {
+		isVisible = false;
+	}
 }
 
 // 添加和清理事件监听器
 import { onMount, onDestroy } from "svelte";
 
 onMount(() => {
-  document.addEventListener('click', handleClickOutside);
+	document.addEventListener("click", handleClickOutside);
 });
 
 onDestroy(() => {
-  document.removeEventListener('click', handleClickOutside);
+	document.removeEventListener("click", handleClickOutside);
 });
 </script>
 
