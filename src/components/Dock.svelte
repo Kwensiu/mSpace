@@ -1,17 +1,17 @@
 <script lang="ts">
-import { onMount } from "svelte";
-import Icon from "@iconify/svelte";
-import { url } from "@utils/url-utils.ts";
-import { getStoredTheme, setTheme } from "@utils/setting-utils.ts";
 import {
 	AUTO_MODE,
 	DARK_MODE,
-	LIGHT_MODE,
 	DEFAULT_THEME,
+	LIGHT_MODE,
 } from "@constants/constants.ts";
+import Icon from "@iconify/svelte";
+import { getStoredTheme, setTheme } from "@utils/setting-utils.ts";
+import { url } from "@utils/url-utils.ts";
+import { onMount } from "svelte";
 import type { LIGHT_DARK_MODE } from "@/types/config.ts";
-import DockSearch from "./dock/DockSearch.svelte";
 import DockColorSettings from "./dock/DockColorSettings.svelte";
+import DockSearch from "./dock/DockSearch.svelte";
 
 // 状态管理
 let isScrolled = false;

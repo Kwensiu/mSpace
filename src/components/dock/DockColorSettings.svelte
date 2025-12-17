@@ -36,7 +36,7 @@ function handleClickOutside(event: Event) {
 }
 
 // 添加和清理事件监听器
-import { onMount, onDestroy } from "svelte";
+import { onDestroy, onMount } from "svelte";
 
 onMount(() => {
 	document.addEventListener("click", handleClickOutside);
