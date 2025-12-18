@@ -1,6 +1,5 @@
 // 图片查看器工具类
 class ImageViewerManager {
-	private instance: any = null;
 	private container: HTMLElement | null = null;
 
 	// 初始化图片查看器
