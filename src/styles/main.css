@@ -27,7 +27,7 @@
         @apply transition rounded-md p-1 -m-1 expand-animation;
     }
     .link-lg {
-        @apply transition rounded-md p-1.5 -m-1.5 expand-animation;
+        @apply transition rounded-md p-1.5 -m-0.5 expand-animation;
     }
     .float-panel {
         @apply top-[5.25rem] rounded-[var(--radius-xlarge)] overflow-hidden bg-[var(--float-panel-bg)] transition shadow-xl dark:shadow-none
@@ -103,8 +103,11 @@
     }
 
     .meta-icon {
-        @apply w-8 h-8 transition rounded-md flex items-center justify-center bg-[var(--btn-regular-bg)]
+        @apply w-6 h-6 transition rounded-md flex items-center justify-center bg-[var(--btn-regular-bg)]
         text-[var(--btn-content)] mr-2
+    }
+    .updated-icon {
+        @apply w-6 h-6 transition rounded-md flex items-center justify-center text-[var(--btn-content)] mr-2
     }
     .with-divider {
         @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-[var(--meta-divider)] before:text-sm

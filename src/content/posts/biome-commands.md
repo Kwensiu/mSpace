@@ -10,7 +10,7 @@ tags:
 category: 开发
 draft: false
 lang: ''
-updated: 2025-12-18T13:58:53.751Z
+updated: 2025-12-18T15:17:16.000Z
 ---
 
 # Biome 格式化命令记录
@@ -24,8 +24,7 @@ updated: 2025-12-18T13:58:53.751Z
 
 ```bash
 # 应用所有可自动修复的问题
-pnpm exec biome check --apply ./src
-
+pnpm exec biome check --fix ./src
 # 或者
 pnpm exec biome lint --fix ./src
 ```

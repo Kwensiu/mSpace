@@ -1,7 +1,7 @@
 ---
 title: 博客更新日志
 published: 2025-12-18T00:00:00.000Z
-updated: 2025-12-18T13:58:53.748Z
+updated: 2025-12-18T15:17:16.000Z
 description: 博客前后端更新记录
 image: ''
 tags:
@@ -21,12 +21,31 @@ lang: zh
 ---
 
 <details>
+<summary>v1.0.11 - 2025-12-18 - [大图查看]</summary>
+
+```
+feat(post): 调整文章卡片与元数据显示样式及布局
+
+- 将置顶标签从文章卡片中移至新位置并调整样式
+- 为 PostMeta 组件新增 `alignRight` 属性以支持内容右对齐
+- 更新图标大小与文本字体大小，优化移动端显示效果
+- 调整更新时间显示位置，并使用新的图标样式
+- 修改部分样式类名与间距，统一设计风格
+- 更新文章文件中的 published 和 updated 时间格式
+- 修正页面底部导航按钮布局问题
+- 微调 CSS 样式变量，提升视觉一致性
+```
+
+</details>
+
+<details>
 <summary>v1.0.10 - 2025-12-18 - [大图查看]</summary>
 
 ```
 feat(image): 为 ImageWrapper 添加 PhotoSwipe 支持及相关属性
-
 feat(layout): 扩展 PhotoSwipe 配置并支持 Banner 图片展示
+feat: 添加updated字段显示贴文更新日期
+fix(posts): 修改文章页面底部导航按钮布局
 ```
 
 </details>
