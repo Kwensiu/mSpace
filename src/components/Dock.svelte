@@ -10,7 +10,6 @@ import { getStoredTheme, setTheme } from "@utils/setting-utils.ts";
 import { url } from "@utils/url-utils.ts";
 import { onMount } from "svelte";
 import type { LIGHT_DARK_MODE } from "@/types/config.ts";
-import DockColorSettings from "./dock/DockColorSettings.svelte";
 import DockSearch from "./dock/DockSearch.svelte";
 
 // 状态管理
@@ -240,9 +239,6 @@ function openSearch(e: Event) {
         ></Icon>
       </button>
 
-      <!-- 颜色设置按钮 -->
-      <DockColorSettings />
-
       <!-- 亮/暗色切换按钮 -->
       <button
         class="btn-plain scale-animation rounded-3xl w-11 h-11 active:scale-90"
@@ -292,9 +288,6 @@ function openSearch(e: Event) {
           class="text-[1.5rem]"
         ></Icon>
       </button>
-
-      <!-- 颜色设置按钮 -->
-      <DockColorSettings />
 
       <!-- 亮/暗色切换按钮 -->
       <button
