@@ -257,7 +257,7 @@ $: if (initialized && keyword) {
     id="dock-search-panel"
     class="rounded-3xl shadow-xl p-1 max-h-[70vh] overflow-y-auto border border-black/5 dark:border-white/5"
     class:bg-white={true}
-    class:dark:bg-black={true}
+    class:dark:bg-neutral-500={true}
     class:bg-opacity-80={true}
     class:dark:bg-opacity-80={true}
     class:backdrop-blur-xs={true}

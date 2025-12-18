@@ -3,8 +3,8 @@ title: Biome | Formatter
 published: 2025-12-18
 description: '记录使用于当前博客的 Biome 命令'
 image: ''
-tags: [Biome, 格式化, 命令]
-category: ''
+tags: [Biome, 开发, 效率]
+category: '开发'
 draft: false 
 lang: ''
 ---

@@ -4,7 +4,7 @@ published: 2025-12-18
 description: '博客前后端更新记录'
 image: ''
 tags: [更新日志, 版本记录]
-category: '文档'
+category: '博客'
 draft: false
 lang: 'zh'
 ---
@@ -16,6 +16,17 @@ lang: 'zh'
 ::github{repo="kwensiu/mSpace"}
 
 ---
+
+<details>
+<summary>v1.0.9 - 2025-12-18</summary>
+
+```
+fix(Dock): 调整Dock组件隐藏状态，调整Dock暗色以及搜索栏背景色，以提高可视度
+feat(posts): 重命名文章文件名并调整分类标签
+- 同时调整了部分页面的Tag与分类
+```
+
+</details>
 
 <details>
 <summary>v1.0.8 - 2025-12-18</summary>
