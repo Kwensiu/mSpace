@@ -7,13 +7,13 @@ tags: [开发, 博客, fuwari]
 category: '开发'
 draft: false 
 lang: 'zh'
-en: "dockcomponentguide/dock-component-guide-en/"
+en: "how-to-add-dock/en/"
 updated: 2025-12-20T06:00:00.000Z
 ---
 
 _本文表达简略，如有任何问题，敬请指出。_
 
-# 下滑即可看到 Dock 组件
+# 向下滚动页面即可看到 Dock 组件
 
 Dock 组件的添加解决两个主要问题：
 1. 阅读时无法搜索或切换页面
@@ -33,8 +33,8 @@ Dock 组件的添加解决两个主要问题：
 
 ```
 src/components/dock/
-├── Dock.svelte          # Main Dock component
-└── DockSearch.svelte     # Search functionality sub-component
+├── Dock.svelte
+└── DockSearch.svelte
 ```
 ---
 
@@ -75,7 +75,7 @@ Dock 组件包含一个配置对象，可根据您网站的结构和个人偏好
 
 ```js title="Dock.svelet"
 const config = {
-	scrollThreshold: 150,  // Show dock after scrolling this many pixels
+	scrollThreshold: 150, //piexl
 	homePath: "/",
 	archivePath: "/archive/",
 	aboutPath: "/about/"

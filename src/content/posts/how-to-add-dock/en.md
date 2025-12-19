@@ -7,7 +7,7 @@ tags: [开发, 博客, fuwari]
 category: '开发'
 draft: false 
 lang: 'en'
-cn: "dockcomponentguide/dock-component-guide-cn/"
+cn: "how-to-add-dock/cn/"
 updated: 2025-12-20T06:01:00.000Z
 hidden: true
 ---
@@ -34,8 +34,8 @@ The Dock component solves two main problems:
 
 ```
 src/components/dock/
-├── Dock.svelte          # Main Dock component
-└── DockSearch.svelte     # Search functionality sub-component
+├── Dock.svelte
+└── DockSearch.svelte
 ```
 ---
 
@@ -76,7 +76,7 @@ The Dock component includes a configuration object that can be modified accordin
 
 ```js title="Dock.svelet"
 const config = {
-	scrollThreshold: 150,  // Show dock after scrolling this many pixels
+	scrollThreshold: 150, //piexl
 	homePath: "/",
 	archivePath: "/archive/",
 	aboutPath: "/about/"
