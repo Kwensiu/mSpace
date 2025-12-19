@@ -112,37 +112,42 @@ const bannerOffset =
 
 		<!-- Set the theme before the page is rendered to avoid a flash -->
 		<script is:inline define:vars={{DEFAULT_THEME, LIGHT_MODE, DARK_MODE, AUTO_MODE, BANNER_HEIGHT_EXTEND, PAGE_WIDTH, configHue}}>
-			// Load the theme from local storage
-			const theme = localStorage.getItem('theme') || DEFAULT_THEME;
-			switch (theme) {
-				case LIGHT_MODE:
-					document.documentElement.classList.remove('dark');
-					break
-				case DARK_MODE:
-					document.documentElement.classList.add('dark');
-					break
-				case AUTO_MODE:
-					if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-						document.documentElement.classList.add('dark');
-					} else {
+			// Use async loading to reduce render-blocking
+			(function() {
+				// Load the theme from local storage
+				const theme = localStorage.getItem('theme') || DEFAULT_THEME;
+				switch (theme) {
+					case LIGHT_MODE:
 						document.documentElement.classList.remove('dark');
-					}
-			}
+						break
+					case DARK_MODE:
+						document.documentElement.classList.add('dark');
+						break
+					case AUTO_MODE:
+						if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+							document.documentElement.classList.add('dark');
+						} else {
+							document.documentElement.classList.remove('dark');
+						}
+				}
 
-			// Load the hue from local storage
-			const hue = localStorage.getItem('hue') || configHue;
-			document.documentElement.style.setProperty('--hue', hue);
+				// Load the hue from local storage
+				const hue = localStorage.getItem('hue') || configHue;
+				document.documentElement.style.setProperty('--hue', hue);
 
-			// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
-			let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
-			offset = offset - offset % 4;
-			document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+				// calculate the --banner-height-extend, which needs to be a multiple of 4 to avoid blurry text
+				// Use requestAnimationFrame to avoid forced reflow
+				requestAnimationFrame(() => {
+					let offset = Math.floor(window.innerHeight * (BANNER_HEIGHT_EXTEND / 100));
+					offset = offset - offset % 4;
+					document.documentElement.style.setProperty('--banner-height-extend', `${offset}px`);
+				});
+			})();
 		</script>
 		<style define:vars={{
 			configHue,
 			'page-width': `${PAGE_WIDTH}rem`,
 		}}></style>  <!-- defines global css variables. This will be applied to <html> <body> and some other elements idk why -->
-
 
 		<slot name="head"></slot>
 
@@ -198,6 +203,7 @@ const bannerOffset =
 
 <script>
 import 'overlayscrollbars/overlayscrollbars.css';
+// Preload OverlayScrollbars to avoid render-blocking
 import {
 	OverlayScrollbars,
 	// ScrollbarsHidingPlugin,
@@ -247,13 +253,15 @@ function disableAnimation() {
 	document.head.appendChild(css)
 
 	return () => {
-		// Force restyle
-		;(() => window.getComputedStyle(document.body))()
-
-		// Wait for next tick before removing
-		setTimeout(() => {
-			document.head.removeChild(css)
-		}, 1)
+		// Force restyle using requestAnimationFrame to avoid forced reflow
+		requestAnimationFrame(() => {
+			window.getComputedStyle(document.body);
+			// Wait for next tick before removing
+			setTimeout(() => {
+				document.head.removeChild(css)
+			}, 1);
+		})
+	}
 	}
 }
 */

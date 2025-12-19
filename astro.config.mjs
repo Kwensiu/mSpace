@@ -1,7 +1,6 @@
 import sitemap from "@astrojs/sitemap";
 import svelte from "@astrojs/svelte";
 import tailwind from "@astrojs/tailwind";
-import vercel_static from "@astrojs/vercel/static";
 import { pluginCollapsibleSections } from "@expressive-code/plugin-collapsible-sections";
 import { pluginLineNumbers } from "@expressive-code/plugin-line-numbers";
 import swup from "@swup/astro";
@@ -43,7 +42,7 @@ export default defineConfig({
 			containers: ["main", "#toc"],
 			smoothScrolling: true,
 			cache: true,
-			preload: true,
+			preload: false, // Disable preloading to reduce critical request chain
 			accessibility: true,
 			updateHead: true,
 			updateBodyClass: false,
@@ -175,5 +174,4 @@ export default defineConfig({
 		},
 	},
 
-	adapter: vercel_static(),
 });

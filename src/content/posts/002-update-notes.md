@@ -21,6 +21,17 @@ lang: zh
 ---
 
 <details>
+<summary>v1.0.16 - 2025-12-20</summary>
+
+日常维护:
+
+- 微调内容与aria-label
+- 为posts添加缺失的lang
+- 压缩Banner图片优化加载
+
+</details>
+
+<details>
 <summary>v1.0.15 - 2025-12-20</summary>
 
 feat(PostMeta): 添加文章多语言版本支持与语言切换按钮  
