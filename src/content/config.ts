@@ -12,6 +12,10 @@ const postsCollection = defineCollection({
 		category: z.string().optional().nullable().default(""),
 		lang: z.string().optional().default(""),
 
+		/* Language versions */
+		en: z.string().optional(),
+		cn: z.string().optional(),
+
 		/* Pin functionality */
 		pin: z.boolean().optional().default(false),
 		pinOrder: z.number().optional().default(999),

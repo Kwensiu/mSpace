@@ -107,7 +107,7 @@
         text-[var(--btn-content)] mr-2
     }
     .updated-icon {
-        @apply w-6 h-6 transition rounded-md flex items-center justify-center text-[var(--btn-content)] mr-2
+        @apply w-6 h-6 transition rounded-md flex items-center justify-center text-[var(--btn-content)] mr-1
     }
     .with-divider {
         @apply before:content-['/'] before:ml-1.5 before:mr-1.5 before:text-[var(--meta-divider)] before:text-sm

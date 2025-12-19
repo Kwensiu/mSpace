@@ -14,6 +14,8 @@ interface Props {
 	hideTagsForMobile?: boolean;
 	hideUpdateDate?: boolean;
 	alignRight?: boolean; // 新增右对齐属性
+	en?: string; // 英文版本文章slug
+	cn?: string; // 中文版本文章slug
 }
 const {
 	published,
@@ -23,10 +25,13 @@ const {
 	hideTagsForMobile = false,
 	hideUpdateDate = false,
 	alignRight = false, // 默认为左对齐
+	en,
+	cn,
 } = Astro.props;
 const className = Astro.props.class;
 ---
 
+<!-- Main metadata row -->
 <div class:list={["flex flex-wrap text-neutral-500 dark:text-neutral-400 items-center gap-2 md:gap-3", className, {"justify-end": alignRight}]}>
     <!-- publish date -->
     <div class="flex items-center">
@@ -78,7 +83,31 @@ const className = Astro.props.class;
             >
                 <Icon name="material-symbols:update" class="text-base"></Icon>
             </div>
-            <span class="text-50 text-sm font-medium">{formatDateToYYYYMMDD(updated)}</span>
+            <span class="text-50 text-sm font-medium pt-[3px]">{formatDateToYYYYMMDD(updated)}</span>
         </div>
     )}
 </div>
+
+<!-- Language switch buttons on separate line -->
+{(en || cn) && (
+    <div class="flex flex-wrap gap-2 mt-2">
+        <div class="flex flex-row flex-wrap items-center gap-2 mb-2">
+            {en && (
+                <a href={`/mSpace/posts/${en}`} 
+                   class="link-lg transition text-50 text-lg font-medium
+                          hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap
+                          px-2 py-1 rounded-md bg-black/5 dark:bg-white/10">
+                    English Version
+                </a>
+            )}
+            {cn && (
+                <a href={`/mSpace/posts/${cn}`}
+                   class="link-lg transition text-50 text-lg font-medium
+                          hover:text-[var(--primary)] dark:hover:text-[var(--primary)] whitespace-nowrap
+                          px-2 py-1 rounded-md bg-black/5 dark:bg-white/10">
+                    中文版本
+                </a>
+            )}
+        </div>
+    </div>
+)}
