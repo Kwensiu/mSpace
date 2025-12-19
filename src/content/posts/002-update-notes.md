@@ -1,7 +1,7 @@
 ---
 title: 博客更新日志
 published: 2025-12-18T00:00:00.000Z
-updated: 2025-12-18T15:17:16.000Z
+updated: 2025-12-20T00:07:16.000Z
 description: 博客前后端更新记录
 image: ''
 tags:
@@ -19,6 +19,16 @@ lang: zh
 ::github{repo="kwensiu/mSpace"}
 
 ---
+
+<details>
+<summary>v1.0.15 - 2025-12-20</summary>
+
+feat(PostMeta): 添加文章多语言版本支持与语言切换按钮
+docs(dock-component): 添加 Dock 组件集成指南的中英文文档
+
+- 同时优化了"更新日期"组件的显示
+
+</details>
 
 <details>
 <summary>v1.0.14 - 2025-12-19 - [Dock重构]</summary>
