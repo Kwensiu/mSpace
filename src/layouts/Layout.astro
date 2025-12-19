@@ -536,9 +536,35 @@ function createPhotoSwipe() {
 		if (element instanceof HTMLImageElement) {
 			itemData.src = element.dataset.pswpSrc || element.src
 
-			// 确保图片尺寸信息正确传递
-			const width = Number(element.dataset.pswpWidth || element.naturalWidth || 1920)
-			const height = Number(element.dataset.pswpHeight || element.naturalHeight || 1080)
+			// 优先使用data属性中的尺寸信息（对于本地图片）
+			let width = Number(element.dataset.pswpWidth || 0)
+			let height = Number(element.dataset.pswpHeight || 0)
+
+			// 如果data属性不可用，尝试使用图片的自然尺寸
+			if (!width || !height) {
+				// 检查图片是否已经完全加载
+				if (element.complete && element.naturalWidth > 0 && element.naturalHeight > 0) {
+					width = element.naturalWidth
+					height = element.naturalHeight
+				} else {
+					// 图片还没加载完成，使用元素的当前尺寸或合理的默认值
+					width = Math.max(element.width || 400, 200)
+					height = Math.max(element.height || 300, 150)
+				}
+			}
+
+			// 如果data属性不可用，尝试使用图片的自然尺寸
+			if (!width || !height) {
+				// 检查图片是否已经完全加载
+				if (element.complete && element.naturalWidth > 0 && element.naturalHeight > 0) {
+					width = element.naturalWidth
+					height = element.naturalHeight
+				} else {
+					// 图片还没加载完成，使用元素的当前尺寸或合理的默认值
+					width = Math.max(element.width || 400, 200)
+					height = Math.max(element.height || 300, 150)
+				}
+			}
 			
 			itemData.w = width
 			itemData.h = height
