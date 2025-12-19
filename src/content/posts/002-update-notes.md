@@ -21,7 +21,30 @@ lang: zh
 ---
 
 <details>
-<summary>v1.0.12 - 2025-12-18 - [Dock重构]</summary>
+<summary>v1.0.14 - 2025-12-19 - [Dock重构]</summary>
+
+feat(dock): 重构 Dock 组件并增强可配置性，初步添加EN文档介绍Dock组件
+
+- 引入 config 对象统一管理滚动阈值和导航路径，提升组件灵活性
+- 简化滚动逻辑，仅在滚动超过设定阈值时显示 Dock
+- 优化 Dock 样式类名与结构，改进响应式表现和视觉效果
+- 重构搜索组件逻辑，增加节流控制和空值检查以提高性能与稳定性
+- 更新组件文档，提供完整集成指南与自定义配置说明
+
+</details>
+
+<details>
+<summary>v1.0.13 - 2025-12-18 </summary>
+
+feat(ImageWrapper): 修复大图查看下意外出现的透明容器导致的放大问题
+feat(image-viewer): 尝试修复图片查看器滚轮会上下滑动而非缩放的问题
+fix: 执行命令 `pnpm exec biome check --write --unsafe` 格式化
+posts:为biome-formatter贴文添加cover
+
+</details>
+
+<details>
+<summary>v1.0.12 - 2025-12-18 </summary>
 
 refactor(dock): 将 Dock 组件的*颜色*与*亮暗色*按钮改为*归档*与*关于*页面  
 feat(image-viewer): 尝试修复图片查看器滚轮会上下滑动而非缩放的问题  

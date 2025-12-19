@@ -1,21 +1,21 @@
 <script lang="ts">
-// 库和模块导入
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { url } from "@utils/url-utils.ts";
-import { onDestroy, onMount } from "svelte";
+import { onMount } from "svelte";
 import type { SearchResult } from "@/global";
 
-// 状态定义
 let keyword = "";
 let result: SearchResult[] = [];
 let isSearching = false;
 let pagefindLoaded = false;
 let initialized = false;
 let isVisible = false;
+let searchPanelElement: HTMLDivElement;
+let searchInputElement: HTMLInputElement;
 
-// 常量定义
+// Mock data for development environment - customize as needed
 const fakeResult: SearchResult[] = [
 	{
 		url: url("/"),
@@ -34,28 +34,23 @@ const fakeResult: SearchResult[] = [
 	},
 ];
 
-// UI 交互函数
 function toggleVisibility(): void {
 	isVisible = !isVisible;
 	if (isVisible) {
-		// 稍微延迟聚焦，确保DOM已经渲染
 		setTimeout(() => {
-			const input = document.querySelector(
-				"#dock-search-input",
-			) as HTMLInputElement;
-			if (input) {
-				input.focus();
-			}
+			if (searchInputElement) searchInputElement.focus();
 		}, 10);
 	} else {
-		// 隐藏时清除搜索结果
-		result = [];
-		keyword = "";
+		resetSearch();
 	}
 }
 
 function hide(): void {
 	isVisible = false;
+	resetSearch();
+}
+
+function resetSearch(): void {
 	result = [];
 	keyword = "";
 }
@@ -64,10 +59,8 @@ function navigateToResult(event: Event, itemUrl: string): void {
 	event.preventDefault();
 	hide(); // 隐藏搜索面板
 	if (window.swup) {
-		// 使用 Swup 进行平滑导航
 		window.swup.navigate(itemUrl);
 	} else {
-		// 备用方案：如果 Swup 不可用，使用普通导航
 		window.location.href = itemUrl;
 	}
 }
@@ -75,13 +68,11 @@ function navigateToResult(event: Event, itemUrl: string): void {
 // 事件处理函数
 function handleClickOutside(event: Event): void {
 	const target = event.target as HTMLElement;
-	const panel = document.getElementById("dock-search-panel");
-	const button = document.getElementById("dock-search-button");
-
-	if (panel && button && !panel.contains(target) && !button.contains(target)) {
-		isVisible = false;
-		result = [];
-		keyword = "";
+	if (
+		!searchPanelElement?.contains(target) &&
+		!target?.closest("#dock-search-button")
+	) {
+		hide();
 	}
 }
 
@@ -92,28 +83,20 @@ async function search(): Promise<void> {
 		return;
 	}
 
-	if (!initialized) {
-		return;
-	}
+	if (!initialized) return;
 
 	isSearching = true;
 
 	try {
-		let searchResults: SearchResult[] = [];
-
 		if (import.meta.env.PROD && pagefindLoaded && window.pagefind) {
 			const response = await window.pagefind.search(keyword);
-			searchResults = await Promise.all(
-				response.results.map((item) => item.data()),
-			);
+			result = await Promise.all(response.results.map((item) => item.data()));
 		} else if (import.meta.env.DEV) {
-			searchResults = fakeResult;
+			result = fakeResult;
 		} else {
-			searchResults = [];
+			result = [];
 			console.error("Pagefind is not available in production environment.");
 		}
-
-		result = searchResults;
 	} catch (error) {
 		console.error("Search error:", error);
 		result = [];
@@ -124,25 +107,21 @@ async function search(): Promise<void> {
 
 $: hasResults = result.length > 0;
 
-// 计算搜索面板宽度
-let panelWidth = "30rem"; // 默认宽度
-
-// 响应式更新面板宽度
-$: {
+// 动态计算面板宽度
+$: panelWidth = (() => {
 	// 未搜索状态 - 保持较短的宽度
-	if (!keyword || keyword.trim() === "") {
-		panelWidth = "30rem";
-	}
+	if (!keyword?.trim()) return "30rem";
+
 	// 有搜索结果状态 - 根据内容长度调整宽度
-	else if (hasResults) {
-		// 计算最长标题的估算宽度
-		let maxLength = 0;
-		for (const item of result) {
-			// 标题长度 + 摘要长度的加权计算
-			const estimatedLength =
-				item.meta.title.length * 1.2 + (item.excerpt?.length || 0) * 0.3;
-			maxLength = Math.max(maxLength, estimatedLength);
-		}
+	if (hasResults) {
+		// 计算最长标题的估算宽度（添加空值检查）
+		const maxLength = Math.max(
+			...result.map(
+				(item) =>
+					(item?.meta?.title?.length || 0) * 1.2 +
+					(item?.excerpt?.length || 0) * 0.3,
+			),
+		);
 
 		// 根据内容长度计算宽度，设置最小和最大限制
 		const minWidth = 35; // rem
@@ -151,35 +130,40 @@ $: {
 			Math.max(minWidth, maxLength / 10),
 			maxWidth,
 		);
-		panelWidth = `${calculatedWidth}rem`;
+		return `${calculatedWidth}rem`;
 	}
+
 	// 正在搜索中或无结果状态 - 中等宽度
-	else {
-		panelWidth = "35rem";
+	return "35rem";
+})();
+
+// 设置CSS变量（使用节流优化性能）
+let lastPanelWidth = "";
+let updateTimeout: ReturnType<typeof setTimeout>;
+
+// 搜索节流
+let searchTimeout: ReturnType<typeof setTimeout>;
+
+function updatePanelWidth(width: string) {
+	if (width !== lastPanelWidth) {
+		if (updateTimeout) clearTimeout(updateTimeout);
+		updateTimeout = setTimeout(() => {
+			if (typeof document !== "undefined") {
+				document.documentElement.style.setProperty(
+					"--search-panel-width",
+					width,
+				);
+				lastPanelWidth = width;
+			}
+		}, 50); // 50ms节流
 	}
 }
 
-// 设置CSS变量
-$: {
-	if (typeof document !== "undefined") {
-		document.documentElement.style.setProperty(
-			"--search-panel-width",
-			panelWidth,
-		);
-	}
-}
+$: updatePanelWidth(panelWidth);
 
 // 生命周期管理
 onMount(() => {
 	document.addEventListener("click", handleClickOutside);
-
-	// 初始化CSS变量
-	if (typeof document !== "undefined") {
-		document.documentElement.style.setProperty(
-			"--search-panel-width",
-			panelWidth,
-		);
-	}
 
 	const initializeSearch = (): void => {
 		initialized = true;
@@ -205,33 +189,31 @@ onMount(() => {
 			console.warn(
 				"Pagefind load error event received. Search functionality will be limited.",
 			);
-			initializeSearch(); // Initialize with pagefindLoaded as false
+			initializeSearch();
 		});
 
-		// Fallback in case events are not caught or pagefind is already loaded by the time this script runs
+		// Fallback in case events are not caught or pagefind is already loaded
 		setTimeout(() => {
 			if (!initialized) {
 				console.log("Fallback: Initializing search after timeout.");
 				initializeSearch();
 			}
-		}, 2000); // Adjust timeout as needed
+		}, 2000);
 	}
 
-	// 清理函数
 	return () => {
 		document.removeEventListener("click", handleClickOutside);
+		if (updateTimeout) clearTimeout(updateTimeout);
+		if (searchTimeout) clearTimeout(searchTimeout);
 	};
 });
 
-onDestroy(() => {
-	document.removeEventListener("click", handleClickOutside);
-});
-
-// 响应式搜索
+// 响应式搜索（带节流）
 $: if (initialized && keyword) {
-	(async () => {
+	if (searchTimeout) clearTimeout(searchTimeout);
+	searchTimeout = setTimeout(async () => {
 		await search();
-	})();
+	}, 300); // 300ms节流
 }
 </script>
 
@@ -254,17 +236,14 @@ $: if (initialized && keyword) {
   style="bottom: 6rem; left: 50%; transform: translateX(-50%); width: calc(100% - 0rem); max-width: var(--search-panel-width, 30rem);"
 >
   <div
+    bind:this={searchPanelElement}
     id="dock-search-panel"
-    class="rounded-3xl shadow-xl p-1 max-h-[70vh] overflow-y-auto border border-black/5 dark:border-white/5"
-    class:bg-white={true}
-    class:dark:bg-neutral-500={true}
-    class:bg-opacity-80={true}
-    class:dark:bg-opacity-80={true}
-    class:backdrop-blur-xs={true}
+    class="rounded-3xl shadow-xl p-1 max-h-[70vh] overflow-y-auto border border-black/5 dark:border-white/5 bg-white/80 dark:bg-neutral-500/80 backdrop-blur-xs"
+    class:scale-95={!isVisible}
     class:scale-100={isVisible}
   >
     <!-- 搜索结果 -->
-    {#if result.length > 0}
+    {#if hasResults}
       <div class="max-h-[50vh] overflow-y-auto mb-2">
         {#each result as item}
           <div
@@ -279,17 +258,19 @@ $: if (initialized && keyword) {
               }
             }}
           >
-            <div
-              class="transition text-90 inline-flex font-bold group-hover:text-[var(--primary)]"
-            >
+            <div class="transition text-90 inline-flex font-bold group-hover:text-[var(--primary)]">
               {item.meta.title}
               <Icon
                 icon="fa6-solid:chevron-right"
                 class="transition text-[0.75rem] translate-x-1 my-auto text-[var(--primary)]"
-              ></Icon>
+              />
             </div>
             <div class="transition text-sm text-50">
-              {@html item.excerpt}
+              {#if import.meta.env.PROD}
+                {@html item.excerpt}
+              {:else}
+                {item.excerpt}
+              {/if}
             </div>
           </div>
         {/each}
@@ -299,27 +280,21 @@ $: if (initialized && keyword) {
     {/if}
 
     <!-- 搜索框 -->
-    <div
-      class="relative transition-all items-center h-11 rounded-3xl
-    bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06]
-    dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10"
-    >
+    <div class="relative flex items-center h-11 rounded-3xl bg-black/[0.04] hover:bg-black/[0.06] focus-within:bg-black/[0.06] dark:bg-white/5 dark:hover:bg-white/10 dark:focus-within:bg-white/10">
       <Icon
         icon="material-symbols:search"
-        class="absolute text-[1.25rem] pointer-events-none ml-3 mt-3 transition my-auto text-black/30 dark:text-white/30"
-      ></Icon>
+        class="absolute text-[1.25rem] pointer-events-none ml-3 text-black/30 dark:text-white/30"
+      />
       <input
         id="dock-search-input"
+        bind:this={searchInputElement}
         placeholder={i18n(I18nKey.search)}
         bind:value={keyword}
         class="pl-10 pr-8 py-2 text-sm bg-transparent outline-0 w-full h-full rounded-3xl"
       />
       {#if keyword}
         <button
-          on:click|stopPropagation={() => {
-            keyword = "";
-            result = [];
-          }}
+          on:click|stopPropagation={resetSearch}
           class="absolute right-2 top-1/2 transform -translate-y-1/2 text-black/30 dark:text-white/30 hover:text-black/50 dark:hover:text-white/50"
           aria-label="Clear search"
         >
@@ -331,7 +306,7 @@ $: if (initialized && keyword) {
 </div>
 
 <style>
-  /* 隐藏滚动条但是保留功能 */
+  /* 隐藏滚动条但保留功能 */
   #dock-search-panel::-webkit-scrollbar {
     width: 6px;
   }
@@ -345,20 +320,9 @@ $: if (initialized && keyword) {
     border-radius: 3px;
   }
 
-  .dark #dock-search-panel::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  /* 添加宽度过渡效果 */
+  /* 优化过渡动画 */
   #dock-search-panel {
-    transition: max-width 0.3s ease-in-out;
+    transition: width 0.3s ease-in-out, transform 0.3s ease-in-out;
     max-width: var(--search-panel-width, 30rem);
-  }
-
-  /* 淡入淡出和缩放动画 */
-  .transition-all {
-    transition-property: all;
-    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-    transition-duration: 200ms;
   }
 </style>
