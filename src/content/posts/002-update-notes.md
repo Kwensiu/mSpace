@@ -9,14 +9,14 @@ tags:
   - 版本记录
 category: 博客
 draft: false
-lang: zh
+lang: zh_CN
 ---
 
 # NaN - 0x01
 
 记录博客系统的功能更新与优化历程。
 
-::github{repo="kwensiu/mSpace"}
+::github{repo="kwensiu/blog"}
 
 ---
 

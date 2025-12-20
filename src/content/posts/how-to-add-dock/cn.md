@@ -220,7 +220,7 @@ function navigateToAbout(event: Event) {
 </style>
 ```
 
-   - 参考: [Github | Dock.svelte](https://github.com/Kwensiu/mSpace/blob/main/src/components/dock/Dock.svelte)
+   - 参考: [Github | Dock.svelte](https://github.com/Kwensiu/blog/blob/main/src/components/dock/Dock.svelte)
 
 2. **DockSearch.svelte** - Dock 的搜索功能组件
 - 下面是 `DockSearch.svelte` 的完整代码。
@@ -550,7 +550,7 @@ $: if (initialized && keyword) {
 </style>
 ```
 
-   - 参考: [Github | DockSearch.svelte](https://github.com/Kwensiu/mSpace/blob/main/src/components/dock/DockSearch.svelte)
+   - 参考: [Github | DockSearch.svelte](https://github.com/Kwensiu/blog/blob/main/src/components/dock/DockSearch.svelte)
    - 这是可选的，假如你不需要 Dock 的搜索功能
 
 ## 2. 导入到 Layout
@@ -581,7 +581,7 @@ import Dock from "@components/dock/Dock.svelte";
 </html>
 ```
 
-   - 参考: [Github | Layout.astro](https://github.com/Kwensiu/mSpace/blob/main/src/layouts/Layout.astro#L162)
+   - 参考: [Github | Layout.astro](https://github.com/Kwensiu/blog/blob/main/src/layouts/Layout.astro#L162)
 
 ---
 

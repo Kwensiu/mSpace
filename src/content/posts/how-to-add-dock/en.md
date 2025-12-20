@@ -221,7 +221,7 @@ function navigateToAbout(event: Event) {
 </style>
 ```
 
-   - Reference: [Github | Dock.svelte](https://github.com/Kwensiu/mSpace/blob/main/src/components/dock/Dock.svelte)
+   - Reference: [Github | Dock.svelte](https://github.com/Kwensiu/blog/blob/main/src/components/dock/Dock.svelte)
 
 2. **DockSearch.svelte** - Search functionality component
 - Also post the **Complete** code for `DockSearch.svelte` here.
@@ -551,7 +551,7 @@ $: if (initialized && keyword) {
 </style>
 ```
 
-- Reference: [Github | DockSearch.svelte](https://github.com/Kwensiu/mSpace/blob/main/src/components/dock/DockSearch.svelte)
+- Reference: [Github | DockSearch.svelte](https://github.com/Kwensiu/blog/blob/main/src/components/dock/DockSearch.svelte)
 - This is optional if you don’t need to add a search button to the Dock.
 
 ## 2. Import into Layout
@@ -580,7 +580,7 @@ import Dock from "@components/dock/Dock.svelte";
 </html>
 ```
 
-- Reference: [Github | Layout.astro](https://github.com/Kwensiu/mSpace/blob/main/src/layouts/Layout.astro#L162)
+- Reference: [Github | Layout.astro](https://github.com/Kwensiu/blog/blob/main/src/layouts/Layout.astro#L162)
 
 ---
 

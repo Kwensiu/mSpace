@@ -8,7 +8,7 @@
 
 如果你有任何想法，随便在issue或讨论里说。我的博客仓库没有规则，弄着玩的。
 
-::github{repo="kwensiu/mSpace"}
+::github{repo="kwensiu/blog"}
 
 
 > ### Sources of images used in this site
