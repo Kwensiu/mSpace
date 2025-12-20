@@ -46,8 +46,9 @@ src/components/dock/
 Create a `dock` folder in your project's `src/components/` directory and add the following two files:
 
 1. **Dock.svelte** - The main component of Dock, including UI and scrolling handling.
+- Here I post the **Complete** code for `Dock.svelte`
 
-```js title="Dock.svelet" collapse={2-64, 69-141, 145-169}
+```ts title="Dock.svelet" collapse={2-64, 69-141, 145-169}
 <script lang="ts">
 import Icon from "@iconify/svelte";
 import { url } from "@utils/url-utils.ts";
@@ -219,10 +220,13 @@ function navigateToAbout(event: Event) {
   }
 </style>
 ```
+
    - Reference: [Github | Dock.svelte](https://github.com/Kwensiu/mSpace/blob/main/src/components/dock/Dock.svelte)
 
 2. **DockSearch.svelte** - Search functionality component
-```js title="DockSearch.svelet" collapse={2-212, 216-221, 225-300, 304-321}
+- Also post the **Complete** code for `DockSearch.svelte` here.
+
+```ts title="DockSearch.svelet" collapse={2-212, 216-221, 225-300, 304-321}
 <script lang="ts">
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
@@ -587,7 +591,7 @@ import Dock from "@components/dock/Dock.svelte";
 
 The Dock component includes a configuration object that can be modified according to your website's structure and personal preferences:
 
-```js title="Dock.svelet" "150" ""/"" "/archive/" "/about/" startLineNumber=7
+```js title="Dock.svelet" "150" /"(/)"/ "/archive/" "/about/" startLineNumber=7
 // Configurable options...
 const config = {
     scrollThreshold: 150, //pixels

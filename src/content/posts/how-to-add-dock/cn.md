@@ -45,7 +45,9 @@ src/components/dock/
 在项目的 `src/components/` 目录下创建一个名为 `dock` 的文件夹(可选)，并添加以下两个文件：
 
 1. **Dock.svelte** - Dock 组件组件主体，包括UI显示与滚动处理
-```js title="Dock.svelet" collapse={2-64, 69-141, 145-169}
+- 下面是 `Dock.svelte` 的完整代码。
+
+```ts title="Dock.svelet" collapse={2-64, 69-141, 145-169}
 <script lang="ts">
 import Icon from "@iconify/svelte";
 import { url } from "@utils/url-utils.ts";
@@ -217,11 +219,13 @@ function navigateToAbout(event: Event) {
   }
 </style>
 ```
+
    - 参考: [Github | Dock.svelte](https://github.com/Kwensiu/mSpace/blob/main/src/components/dock/Dock.svelte)
 
 2. **DockSearch.svelte** - Dock 的搜索功能组件
+- 下面是 `DockSearch.svelte` 的完整代码。
 
-```js title="DockSearch.svelet" collapse={2-212, 216-221, 225-300, 304-321}
+```ts title="DockSearch.svelet" collapse={2-212, 216-221, 225-300, 304-321}
 <script lang="ts">
 import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
@@ -554,7 +558,9 @@ $: if (initialized && keyword) {
 1. 将 Dock 组件导入并添加到 Layout 文件（`src/layouts/Layout.astro`）：
 
 2. 在 `</body>` 前添加 `<Dock client:only="svelte" />`
-> 使用 `client:only="svelte"` 避免水合问题
+:::note
+使用 `client:only="svelte"` 避免水合问题
+:::
 
 ```js title="Layout.astro" ins={3, 11-12} showLineNumbers=false
 // ...
@@ -567,7 +573,7 @@ import Dock from "@components/dock/Dock.svelte";
         // ...
         <ConfigCarrier></ConfigCarrier>
         <slot />
-        // 添加Dock组件,同时避免水和问题
+        // 添加Dock组件,同时避免水合问题
         <Dock client:only="svelte" />
 
         <!-- increase ... -->
@@ -586,7 +592,7 @@ import Dock from "@components/dock/Dock.svelte";
 
 Dock 组件包含一个配置对象，可根据网站的结构和个人偏好进行修改：
 
-```js title="Dock.svelet" "150" ""/"" "/archive/" "/about/" startLineNumber=7
+```js title="Dock.svelet" "150" /"(/)"/ "/archive/" "/about/" startLineNumber=7
 // Configurable options...
 const config = {
     scrollThreshold: 150, //pixels
