@@ -11,6 +11,7 @@ interface Props {
 	description?: string;
 	imageUrl?: string;
 	enablePhotoswipe?: boolean;
+	fetchpriority?: "high" | "low" | "auto";
 }
 
 import { Image } from "astro:assets";
@@ -25,6 +26,7 @@ const {
 	description,
 	imageUrl,
 	enablePhotoswipe = false,
+	fetchpriority,
 } = Astro.props;
 const className = Astro.props.class;
 
@@ -72,7 +74,7 @@ const isBanner = id === "banner";
         format="webp"
         quality={80}
         loading={isBanner ? "eager" : "lazy"}
-        fetchpriority={isBanner ? "high" : undefined}
+        fetchpriority={fetchpriority || (isBanner ? "high" : undefined)}
         decoding="async"
     />}
     {!isLocal && <img 
@@ -81,7 +83,7 @@ const isBanner = id === "banner";
         class={imageClass} 
         style={imageStyle}
         loading={isBanner ? "eager" : "lazy"}
-        fetchpriority={isBanner ? "high" : undefined}
+        fetchpriority={fetchpriority || (isBanner ? "high" : undefined)}
         decoding="async"
     />}
 </div>
