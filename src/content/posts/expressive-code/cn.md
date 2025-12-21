@@ -11,7 +11,12 @@ draft: false
 lang: zh-CN
 hidden: true
 updated: 2025-12-18T13:58:53.755Z
+en: "expressive-code/en/"
 ---
+
+:::note
+This is a translated version.
+:::
 
 这里，我们将探索使用 [Expressive Code](https://expressive-code.com/) 的代码块外观。提供的示例基于官方文档，你可以参考官方文档获取更多详细信息。
 

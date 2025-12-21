@@ -8,7 +8,12 @@ draft: false
 lang: zh_CN
 updated: 2025-12-21T02:44:00.000Z
 hidden: true
+en: "markdown/en/"
 ---
+
+:::note
+This is a translated version.
+:::
 
 :::Warning
 我在翻译时发现有很多功能“似乎”没有正确实现，未知原因，故暂停翻译

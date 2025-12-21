@@ -4,15 +4,17 @@ published: 2024-05-01T00:00:00.000Z
 updated: 2025-12-18T13:58:53.773Z
 description: 在Fuwari中阅读有关Markdown功能的更多信息
 image: ''
-tags:
-  - 示例
-  - Markdown
-  - Fuwari
+tags: [Markdown, 博客, 示例, 演示]
 category: 示例
 draft: false
 lang: zh_CN
 hidden: true
+en: "markdown-extended/en/"
 ---
+
+:::note
+This is a translated version.
+:::
 
 ## GitHub 仓库卡片
 
