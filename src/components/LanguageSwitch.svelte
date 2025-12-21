@@ -63,7 +63,22 @@ if (typeof window !== "undefined") {
 	});
 }
 
+let isPanelVisible = $state(false);
+
+function togglePanel() {
+	isPanelVisible = !isPanelVisible;
+	const panel = document.querySelector("#language-panel");
+	if (panel) {
+		if (isPanelVisible) {
+			panel.classList.remove("float-panel-closed");
+		} else {
+			panel.classList.add("float-panel-closed");
+		}
+	}
+}
+
 function showPanel() {
+	isPanelVisible = true;
 	const panel = document.querySelector("#language-panel");
 	if (panel) {
 		panel.classList.remove("float-panel-closed");
@@ -71,6 +86,7 @@ function showPanel() {
 }
 
 function hidePanel() {
+	isPanelVisible = false;
 	const panel = document.querySelector("#language-panel");
 	if (panel) {
 		panel.classList.add("float-panel-closed");
@@ -81,17 +97,19 @@ function hidePanel() {
 <!-- z-50 make the panel higher than other float panels -->
 <div class="relative z-50" role="menu" tabindex="-1" onmouseleave={hidePanel}>
 	<button
+		id="language-switch"
 		aria-label={buttonLabel}
 		role="menuitem"
 		class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 flex items-center justify-center"
 		onmouseenter={showPanel}
+		onclick={togglePanel}
 	>
 		<Icon icon="material-symbols:language" class="text-[1.25rem]" />
 	</button>
 
 	<div
 		id="language-panel"
-		class="hidden lg:block absolute transition float-panel-closed top-11 -right-2 pt-5"
+		class="absolute transition float-panel-closed top-11 pt-5 z-50 lg:-right-2 right-0"
 	>
 		<div class="card-base float-panel p-2 min-w-48">
 			<div class="font-bold text-neutral-900 dark:text-neutral-100 px-3 py-1 mb-1">
