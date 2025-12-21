@@ -10,7 +10,7 @@ category: 示例
 draft: false
 lang: zh_CN
 updated: 2025-12-18
-en: "expressive-code/en/"
+en: 'expressive-code/en/'
 ---
 
 :::note

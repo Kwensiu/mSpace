@@ -29,6 +29,7 @@ export const en: Translation = {
 	[Key.lightMode]: "Light",
 	[Key.darkMode]: "Dark",
 	[Key.systemMode]: "System",
+	[Key.language]: "Language",
 
 	[Key.more]: "More",
 

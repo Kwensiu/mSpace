@@ -23,6 +23,10 @@ onMount(() => {
 		applyThemeToDocument(mode);
 	};
 	darkModePreference.addEventListener("change", changeThemeWhenSchemeChanged);
+
+	// Import global i18n functions which will handle language changes
+	import("@utils/global-i18n");
+
 	return () => {
 		darkModePreference.removeEventListener(
 			"change",

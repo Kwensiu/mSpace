@@ -3,6 +3,7 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 import Icon from "@iconify/svelte";
 import { getDefaultHue, getHue, setHue } from "@utils/setting-utils";
+import { onMount } from "svelte";
 
 let hue = getHue();
 const defaultHue = getDefaultHue();
@@ -14,6 +15,11 @@ function resetHue() {
 $: if (hue || hue === 0) {
 	setHue(hue);
 }
+
+onMount(() => {
+	// Import global i18n functions which will handle language changes
+	import("@utils/global-i18n");
+});
 </script>
 
 <div id="display-setting" class="float-panel float-panel-closed absolute transition-all w-80 right-4 px-4 py-4">
