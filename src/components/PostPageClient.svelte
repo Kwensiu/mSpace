@@ -51,7 +51,7 @@ function filterPostsByLanguage() {
 	const normalizedCurrentLang = normalizeLang(currentLang);
 
 	// Find all post cards on the page
-	const postCards = document.querySelectorAll(".post-card");
+	const postCards = document.querySelectorAll(".post-card-wrapper");
 
 	postCards.forEach((card) => {
 		const langAttr = card.getAttribute("data-lang");
@@ -94,9 +94,20 @@ function filterPostsByLanguage() {
 
 	// Check if any posts are visible
 	const visiblePosts = document.querySelectorAll(
-		'.post-card[style*="display: block"]',
+		'.post-card-wrapper[style*="display: block"]',
 	);
 	const noContentMessage = document.getElementById("no-content-message");
+
+	// Remove any existing last-visible class from all posts
+	document.querySelectorAll('.post-card-wrapper.last-visible').forEach(card => {
+		card.classList.remove('last-visible');
+	});
+
+	// Add last-visible class to the last visible post
+	if (visiblePosts.length > 0) {
+		const lastVisiblePost = visiblePosts[visiblePosts.length - 1] as HTMLElement;
+		lastVisiblePost.classList.add('last-visible');
+	}
 
 	if (visiblePosts.length === 0 && noContentMessage) {
 		noContentMessage.style.display = "block";

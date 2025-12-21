@@ -162,3 +162,25 @@
     }
   }
 }
+
+/* PostCard 分隔线样式 */
+.post-card-wrapper:not(.last-visible)::after {
+    content: '';
+    display: block;
+    width: calc(100% - 48px);
+    height: 1px;
+    margin: 0 24px;
+    border-top: 1px dashed rgba(0, 0, 0, 0.1);
+}
+
+/* 在暗色模式下使用不同的颜色 */
+.dark .post-card-wrapper:not(.last-visible)::after {
+    border-top-color: rgba(255, 255, 255, 0.15);
+}
+
+/* 在桌面端隐藏分隔线 */
+@media (min-width: 768px) {
+    .post-card-wrapper:not(.last-visible)::after {
+        display: none;
+    }
+}
