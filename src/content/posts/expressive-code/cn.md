@@ -8,8 +8,7 @@ tags:
   - 演示
 category: 示例
 draft: false
-lang: zh-CN
-hidden: true
+lang: zh_CN
 updated: 2025-12-18T13:58:53.755Z
 en: "expressive-code/en/"
 ---

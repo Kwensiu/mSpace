@@ -7,7 +7,7 @@ tags:
   - 视频
 category: 示例
 draft: false
-hidden: true
+hidden: "part"
 updated: 2025-12-18T13:58:53.788Z
 ---
 

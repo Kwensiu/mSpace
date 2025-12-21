@@ -7,7 +7,6 @@ category: 示例
 draft: false
 lang: zh_CN
 updated: 2025-12-21T02:44:00.000Z
-hidden: true
 en: "markdown/en/"
 ---
 

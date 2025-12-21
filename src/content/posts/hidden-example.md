@@ -8,13 +8,13 @@ tags:
 category: 示例
 draft: false
 lang: zh_CN
-hidden: true
+hidden: "part"
 updated: 2025-12-18T13:58:53.768Z
 ---
 
 # 这是一篇隐藏文章
 
-这篇文章设置了 `hidden: true` 属性，因此它不会在主页显示，但你仍然可以在[归档页面](../../archive/)中找到它。
+这篇文章设置了 `hidden: "all"` 属性，因此它完全隐藏，只能通过直接链接访问。
 
 这种功能适用于：
 - 特殊用途的文章
@@ -30,10 +30,13 @@ updated: 2025-12-18T13:58:53.768Z
 title: 文章标题
 published: 2024-01-01
 draft: false
-hidden: true  # 添加这个属性
+hidden: "all"  # 完全隐藏，只能通过直接链接访问
 ---
 
 文章内容...
 ```
 
-这样文章就不会在主页显示，但仍可通过归档页面或直接访问URL查看。
+hidden属性有3个值：
+- `"none"`: 默认值，不隐藏
+- `"part"`: 只在主页隐藏，在归档页面显示
+- `"all"`: 完全隐藏，只能通过直接链接访问

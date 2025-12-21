@@ -8,7 +8,6 @@ tags: [Markdown, 博客, 示例, 演示]
 category: 示例
 draft: false
 lang: en
-hidden: true
 cn: "markdown-extended/cn/"
 ---
 

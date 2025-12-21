@@ -6,7 +6,7 @@ image: ''
 tags: [隐藏]
 category: ''
 draft: true
-hidden: true
+hidden: "all"
 ---
 
 # OK, it's fine. Let's watch a video

@@ -5,9 +5,8 @@ description: A simple example of a Markdown blog post.
 tags: [Markdown, 博客, 演示]
 category: 示例
 draft: false
-lang: zh_CN
+lang: en
 updated: 2023-10-01
-hidden: true
 cn: "markdown/cn/"
 ---
 
