@@ -9,7 +9,7 @@ tags:
 category: 示例
 draft: false
 lang: zh_CN
-updated: 2025-12-18T13:58:53.755Z
+updated: 2025-12-18
 en: "expressive-code/en/"
 ---
 

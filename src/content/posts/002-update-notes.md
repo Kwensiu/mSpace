@@ -1,7 +1,7 @@
 ---
 title: 博客更新日志
-published: 2025-12-18T00:00:00.000Z
-updated: 2025-12-20T00:07:16.000Z
+published: 2025-12-18
+updated: 2025-12-21
 description: 博客前后端更新记录
 image: ''
 tags:
@@ -18,6 +18,56 @@ draft: false
 ::github{repo="kwensiu/blog"}
 
 ---
+
+<details>
+<summary>v1.0.22 - 2025-12-21 [完善i18n]|[Writing页面]|[hidden重构]|[...]</summary>
+
+fix(posts): 调整文章的hidden与lang字段，更新部分文档  
+
+feat(posts): 为hidden字段添加更多可选项  
+- 将 `hidden` 字段类型从 boolean 更改为枚举：`"none" | "part" | "all"`
+  - "none": 为默认回退值，不隐藏
+  - "part": 不显示在主页，归档不重要贴文
+  - "all": 不显示在主页与归档，通过搜索、URL等依然可以访问贴文
+- 引入 `getArchivePosts` 和 `getArchivePostsList` 函数，用于处理归档页面中的文章
+- 调整客户端过滤以适应新的隐藏值
+- 在归档页面中，将 `getSortedPostsList` 重命名并更新其用法为 `getArchivePostsList`
+
+fix(i18n): 将简体中文语言键的更正为 zh_CN，避免语言检测和选择出现不匹配的问题  
+
+feat(i18n): 实现多语言支持及语言过滤逻辑  
+
+- 支持从浏览器设置中检测语言
+- 将默认语言配置为简体中文 (zh_CN)
+- 添加语言切换器组件，带有图标和切换列表
+  - 添加语言切换事件监听器和 DOM 更新
+  - 实现客户端按语言过滤文章的功能，
+  - 添加区域变体的语言规范化映射
+
+- 更新 ArchivePanel，使其能够按语言和隐藏状态过滤文章
+- 修改文章组件，使其能够处理语言和隐藏的 frontmatter 字段
+- 调整文章卡片的样式
+<div class="text-white/60">⚠️ 我的博客自定义了过滤逻辑，en文章将同时被展示在除了zh_CN以外的语言</div>
+
+docs(posts): 更新项目引用链接  
+
+feat(config): 更新站点配置为新域名和路径  
+
+refactor(editor): 调整写作编辑器保存逻辑与上传接口地址  
+
+feat(page): 实验性添加 "Writing" 页面  
+
+feat(ImageWrapper): 为图片添加 fetchpriority 属性支持  
+
+其他:  
+
+- 更新 VS Code 扩展配置
+- 修改部分贴文 lang & hidden 字段，
+- 添加markdown.md、markdown-extended.md 以及 expressive-code.md原文档以及引用
+- 重新开启颜色选择按钮
+- 更新文档
+
+</details>
 
 <details>
 <summary>v1.0.18 - 2025-12-20</summary>

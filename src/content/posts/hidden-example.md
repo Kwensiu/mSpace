@@ -9,7 +9,7 @@ category: 示例
 draft: false
 lang: zh_CN
 hidden: "part"
-updated: 2025-12-18T13:58:53.768Z
+updated: 2025-12-18
 ---
 
 # 这是一篇隐藏文章

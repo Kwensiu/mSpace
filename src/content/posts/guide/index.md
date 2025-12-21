@@ -7,7 +7,7 @@ tags: ["Fuwari", "博客", "自定义"]
 category: 指南
 draft: false
 lang: zh_CN
-updated: 2025-12-18T13:58:53.762Z
+updated: 2025-12-18
 ---
 
 > 图片来源: [image.civitai.com](https://image.civitai.com/xG1nkqKTMzGDvpLrqFT7WA/208fc754-890d-4adb-9753-2c963332675d/width=2048/01651-1456859105-(colour_1.5),girl,_Blue,yellow,green,cyan,purple,red,pink,_best,8k,UHD,masterpiece,male%20focus,%201boy,gloves,%20ponytail,%20long%20hair,.jpeg)
@@ -27,7 +27,7 @@ category: Front-end
 draft: false  //
 pin: false //顶置开关
 pinOrder: 0  //顶置顺序
-updated: 2025-12-18T13:58:53.762Z //贴文更新时间
+updated: 2025-12-18 //贴文更新时间
 ---
 ```
 

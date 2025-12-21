@@ -8,7 +8,7 @@ category: '开发'
 draft: false 
 lang: en
 cn: "how-to-add-dock/cn/"
-updated: 2025-12-21T02:44:01.000Z
+updated: 2025-12-21
 ---
 
 _Feel free to point out any issues._

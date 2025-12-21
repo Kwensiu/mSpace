@@ -10,7 +10,7 @@ tags:
 category: 开发
 draft: false
 lang: 'zh_CN'
-updated: 2025-12-18T15:17:16.000Z
+updated: 2025-12-18
 ---
 
 # Biome 格式化命令记录
