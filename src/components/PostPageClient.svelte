@@ -99,27 +99,31 @@ function filterPostsByLanguage() {
 	const noContentMessage = document.getElementById("no-content-message");
 
 	// Remove any existing last-visible class from all posts
-	document.querySelectorAll('.post-card-wrapper.last-visible').forEach(card => {
-		card.classList.remove('last-visible');
-	});
+	document
+		.querySelectorAll(".post-card-wrapper.last-visible")
+		.forEach((card) => {
+			card.classList.remove("last-visible");
+		});
 
 	// Add last-visible class to the last visible post
 	if (visiblePosts.length > 0) {
-		const lastVisiblePost = visiblePosts[visiblePosts.length - 1] as HTMLElement;
-		lastVisiblePost.classList.add('last-visible');
+		const lastVisiblePost = visiblePosts[
+			visiblePosts.length - 1
+		] as HTMLElement;
+		lastVisiblePost.classList.add("last-visible");
 	}
 
-	if (visiblePosts.length === 0 && noContentMessage) {
-		noContentMessage.style.display = "block";
-	} else if (noContentMessage) {
-		noContentMessage.style.display = "none";
+	// Show or hide no content message
+	if (noContentMessage) {
+		noContentMessage.style.display = visiblePosts ? "none" : "block";
 	}
 }
 
 function setupLanguageListener() {
 	// Listen for language changes
-	window.addEventListener("languagechange", (event: any) => {
-		currentLang = event.detail.language;
+	window.addEventListener("languagechange", (event: Event) => {
+		const customEvent = event as CustomEvent<{ language: string }>;
+		currentLang = customEvent.detail.language;
 		filterPostsByLanguage();
 	});
 }

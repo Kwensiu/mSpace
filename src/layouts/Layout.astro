@@ -209,7 +209,6 @@ const bannerOffset =
 
 <script>
 import 'overlayscrollbars/overlayscrollbars.css';
-// Preload OverlayScrollbars to avoid render-blocking
 import {
 	OverlayScrollbars,
 	// ScrollbarsHidingPlugin,
@@ -259,15 +258,13 @@ function disableAnimation() {
 	document.head.appendChild(css)
 
 	return () => {
-		// Force restyle using requestAnimationFrame to avoid forced reflow
-		requestAnimationFrame(() => {
-			window.getComputedStyle(document.body);
+		// Force restyle
+		;(() => window.getComputedStyle(document.body))()
+
 			// Wait for next tick before removing
 			setTimeout(() => {
 				document.head.removeChild(css)
-			}, 1);
-		})
-	}
+		}, 1)
 	}
 }
 */
@@ -554,10 +551,10 @@ function createPhotoSwipe() {
 		imageClickAction: 'close',
 		tapAction: 'close',
 		doubleTapAction: 'zoom',
-		showAnimationDuration: 333, // 淡入动画
-		hideAnimationDuration: 333, // 淡出动画
-		showHideAnimationType: 'fade', // 淡入淡出动画
-		bgOpacity: 0.9, // 背景透明度
+		showAnimationDuration: 333,
+		hideAnimationDuration: 333,
+		showHideAnimationType: 'fade',
+		bgOpacity: 0.9,
 	})
 
 	lightbox.addFilter("domItemData", (itemData, element) => {
@@ -568,18 +565,18 @@ function createPhotoSwipe() {
 			let width = Number(element.dataset.pswpWidth || 0)
 			let height = Number(element.dataset.pswpHeight || 0)
 
-			// 如果data属性不可用，尝试使用图片的自然尺寸
-			if (!width || !height) {
-				// 检查图片是否已经完全加载
-				if (element.complete && element.naturalWidth > 0 && element.naturalHeight > 0) {
-					width = element.naturalWidth
-					height = element.naturalHeight
-				} else {
-					// 图片还没加载完成，使用元素的当前尺寸或合理的默认值
-					width = Math.max(element.width || 400, 200)
-					height = Math.max(element.height || 300, 150)
-				}
-			}
+			// // 如果data属性不可用，尝试使用图片的自然尺寸
+			// if (!width || !height) {
+			// 	// 检查图片是否已经完全加载
+			// 	if (element.complete && element.naturalWidth > 0 && element.naturalHeight > 0) {
+			// 		width = element.naturalWidth
+			// 		height = element.naturalHeight
+			// 	} else {
+			// 		// 图片还没加载完成，使用元素的当前尺寸或合理的默认值
+			// 		width = Math.max(element.width || 400, 200)
+			// 		height = Math.max(element.height || 300, 150)
+			// 	}
+			// }
 
 			itemData.w = width
 			itemData.h = height
