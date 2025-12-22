@@ -20,6 +20,32 @@ draft: false
 ---
 
 <details>
+<summary>v1.0.24 - 2025-12-23</summary>
+
+feat(expressive-code): 新增 GitHub 用户卡片样式  
+
+- 使用新函数 GithubUserCardComponent 实现 Github 用户卡片
+- 默认语法为 ::github{user="username"}
+- 更新了 markdown-extended.md 介绍用法
+- 为 markdown-extend.styl 添加相应样式
+- 为 astro.config.mjs 导入组件
+
+</details>
+
+<details>
+<summary>v1.0.23 - 2025-12-22</summary>
+
+style(css): 调整 navbar 和 markdown 样式细节  
+
+feat(PostCard): 修复PostCard样式与分隔线显示  
+
+feat(components): 修复移动设备无法打开语言切换菜单  
+
+fix(pnpm): 修复莫名奇妙的 @iconify/svelte 版本问题  
+
+</details>
+
+<details>
 <summary>v1.0.22 - 2025-12-21 [完善i18n]|[Writing页面]|[hidden重构]|[...]</summary>
 
 fix(posts): 调整文章的hidden与lang字段，更新部分文档  
@@ -72,7 +98,7 @@ feat(ImageWrapper): 为图片添加 fetchpriority 属性支持
 <details>
 <summary>v1.0.18 - 2025-12-20</summary>
 
-feat(sytles): 完善文本横线的显示，用伪元素方式解决链接文本的虚线闪烁问题
+feat(sytles): 完善文本横线的显示，用伪元素方式解决链接文本的虚线闪烁问题  
 
 - 同时为extensions.json添加建议拓展方便同步
 
@@ -104,6 +130,7 @@ feat(sytles): 完善文本横线的显示，用伪元素方式解决链接文本
 <summary>v1.0.15 - 2025-12-20</summary>
 
 feat(PostMeta): 添加文章多语言版本支持与语言切换按钮  
+
 docs(dock-component): 添加 Dock 组件集成指南的中英文文档  
 
 - 同时优化了"更新日期"组件的显示
@@ -113,7 +140,7 @@ docs(dock-component): 添加 Dock 组件集成指南的中英文文档
 <details>
 <summary>v1.0.14 - 2025-12-19 - [Dock重构]</summary>
 
-feat(dock): 重构 Dock 相关组件并增强可配置性，完善CN/EN文档介绍Dock组件
+feat(dock): 重构 Dock 相关组件并增强可配置性，完善CN/EN文档介绍Dock组件  
 
 - 引入 config 对象统一管理滚动阈值和导航路径，提升组件灵活性
 - 简化滚动逻辑，仅在滚动超过设定阈值时显示 Dock
@@ -126,10 +153,13 @@ feat(dock): 重构 Dock 相关组件并增强可配置性，完善CN/EN文档介
 <details>
 <summary>v1.0.13 - 2025-12-18 </summary>
 
-feat(ImageWrapper): 修复大图查看下意外出现的透明容器导致的放大问题
-feat(image-viewer): 尝试修复图片查看器滚轮会上下滑动而非缩放的问题
-fix: 执行命令 `pnpm exec biome check --write --unsafe` 格式化
-posts:为biome-formatter贴文添加cover
+feat(ImageWrapper): 修复大图查看下意外出现的透明容器导致的放大问题  
+
+feat(image-viewer): 尝试修复图片查看器滚轮会上下滑动而非缩放的问题  
+
+fix: 执行命令 `pnpm exec biome check --write --unsafe` 格式化  
+
+posts:为biome-formatter贴文添加cover  
 
 </details>
 
@@ -137,6 +167,7 @@ posts:为biome-formatter贴文添加cover
 <summary>v1.0.12 - 2025-12-18 </summary>
 
 refactor(dock): 将 Dock 组件的*颜色*与*亮暗色*按钮改为*归档*与*关于*页面  
+
 feat(image-viewer): 尝试修复图片查看器滚轮会上下滑动而非缩放的问题  
 
 </details>
@@ -161,8 +192,11 @@ feat(post): 调整文章卡片与元数据显示样式及布局
 <summary>v1.0.10 - 2025-12-18 - [大图查看]</summary>
 
 feat(image): 为 ImageWrapper 添加 PhotoSwipe 支持及相关属性  
+
 feat(layout): 扩展 PhotoSwipe 配置并支持 Banner 图片展示  
+
 feat(posts): 添加updated字段显示贴文更新日期  
+
 fix(posts): 修改文章页面底部导航按钮布局  
 
 </details>
@@ -171,6 +205,7 @@ fix(posts): 修改文章页面底部导航按钮布局
 <summary>v1.0.9 - 2025-12-18</summary>
 
 fix(Dock): 调整Dock组件隐藏状态，调整Dock暗色以及搜索栏背景色，以提高可视度  
+
 feat(posts): 重命名文章文件名并调整分类标签  
 - 同时调整了部分页面的Tag与分类  
 
@@ -180,10 +215,15 @@ feat(posts): 重命名文章文件名并调整分类标签
 <summary>v1.0.8 - 2025-12-18</summary>
 
 docs: 添加 Biome 格式化代码记录文章  
+
 docs: 添加更新日志板块，并为导航页添加链接  
+
 docs: 更新软件推荐贴文内容  
+
 refactor(dock): run `pnpm format`  
+
 refactor(dock): 手动执行Biome相关命令格式化代码  
+
 
 </details>
 

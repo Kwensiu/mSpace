@@ -10,6 +10,8 @@
 
 ::github{repo="kwensiu/blog"}
 
+::github{username="kwensiu"}
+
 
 > ### Sources of images used in this site
 > - [Piapro](https://piapro.net/)

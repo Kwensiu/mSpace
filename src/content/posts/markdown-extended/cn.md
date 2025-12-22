@@ -17,7 +17,7 @@ This is a translated version.
 
 ## GitHub 仓库卡片
 
-你可以添加链接到 GitHub 仓库的动态卡片，页面加载时，仓库信息会通过 GitHub API 拉取。  
+你可以添加链接创建 GitHub 仓库的动态卡片，页面加载时，仓库信息会通过 GitHub API 拉取。  
 
 ::github{repo="Fabrizz/MMM-OnSpotify"}
 
@@ -25,6 +25,18 @@ This is a translated version.
 
 ```markdown
 ::github{repo="saicaca/fuwari"}
+```
+
+## GitHub 用户卡片
+
+与仓库卡片相似，你可以通过添加链接创建 GitHub 用户卡片。  
+
+::github{user="torvalds"}
+
+使用代码 `::github{user="username"}` 创建 GitHub 用户卡片。
+
+```markdown
+::github{user="torvalds"}
 ```
 
 ## 警示框（Admonitions）

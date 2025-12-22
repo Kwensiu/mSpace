@@ -26,6 +26,18 @@ Create a GitHub repository card with the code `::github{repo="<owner>/<repo>"}`.
 ::github{repo="saicaca/fuwari"}
 ```
 
+## GitHub User Cards
+
+You can add dynamic cards that link to GitHub users, on page load, the user information is pulled from the GitHub API. 
+
+::github{user="torvalds"}
+
+Create a GitHub user card with the code `::github{user="username"}`.
+
+```markdown
+::github{user="username"}
+```
+
 ## Admonitions
 
 Following types of admonitions are supported: `note` `tip` `important` `warning` `caution`
