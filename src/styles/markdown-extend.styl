@@ -231,6 +231,169 @@ a.card-github.fetch-error
   pointer-events: all
   opacity: 1
 
+.card-github, .gc-description, .gc-titlebar, .gc-stars, .gc-forks, .gc-license, .gc-avatar, .github-logo
+  transition-property: all
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+  transition-duration: 0.15s
+
+// GitHub User Card Styles
+a.card-github-user
+  display: block
+  background: var(--license-block-bg)
+  position: relative
+  margin: 0.5rem 0
+  padding: 1.1rem 1.5rem 1.1rem 1.5rem
+  color: var(--tw-prose-body)
+  border-radius: var(--radius-large)
+  text-decoration-thickness: 0px
+  text-decoration-line: none
+
+  &:hover
+    background-color: var(--btn-regular-bg-hover)
+
+    .gu-titlebar
+      color: var(--btn-content)
+
+    .gu-followers, .gu-following, .gu-repos
+      color: var(--tw-prose-headings)
+
+      &:before
+        background-color: var(--tw-prose-headings)
+
+  &:active
+    scale: .98
+    background-color: var(--btn-regular-bg-active);
+
+  .gu-titlebar
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-bottom: 0.5rem
+    color: var(--tw-prose-headings)
+    font-size: 1.25rem
+    font-weight: 500
+
+    .gu-titlebar-left
+      display: flex
+      flex-flow: row nowrap
+      gap: 0.5rem
+
+    .gu-user
+      display: flex
+      flex-flow: row nowrap
+      gap: 0.5rem
+      align-items: center
+
+    .gu-user-info
+      display: flex
+      flex-direction: row  // 水平排列
+      align-items: center  // 垂直居中
+      gap: 1rem  // 间距
+
+    .gu-displayname
+      font-weight: bold
+
+    .gu-username
+      font-weight: 300
+      font-size: 1rem
+      opacity: 0.7
+      margin-top: 0.1rem;
+
+    .github-logo
+      font-size: 1.25rem
+
+      &:before
+        background-color: var(--tw-prose-headings)
+        margin-right: 0
+        mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='31' height='32' viewBox='0 0 496 512'%3E%3Cpath fill='%23a1f7cb' d='M165.9 397.4c0 2-2.3 3.6-5.2 3.6c-3.3.3-5.6-1.3-5.6-3.6c0-2 2.3-3.6 5.2-3.6c3-.3 5.6 1.3 5.6 3.6m-31.1-4.5c-.7 2 1.3 4.3 4.3 4.9c2.6 1 5.6 0 6.2-2s-1.3-4.3-4.3-5.2c-2.6-.7-5.5.3-6.2 2.3m44.2-1.7c-2.9.7-4.9 2.6-4.6 4.9c.3 2 2.9 3.3 5.9 2.6c2.9-.7 4.9-2.6 4.6-4.6c-.3-1.9-3-3.2-5.9-2.9M244.8 8C106.1 8 0 113.3 0 252c0 110.9 69.8 205.8 169.5 239.2c12.8 2.3 17.3-5.6 17.3-12.1c0-6.2-.3-40.4-.3-61.4c0 0-70 15-84.7-29.8c0 0-11.4-29.1-27.8-36.6c0 0-22.9-15.7 1.6-15.4c0 0 24.9 2 38.6 25.8c21.9 38.6 58.6 27.5 72.9 20.9c2.3-16 8.8-27.1 16-33.7c-55.9-6.2-112.3-14.3-112.3-110.5c0-27.5 7.6-41.3 23.6-58.9c-2.6-6.5-11.1-33.3 2.6-67.9c20.9-6.5 69 27 69 27c20-5.6 41.5-8.5 62.8-8.5s42.8 2.9 62.8 8.5c0 0 48.1-33.6 69-27c13.7 34.7 5.2 61.4 2.6 67.9c16 17.7 25.8 31.5 25.8 58.9c0 96.5-58.9 104.2-114.8 110.5c9.2 7.9 17 22.9 17 46.4c0 33.7-.3 75.4-.3 83.6c0 6.5 4.6 14.4 17.3 12.1C428.2 457.8 496 362.9 496 252C496 113.3 383.5 8 244.8 8M97.2 352.9c-1.3 1-1 3.3.7 5.2c1.6 1.6 3.9 2.3 5.2 1c1.3-1 1-3.3-.7-5.2c-1.6-1.6-3.9-2.3-5.2-1m-10.8-8.1c-.7 1.3.3 2.9 2.3 3.9c1.6 1 3.6.7 4.3-.7c.7-1.3-.3-2.9-2.3-3.9c-2-.6-3.6-.3-4.3.7m32.4 35.6c-1.6 1.3-1 4.3 1.3 6.2c2.3 2.3 5.2 2.6 6.5 1c1.3-1.3.7-4.3-1.3-6.2c-2.2-2.3-5.2-2.6-6.5-1m-11.4-14.7c-1.6 1-1.6 3.6 0 5.9c1.6 2.3 4.3 3.3 5.6 2.3c1.6-1.3 1.6-3.9 0-6.2c-1.4-2.3-4-3.3-5.6-2'/%3E%3C/svg%3E")
+
+  .gu-avatar
+    display: block
+    overflow: hidden
+    width: 1.5rem
+    height: 1.5rem
+    margin-top: -0.1rem
+    background-color: var(--primary)
+    background-size: cover
+    border-radius: 50%
+
+  .gu-bio
+    margin-bottom: 0.7rem
+    font-size: 1rem
+    font-weight: 300
+    line-height: 1.5rem
+    color: var(--tw-prose-body)
+
+  .gu-stats
+    display: flex
+    flex-flow: row nowrap
+    gap: 1.5rem
+    color: var(--tw-prose-body)
+    width: fit-content
+
+  .gu-followers, .gu-following, .gu-repos, .github-logo
+    font-weight: 500
+    font-size: 0.875rem
+    opacity: 0.9
+
+    &:before
+      content: ' '
+      display: inline-block
+      height: 1.3em
+      width: 1.3em
+      margin-right: .4rem
+      vertical-align: -.24em
+      font-size: inherit
+      background-color: var(--tw-prose-body)
+      overflow: visible
+      mask-size: contain
+      mask-position: center
+      mask-repeat: no-repeat
+      transition-property: background-color, background;
+      transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+      transition-duration: 0.15s
+
+  .gu-followers
+    &:before
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'%3E%3Cpath d='m8 14.25.345.666a.75.75 0 0 1-.69 0l-.008-.004-.018-.01a7.152 7.152 0 0 1-.31-.17 22.055 22.055 0 0 1-3.434-2.414C2.045 10.731 0 8.35 0 5.5 0 2.836 2.086 1 4.25 1 5.797 1 7.153 1.802 8 3.02 8.847 1.802 10.203 1 11.75 1 13.914 1 16 2.836 16 5.5c0 2.85-2.045 5.231-3.885 6.818a22.066 22.066 0 0 1-3.744 2.584l-.018.01-.006.003h-.002ZM4.25 2.5c-1.336 0-2.75 1.164-2.75 3 0 2.15 1.58 4.144 3.365 5.682A20.58 20.58 0 0 0 8 13.393a20.58 20.58 0 0 0 3.135-2.211C12.92 9.644 14.5 7.65 14.5 5.5c0-1.836-1.414-3-2.75-3-1.373 0-2.609.986-3.029 2.456a.749.749 0 0 1-1.442 0C6.859 3.486 5.623 2.5 4.25 2.5Z'%3E%3C/path%3E%3C/svg%3E")
+
+  .gu-following
+    &:before
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'%3E%3Cpath d='M8 16a2 2 0 0 0 1.985-1.75c.017-.137-.097-.25-.235-.25h-3.5c-.138 0-.252.113-.235.25A2 2 0 0 0 8 16ZM3 5a5 5 0 0 1 10 0v2.947c0 .05.015.098.042.139l1.703 2.555A1.519 1.519 0 0 1 13.482 13H2.518a1.516 1.516 0 0 1-1.263-2.36l1.703-2.554A.255.255 0 0 0 3 7.947Zm5-3.5A3.5 3.5 0 0 0 4.5 5v2.947c0 .346-.102.683-.294.97l-1.703 2.556a.017.017 0 0 0-.003.01l.001.006c0 .002.002.004.004.006l.006.004.007.001h10.964l.007-.001.006-.004.004-.006.001-.007a.017.017 0 0 0-.003-.01l-1.703-2.554a1.745 1.745 0 0 1-.294-.97V5A3.5 3.5 0 0 0 8 1.5Z'%3E%3C/path%3E%3C/svg%3E")
+
+  .gu-repos
+    &:before
+      mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' width='16' height='16'%3E%3Cpath d='M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z'%3E%3C/path%3E%3C/svg%3E")
+
+a.card-github-user.fetch-waiting
+  pointer-events: none
+  opacity: 0.7
+  transition: opacity 0.15s ease-in-out
+
+  .gu-bio, .gu-stats, .gu-avatar
+    background-color: var(--tw-prose-body)
+    color: transparent
+    opacity: 0.5
+    animation: pulsate 2s infinite linear
+    user-select: none
+
+    &:before
+      background-color: transparent
+
+  .gu-bio, .gu-stats, .gu-user-info
+    border-radius: 0.5rem
+
+a.card-github-user.fetch-error
+  pointer-events: all
+  opacity: 1
+
+.card-github-user, .gu-bio, .gu-titlebar, .gu-followers, .gu-following, .gu-repos, .gu-avatar, .github-logo
+  transition-property: all
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
+  transition-duration: 0.15s
+
+
+
 @keyframes pulsate
   0%
     opacity: 0.15
@@ -238,8 +401,3 @@ a.card-github.fetch-error
     opacity: 0.25
   100%
     opacity: 0.15
-
-.card-github, .gc-description, .gc-titlebar, .gc-stars, .gc-forks, .gc-license, .gc-avatar, .github-logo
-  transition-property: all
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1)
-  transition-duration: 0.15s
