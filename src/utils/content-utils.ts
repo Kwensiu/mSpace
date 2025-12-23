@@ -50,7 +50,9 @@ export async function getSortedPosts() {
 // Get the articles displayed on the homepage (excluding fully hidden articles)
 export async function getVisiblePosts() {
 	const allPosts = await getRawSortedPosts();
-	const visiblePosts = allPosts.filter((post) => post.data.hidden !== "all");
+	const visiblePosts = allPosts.filter((post) => 
+		post.data.hidden !== "all" && post.data.hidden !== "part"
+	);
 
 	for (let i = 1; i < visiblePosts.length; i++) {
 		visiblePosts[i].data.nextSlug = visiblePosts[i - 1].slug;
