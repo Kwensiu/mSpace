@@ -1,7 +1,7 @@
 ---
 title: 优雅地使用Scoop
 published: 2025-12-26
-updated: 2025-12-26
+updated: 2025-12-27
 description: '介绍一些近一年使用Scoop的心得'
 image: ''
 tags: [Scoop, 软件, 开发]
@@ -19,10 +19,10 @@ hidden: none
 > 
 > Scoop 允许您通过命令行安装你熟悉和喜爱的程序，且几乎没有任何障碍:
 > 
-> - 消除安装时的权限弹  
+> - 消除安装时的权限弹窗  
 > - 隐藏GUI向导式安装程序  
 > - 防止安装大量程序后对 PATH 的污染  
-> - 避免安装和卸载程序带来的残留和意外副作用  
+> - 避免安装和卸载程序带来的意外残留和副作用  
 > - 自动查找并安装依赖项  
 > - 自动执行所有额外的设置步骤以确保程序可用  
 
@@ -51,6 +51,8 @@ Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 # 这段便是Scoop本体的安装命令
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
+<div class="custom-bl"></div>
+
 只需两步就能将Scoop安装在默认的系统盘下了，路径为 `$env:USERPROFILE\scoop`。  
 
 或许你不喜欢安装在C盘。的确，通过Scoop安装的软件，实际上在任何位置都能被正确调用。  
@@ -62,22 +64,21 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
 ### Scoop是如何被安装的？
 
+这是Scoop的安装命令：
+
 ```powershell
 Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 ```
 
-1. `Invoke-RestMethod`
-
+1. `Invoke-RestMethod`：  
 用于向指定的 URI 发送 HTTP/HTTPS 请求，并将返回的 **结构化数据** 解析成Powershell易于处理的对象。
-
-2. `-Uri https://get.scoop.sh`  
-
+2. `-Uri https://get.scoop.sh`：  
 不难看出是指定向get.scoop.sh发送请求。通过查看链接内容可知，其实际上指向了Scoop官方仓库的 **master** 分支下的 `install.ps1`，也就是Scoop的安装脚本。
-
-1. 管道 `|` 是 Powershell 用于将前一个命令的输出内容输入给后一个命令的标识符。  
-2. `Invoke-Expression`
-
+1. 管道 `|`：Powershell 用于将前一个命令的输出内容输入给后一个命令的标识符。  
+2. `Invoke-Expression`：  
 用于将输入的字符串作为 PowerShell 代码来执行。  
+
+<div class="custom-bl"></div>
 
 通过梳理可知，我们只需要获得安装Scoop的 `install.ps1` ，就能对其安装过程“动手脚”。
 
@@ -85,11 +86,12 @@ Invoke-RestMethod -Uri https://get.scoop.sh | Invoke-Expression
 
 ## 2. 所以如何更改安装Scoop的目录？
 
->参考：[官方文档](https://github.com/ScoopInstaller/Install#readme) | [翻译版本](../scoop-installation-cn/)
-
 :::note
-限于篇幅，我这里只介绍经典安装。
+限于篇幅，我这里只介绍经典安装。  
+参考：[官方文档](https://github.com/ScoopInstaller/Install#readme) | [翻译版本](../scoop-installation-cn/)
 :::
+
+<div class="custom-bl"></div>
 
 #### 经典安装(Typical Installation)
 
@@ -108,11 +110,14 @@ irm get.scoop.sh -Proxy 'http://<ip:port>' | iex
 ```powershell
 irm get.scoop.sh -outfile 'install.ps1'
 ```
+<div class="custom-bl"></div>
+
 然后执行以下命令，指定 `Scoop` 与 `GlobalScoopApps` 的安装位置：
 ```powershell
 # 注意更改你需要的路径
 .\install.ps1 -ScoopDir 'D:\Scoop' -ScoopGlobalDir 'D:\GlobalScoopApps'
 ```
+<div class="custom-bl"></div>
 
 至此，Scoop 本体的安装就完成了
 
@@ -148,7 +153,7 @@ irm scoop.201704.xyz -outfile 'install.ps1'
 
 这是我后来找到的另一个CN库，没有尝试过，故不展示过程。  
 
-::github{repo="duzyn/scoop-cn"}
+<!-- ::github{repo="duzyn/scoop-cn"} -->
 
 还有很多其他的CN库我就不介绍了~
 
@@ -158,9 +163,9 @@ irm scoop.201704.xyz -outfile 'install.ps1'
 
 这里推荐一下来自AmarBego开发的Rscoop，以及我对其Fork后加以改进的版本：
 
-::github{repo="Kwensiu/Rscoop"}
+<!-- ::github{repo="Kwensiu/Rscoop"} -->
 
-::github{repo="AmarBego/Rscoop"}
+<!-- ::github{repo="AmarBego/Rscoop"} -->
 
 相关功能介绍我已在仓库内详细介绍。
 
