@@ -230,6 +230,7 @@ import {
 	MAIN_PANEL_OVERLAPS_BANNER_HEIGHT
 } from "../constants/constants";
 import { siteConfig } from '../config';
+import ts from 'typescript';
 
 /* Preload fonts */
 // (async function() {
@@ -435,6 +436,37 @@ const setup = () => {
 		}
 	})
 	window.swup.hooks.on('content:replace', initCustomScrollbar)
+	window.swup.hooks.on('content:replace', () => {
+		// 更新全局headings变量，确保DockTOC能获取到最新的标题数据
+		if (typeof window !== 'undefined') {
+			// 这里需要从新的页面内容中提取headings
+			const newContent = document.getElementById('swup-container');
+			if (newContent) {
+				const headingElements = newContent.querySelectorAll('h2, h3, h4');
+				const extractedHeadings = [];
+				
+				headingElements.forEach((element) => {
+					const id = element.id;
+					if (id) {
+						const cloned = element.cloneNode(true) as HTMLElement;
+						cloned.removeAttribute('id');
+						let text = cloned.textContent || '';
+						const hashIndex = text.lastIndexOf('#');
+						if (hashIndex === text.length - 1) {
+							text = text.substring(0, hashIndex);
+						}
+						extractedHeadings.push({
+							depth: parseInt(element.tagName.charAt(1)),
+							text,
+							slug: id,
+						});
+					}
+				});
+				
+				(window as any).__astroHeadings = extractedHeadings;
+			}
+		}
+	})
 	window.swup.hooks.on('visit:start', (visit: {to: {url: string}}) => {
 		// change banner height immediately when a link is clicked
 		const bodyElement = document.querySelector('body')

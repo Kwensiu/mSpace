@@ -67,15 +67,15 @@
 
 	// Heading utilities
 	function extractHeadings(retryCount: number = 0): void {
-		const maxRetries = 5;
-		const retryDelay = 100;
+		const maxRetries = 10;
+		const retryDelay = 200;
 
-		setTimeout(() => {
+		const attemptExtraction = () => {
 			console.log('[DockTOC] extractHeadings called, retryCount:', retryCount);
 			console.log('[DockTOC] propHeadings:', propHeadings);
 			console.log('[DockTOC] __astroHeadings:', (window as any).__astroHeadings);
 
-			// 首先使用传入的 headings 数据（与现有 TOC 保持一致）
+			// 参考TOC.astro，优先使用传入的 headings 数据
 			if (propHeadings && propHeadings.length > 0) {
 				const extractedHeadings: Heading[] = propHeadings.map((h: any) => ({
 					depth: h.depth,
@@ -84,54 +84,71 @@
 				}));
 				headings = extractedHeadings;
 				console.log('[DockTOC] Using propHeadings:', extractedHeadings.length);
-				return;
+				return true;
 			}
 
-			// 备选方案：从全局获取
+			// 备选方案：从全局变量获取（与TOC.astro保持一致）
 			if ((window as any).__astroHeadings) {
 				const astroHeadings = (window as any).__astroHeadings as any[];
-				const extractedHeadings: Heading[] = astroHeadings.map(h => ({
-					depth: h.depth,
-					text: h.text.replace(/#$/, ''),
-					id: h.slug,
-				}));
-				headings = extractedHeadings;
-				return;
-			}
-
-			// 如果全局变量还没设置且重试次数未达到上限，继续重试
-			if (retryCount < maxRetries) {
-				extractHeadings(retryCount + 1);
-				return;
-			}
-
-			// 最后备用：从 DOM 提取
-			const postContainer = document.getElementById(POST_CONTAINER_ID);
-			if (!postContainer) return;
-
-			const headingElements = postContainer.querySelectorAll(TOC_HEADING_SELECTORS.join(', '));
-			const extractedHeadings: Heading[] = [];
-
-			headingElements.forEach((element) => {
-				const id = element.id;
-				if (id) {
-					const cloned = element.cloneNode(true) as HTMLElement;
-					cloned.removeAttribute('id');
-					let text = cloned.textContent || '';
-					const hashIndex = text.lastIndexOf('#');
-					if (hashIndex === text.length - 1) {
-						text = text.substring(0, hashIndex);
-					}
-					extractedHeadings.push({
-						depth: parseInt(element.tagName.charAt(1)),
-						text,
-						id,
-					});
+				if (astroHeadings.length > 0) {
+					const extractedHeadings: Heading[] = astroHeadings.map(h => ({
+						depth: h.depth,
+						text: h.text.replace(/#$/, ''),
+						id: h.slug,
+					}));
+					headings = extractedHeadings;
+					console.log('[DockTOC] Using __astroHeadings:', extractedHeadings.length);
+					return true;
 				}
-			});
+			}
 
-			headings = extractedHeadings;
-		}, retryCount === 0 ? 100 : retryDelay);
+			// 如果都没找到，尝试从DOM提取（最后备用方案）
+			const postContainer = document.getElementById(POST_CONTAINER_ID);
+			if (postContainer) {
+				const headingElements = postContainer.querySelectorAll(TOC_HEADING_SELECTORS.join(', '));
+				if (headingElements.length > 0) {
+					const extractedHeadings: Heading[] = [];
+					
+					headingElements.forEach((element) => {
+						const id = element.id;
+						if (id) {
+							const cloned = element.cloneNode(true) as HTMLElement;
+							cloned.removeAttribute('id');
+							let text = cloned.textContent || '';
+							const hashIndex = text.lastIndexOf('#');
+							if (hashIndex === text.length - 1) {
+								text = text.substring(0, hashIndex);
+							}
+							extractedHeadings.push({
+								depth: parseInt(element.tagName.charAt(1)),
+								text,
+								id,
+							});
+						}
+					});
+
+					headings = extractedHeadings;
+					console.log('[DockTOC] Using DOM extraction:', extractedHeadings.length);
+					return true;
+				}
+			}
+
+			return false;
+		};
+
+		// 立即尝试提取
+		if (attemptExtraction()) {
+			return;
+		}
+
+		// 如果失败且还有重试机会，继续重试
+		if (retryCount < maxRetries) {
+			setTimeout(() => extractHeadings(retryCount + 1), retryDelay);
+		} else {
+			// 最终失败，设置为空数组
+			headings = [];
+			console.log('[DockTOC] No headings found after all retries');
+		}
 	}
 
 	// Swup integration
@@ -140,13 +157,24 @@
 
 		window.swup.hooks.on('content:replace', checkPostPage);
 		window.swup.hooks.on('page:view', () => {
-			// 延迟执行以确保全局变量已设置
-			setTimeout(() => {
-				checkPostPage();
-				handleScroll();
-				// 页面完全加载后重新提取标题
-				setTimeout(extractHeadings, 200);
-			}, 50);
+			// 参考TOC.astro的实现，等待动画结束后再初始化
+			const element = document.querySelector('.prose');
+			if (element) {
+				element.addEventListener('animationend', () => {
+					setTimeout(() => {
+						checkPostPage();
+						handleScroll();
+						extractHeadings();
+					}, 100);
+				}, { once: true });
+			} else {
+				// 备用方案，直接执行
+				setTimeout(() => {
+					checkPostPage();
+					handleScroll();
+					extractHeadings();
+				}, 50);
+			}
 		});
 
 		swupHooksRegistered = true;
@@ -174,6 +202,19 @@
 		window.addEventListener("resize", updateDockPosition, { passive: true });
 		document.addEventListener('click', handleClickOutside);
 		handleScroll();
+
+		// 初始化时也参考TOC.astro的方式，等待动画结束后提取标题
+		if (isPostPage) {
+			const element = document.querySelector('.prose');
+			if (element) {
+				element.addEventListener('animationend', () => {
+					setTimeout(extractHeadings, 100);
+				}, { once: true });
+			} else {
+				// 备用方案
+				setTimeout(extractHeadings, 300);
+			}
+		}
 
 		return () => {
 			window.removeEventListener("scroll", handleScroll);
