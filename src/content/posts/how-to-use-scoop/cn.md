@@ -105,6 +105,8 @@ irm get.scoop.sh -Proxy 'http://<ip:port>' | iex
 
 由上文可知，如果需要进行自定义高级安装，必须要先下载 `install.ps1` 到本地。  
 
+#### 高级安装 - 添加安装路径
+
 先执行以下命令将 `install.ps1` 下载到本地(默认为Powershell的根目录)：
 
 ```powershell
@@ -113,6 +115,11 @@ irm get.scoop.sh -outfile 'install.ps1'
 <div class="custom-bl"></div>
 
 然后执行以下命令，指定 `Scoop` 与 `GlobalScoopApps` 的安装位置：
+
+:::note
+Scoop 安装区分 User & ALL，所以需要定义两个文件夹的安装路径。  
+:::
+
 ```powershell
 # 注意更改你需要的路径
 .\install.ps1 -ScoopDir 'D:\Scoop' -ScoopGlobalDir 'D:\GlobalScoopApps'
@@ -127,15 +134,15 @@ irm get.scoop.sh -outfile 'install.ps1'
 
 使用第三方Scoop库，主要还是针对 **网络环境不好** 的设备。这些库一般放在Gitee，或者在安装过程为Github域名添加了加速前缀。
 
-### `scoop.201704.xyz`
+### 1. `scoop.201704.xyz`
 这是我首次安装Scoop使用的库 ，所以在这里首推。  
 
 :::tip
-更多信息请查看[Gitee](https://gitee.com/scoop-installer/scoop)  
+更多信息请查看[仓库[Gitee]](https://gitee.com/scoop-installer/scoop)  
 :::
 
 执行以下命令即可完整安装：
-```
+```powershell
 # 脚本执行策略更改，默认自动同意
 Set-ExecutionPolicy RemoteSigned -scope CurrentUser -Force
 
@@ -147,9 +154,9 @@ iwr -useb scoop.201704.xyz | iex
 irm scoop.201704.xyz -outfile 'install.ps1'
 .\install.ps1 -ScoopDir 'D:\Scoop' -ScoopGlobalDir 'D:\GlobalScoopApps'
 ```
----
+<div class="custom-bl"></div>
 
-### `scoop-cn`
+### 2. `scoop-cn`
 
 这是我后来找到的另一个CN库，没有尝试过，故不展示过程。  
 

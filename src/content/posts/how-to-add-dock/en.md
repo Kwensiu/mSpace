@@ -3,12 +3,12 @@ title: Dock Component Integration Guide
 published: 2025-12-19
 description: "Show how to add the Dock component into fuwari"
 image: ""
-tags: [开发, 博客, fuwari]
+tags: [开发, 博客, Fuwari]
 category: "开发"
 draft: false
 lang: en
 cn: "how-to-add-dock/cn/"
-updated: 2025-12-24
+updated: 2025-12-27
 ---
 
 _Feel free to point out any issues._
