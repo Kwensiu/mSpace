@@ -27,9 +27,11 @@
 	let showEmptyMessage = $state(false);
 	let isPostPage = $state(false);
 	let headings = $state<Heading[]>([]);
-	
+	let dockLeftOffset = $state(parseFloat(CONFIG.DOCK_LEFT_OFFSET));
+
 	// Refs
 	let tocPanelElement = $state<HTMLDivElement>();
+	let dockTocElement = $state<HTMLDivElement>();
 
 	// Constants
 	const TOC_HEADING_SELECTORS = ['h2', 'h3', 'h4'];
@@ -38,11 +40,43 @@
 	
 	// Timers
 	let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+	let resizeTimer: ReturnType<typeof setTimeout> | null = null;
 	let swupHooksRegistered = false;
 
+	// Layout utilities
+	function updateDockPosition(): void {
+		if (resizeTimer) {
+			clearTimeout(resizeTimer);
+		}
+
+		resizeTimer = setTimeout(() => {
+			const dockElement = document.getElementById('dock');
+			if (dockElement && dockTocElement) {
+				const dockRect = dockElement.getBoundingClientRect();
+				const tocRect = dockTocElement.getBoundingClientRect();
+
+				// 计算dock中心点到TOC按钮的距离
+				const dockCenterX = dockRect.left + dockRect.width / 2;
+				const tocCenterX = tocRect.left + tocRect.width / 2;
+				const offset = tocCenterX - dockCenterX;
+
+				// 转换为rem单位 (假设1rem = 16px)
+				dockLeftOffset = offset / 16;
+			}
+			resizeTimer = null;
+		}, 100);
+	}
+
 	// Heading utilities
-	function extractHeadings(): void {
+	function extractHeadings(retryCount: number = 0): void {
+		const maxRetries = 5;
+		const retryDelay = 100;
+
 		setTimeout(() => {
+			console.log('[DockTOC] extractHeadings called, retryCount:', retryCount);
+			console.log('[DockTOC] propHeadings:', propHeadings);
+			console.log('[DockTOC] __astroHeadings:', (window as any).__astroHeadings);
+			
 			// 首先使用传入的 headings 数据（与现有 TOC 保持一致）
 			if (propHeadings && propHeadings.length > 0) {
 				const extractedHeadings: Heading[] = propHeadings.map((h: any) => ({
@@ -51,6 +85,7 @@
 					id: h.slug,
 				}));
 				headings = extractedHeadings;
+				console.log('[DockTOC] Using propHeadings:', extractedHeadings.length);
 				return;
 			}
 
@@ -63,6 +98,12 @@
 					id: h.slug,
 				}));
 				headings = extractedHeadings;
+				return;
+			}
+
+			// 如果全局变量还没设置且重试次数未达到上限，继续重试
+			if (retryCount < maxRetries) {
+				extractHeadings(retryCount + 1);
 				return;
 			}
 
@@ -92,7 +133,7 @@
 			});
 
 			headings = extractedHeadings;
-		}, 100);
+		}, retryCount === 0 ? 100 : retryDelay);
 	}
 
 	// Swup integration
@@ -101,8 +142,13 @@
 
 		window.swup.hooks.on('content:replace', checkPostPage);
 		window.swup.hooks.on('page:view', () => {
-			checkPostPage();
-			handleScroll();
+			// 延迟执行以确保全局变量已设置
+			setTimeout(() => {
+				checkPostPage();
+				handleScroll();
+				// 页面完全加载后重新提取标题
+				setTimeout(extractHeadings, 200);
+			}, 50);
 		});
 
 		swupHooksRegistered = true;
@@ -112,6 +158,7 @@
 	onMount(() => {
 		checkPostPage();
 		registerSwupHooks();
+		updateDockPosition(); // 初始化dock位置
 
 		if (!swupHooksRegistered) {
 			const checkSwup = setInterval(() => {
@@ -126,14 +173,19 @@
 
 		window.addEventListener('popstate', checkPostPage);
 		window.addEventListener("scroll", handleScroll, { passive: true });
+		window.addEventListener("resize", updateDockPosition, { passive: true });
 		document.addEventListener('click', handleClickOutside);
 		handleScroll();
 
 		return () => {
 			window.removeEventListener("scroll", handleScroll);
+			window.removeEventListener("resize", updateDockPosition);
 			document.removeEventListener('click', handleClickOutside);
 			if (scrollTimer) {
 				clearTimeout(scrollTimer);
+			}
+			if (resizeTimer) {
+				clearTimeout(resizeTimer);
 			}
 		};
 	});
@@ -162,7 +214,14 @@
 
 		scrollTimer = setTimeout(() => {
 			const currentScrollY = window.scrollY;
+			const wasShowingDock = showDock;
 			showDock = isPostPage && currentScrollY > CONFIG.SCROLL_THRESHOLD;
+
+			// dock显示状态改变时，更新TOC按钮位置
+			if (wasShowingDock !== showDock) {
+				setTimeout(updateDockPosition, 300); // 等待dock动画完成后更新位置
+			}
+
 			scrollTimer = null;
 		}, 16);
 	}
@@ -229,6 +288,7 @@
 <!-- Dock TOC Button -->
 <div
   id="dock-toc"
+  bind:this={dockTocElement}
   role="toolbar"
   tabindex="0"
   class="fixed z-50 transition-all duration-300 ease-out"
@@ -236,6 +296,7 @@
   class:-bottom-14={!showDock}
   class:opacity-100={showDock}
   class:scale-100={showDock}
+  style="left: calc(50% + {dockLeftOffset}rem); transform: translateX(-50%);"
 >
   <!-- TOC Button -->
   <button
@@ -322,12 +383,6 @@
 </div>
 
 <style>
-  /* Dock TOC Container */
-  #dock-toc {
-    left: calc(50% + 10.625rem);
-    transform: translateX(-50%);
-  }
-
   /* Custom Scrollbar */
   .custom-scrollbar::-webkit-scrollbar {
     width: 6px;
