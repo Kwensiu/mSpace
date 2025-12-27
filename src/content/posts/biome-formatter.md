@@ -2,7 +2,7 @@
 title: Biome | Formatter
 published: 2025-12-18T00:00:00.000Z
 description: 记录使用于当前博客的 Biome 命令
-image: './cover.png'
+image: ''
 tags:
   - Biome
   - 开发

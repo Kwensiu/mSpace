@@ -1,14 +1,14 @@
 ---
 title: Dock Component Integration Guide
 published: 2025-12-19
+updated: 2025-12-28
 description: "Show how to add the Dock component into fuwari"
 image: ""
 tags: [开发, 博客, Fuwari]
 category: "开发"
 draft: false
-lang: en
+lang: "en"
 cn: "how-to-add-dock/cn/"
-updated: 2025-12-27
 ---
 
 _Feel free to point out any issues._
@@ -50,70 +50,82 @@ Create a `dock` folder in your project's `src/components/` directory and add the
 
 - Here I post the **Complete** code for `Dock.svelte`
 
-```ts title="Dock.svelet" collapse={2-64, 69-141, 145-169}
+```ts title="Dock.svelet" collapse={2-76, 81-153, 157-181}
 <script lang="ts">
-import Icon from "@iconify/svelte";
-import { url } from "@utils/url-utils.ts";
-import { onMount } from "svelte";
-import DockSearch from "./DockSearch.svelte";
+	import Icon from "@iconify/svelte";
+	import { url } from "@utils/url-utils.ts";
+	import { onMount } from "svelte";
+	import DockSearch from "./DockSearch.svelte";
+
+	let props = $props();
 
 // Configurable options - can be customized based on site needs
 const config = {
-        scrollThreshold: 150, // Show dock after scrolling this many pixels
-        homePath: "/",
-        archivePath: "/archive/",
-        aboutPath: "/about/",
+	scrollThreshold: 150, // Show dock after scrolling this many pixels
+	homePath: "/",
+	archivePath: "/archive/",
+	aboutPath: "/about/",
 };
 
-let showDock = false;
+let showDock = $state(false);
+let scrollTimer: ReturnType<typeof setTimeout> | null = null;
 
 onMount(() => {
-        handleScroll();
+	handleScroll();
 
-        window.addEventListener("scroll", handleScroll, { passive: true });
+	window.addEventListener("scroll", handleScroll, { passive: true });
 
-        return () => {
-                window.removeEventListener("scroll", handleScroll);
-        };
+	return () => {
+		window.removeEventListener("scroll", handleScroll);
+		if (scrollTimer) {
+			clearTimeout(scrollTimer);
+		}
+	};
 });
 
 function handleScroll() {
-        const currentScrollY = window.scrollY;
+	if (scrollTimer) {
+		clearTimeout(scrollTimer);
+	}
 
-        // Dock displayed when the currentScrollY > scrollThreshold
-        showDock = currentScrollY > config.scrollThreshold;
+	scrollTimer = setTimeout(() => {
+		const currentScrollY = window.scrollY;
+		// Dock displayed when the currentScrollY > scrollThreshold
+		showDock = currentScrollY > config.scrollThreshold;
+		scrollTimer = null;
+	}, 16);
 }
 
 function navigateHome(event: Event) {
-        event.preventDefault();
-        if (window.swup) {
-                window.swup.navigate(url(config.homePath));
-        }
+	event.preventDefault();
+	if (window.swup) {
+		window.swup.navigate(url(config.homePath));
+	}
 }
 
 // Return to Top
 function scrollToTop(e: Event) {
-        e.stopPropagation();
-        window.scrollTo({
-                top: 0,
-                behavior: "smooth",
-        });
+	e.stopPropagation();
+	window.scrollTo({
+		top: 0,
+		behavior: "smooth",
+	});
 }
 
 // Navigate to Archive
 function navigateToArchive(event: Event) {
-        event.preventDefault();
-        if (window.swup) {
-                window.swup.navigate(url(config.archivePath));
-        }
+	event.preventDefault();
+	if (window.swup) {
+		window.swup.navigate(url(config.archivePath));
+	}
 }
 
 // Navigate to About
 function navigateToAbout(event: Event) {
-        event.preventDefault();
-        if (window.swup) {
-                window.swup.navigate(url(config.aboutPath));
-        }
+	event.preventDefault();
+	if (window.swup) {
+		window.swup.navigate(url(config.aboutPath));
+	}
 }
 </script>
 
@@ -136,7 +148,7 @@ function navigateToAbout(event: Event) {
 
   <!-- Buttons Container -->
   <div
-    class="relative flex items-center justify-center h-full px-6 will-change-transform"
+    class="relative flex items-center justify-center h-full px-4 will-change-transform"
   >
     <!-- Search Button -->
     <DockSearch />
@@ -146,7 +158,7 @@ function navigateToAbout(event: Event) {
       href={url(config.homePath)}
       class="btn-plain scale-animation rounded-3xl w-11 h-11 active:scale-90"
       aria-label="Home Page"
-      on:click={navigateHome}
+      onclick={navigateHome}
     >
       <Icon
         icon="material-symbols:home-outline-rounded"
@@ -157,7 +169,7 @@ function navigateToAbout(event: Event) {
     <!-- Return to Top Button -->
     <button
       class="btn-dock-primary items-center justify-center mx-1"
-      on:click={scrollToTop}
+      onclick={scrollToTop}
       aria-label="Return to Top"
     >
       <Icon
@@ -171,7 +183,7 @@ function navigateToAbout(event: Event) {
       href={url(config.archivePath)}
       class="btn-plain scale-animation rounded-3xl w-11 h-11 active:scale-90"
       aria-label="Archive Page"
-      on:click={navigateToArchive}
+      onclick={navigateToArchive}
     >
       <Icon
         icon="material-symbols:inventory-2-outline-rounded"
@@ -184,7 +196,7 @@ function navigateToAbout(event: Event) {
       href={url(config.aboutPath)}
       class="btn-plain scale-animation rounded-3xl w-11 h-11 active:scale-90"
       aria-label="About Page"
-      on:click={navigateToAbout}
+      onclick={navigateToAbout}
     >
       <Icon
         icon="material-symbols:info-outline-rounded"
@@ -215,7 +227,7 @@ function navigateToAbout(event: Event) {
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 200ms;
   }
-
+  
   .btn-dock-primary:hover {
     opacity: 0.8;
     transform: scale(1.05);
@@ -605,45 +617,23 @@ const config = {
 };
 ```
 
-## Throttle Optimization
+## Throttle Optimization(Added)
 
 To reduce power consumption, you can add throttling to limit the frequency of scroll event handling in `Dock.svelte`:
 
 ```ts title="Dock.svelte" ins={3, 12-14, 23-34} del={19-22} collapse={7-10} "handleScroll" ins="clearTimeout" showLineNumbers=false
 // ...
-let showDock = false;
-let scrollTimer: ReturnType<typeof setTimeout> | null = null;
-
-onMount(() => {
-  handleScroll();
-
-  window.addEventListener("scroll", handleScroll, { passive: true });
-
-  return () => {
-    window.removeEventListener("scroll", handleScroll);
-    if (scrollTimer) {
-      clearTimeout(scrollTimer);
-    }
-  };
-});
-
 function handleScroll() {
-  const currentScrollY = window.scrollY;
+	if (scrollTimer) {
+		clearTimeout(scrollTimer);
+	}
 
-  // Dock displayed when the currentScrollY > scrollThreshold
-  showDock = currentScrollY > config.scrollThreshold;
-  // Clear previous timer
-  if (scrollTimer) {
-    clearTimeout(scrollTimer);
-  }
-
-  // Use 16ms throttling (approx 60fps), reduce frequent updates
-  scrollTimer = setTimeout(() => {
-    const currentScrollY = window.scrollY;
-    // Dock displayed when the currentScrollY > scrollThreshold
-    showDock = currentScrollY > config.scrollThreshold;
-    scrollTimer = null;
-  }, 16);
+	scrollTimer = setTimeout(() => {
+		const currentScrollY = window.scrollY;
+		// Dock displayed when the currentScrollY > scrollThreshold
+		showDock = currentScrollY > config.scrollThreshold;
+		scrollTimer = null;
+	}, 16);
 }
 // ...
 ```
