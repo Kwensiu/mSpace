@@ -20,21 +20,64 @@ draft: false
 ---
 
 <details>
+<summary>v0.0.30 - 2025-12-29</summary>
+
+feat: 更新站点配置和组件样式  
+
+</details>
+
+<details>
+<summary>v0.0.29 - 2025-12-28 [DockTOC]</summary>
+
+feat(TOC): 添加 DockTOC.svelte ，允许在小屏幕下使用到TOC功能  
+
+</details>
+
+<details>
+<summary>v0.0.28 - 2025-12-27 [Scoop]</summary>
+
+Post: 添加 `优雅地使用Scoop` 推文  
+
+docs(how-to-use-scoop): 更新Scoop使用指南文档  
+
+style(css): 调整markdown样式和列表横线效果  
+
+fix(how-to-use-scoop): 移除注释标记  
+
+</details>
+
+<details>
+<summary>v0.0.27 - 2025-12-24</summary>
+
+feat(writing): 完善写作页面功能，实际上更像一个格式生成器  
+
+feat(dock): 为Dock组件添加节流，并更新Dock文章  
+
+update(posts): 更新关于页面与部分文章日期  
+
+</details>
+
+<details>
 <summary>v0.0.26 - 2025-12-24 [MEGA39]</summary>
 
-feat: 添加MEGA39游戏记录文章与相关图片内容
-feat(writing): 完善写作页面功能，实际上更像一个格式生成器
-feat(dock): 为Dock组件添加节流，并更新Dock文章
+feat: 添加MEGA39游戏记录文章与相关图片内容  
+
+feat(writing): 完善写作页面功能，实际上更像一个格式生成器  
+
+feat(dock): 为Dock组件添加节流，并更新Dock文章  
 
 </details>
 
 <details>
 <summary>v0.0.25 - 2025-12-23</summary>
 
-feat(css): 为post背景添加水彩渐变; 为blog背景添加网格装饰
-fix(utils): 修复 part 贴文未正确隐藏的问题
-fix(styl): 修复 User-Card 缺少的 Github 图标
-fix(css): 调整 data-language 徽章的位置
+feat(css): 为post背景添加水彩渐变; 为blog背景添加网格装饰  
+
+fix(utils): 修复 part 贴文未正确隐藏的问题  
+
+fix(styl): 修复 User-Card 缺少的 Github 图标  
+
+fix(css): 调整 data-language 徽章的位置  
 
 </details>
 
@@ -42,12 +85,6 @@ fix(css): 调整 data-language 徽章的位置
 <summary>v0.0.24 - 2025-12-23 [GitHub 用户卡片]</summary>
 
 feat(expressive-code): 新增 GitHub 用户卡片样式  
-
-- 使用新函数 GithubUserCardComponent 实现 Github 用户卡片
-- 默认语法为 ::github{user="username"}
-- 更新了 markdown-extended.md 介绍用法
-- 为 markdown-extend.styl 添加相应样式
-- 为 astro.config.mjs 导入组件
 
 </details>
 

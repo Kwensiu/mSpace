@@ -10,10 +10,10 @@ let delay = 0;
 const interval = 50;
 ---
 
-<div class="post-container transition flex flex-col rounded-[var(--radius-large)] bg-[var(--card-bg)] py-1 md:py-0 md:bg-transparent md:gap-4 mb-4">
+<div class="post-container transition flex flex-col rounded-[var(--radius-xxlarge)] py-1 md:py-0 md:gap-4 mb-4 ml-2 mr-2 md:ml-0 md:mr-0">
     {page.data.map((entry: CollectionEntry<"posts">) => (
         <div
-            class="post-card-wrapper"
+            class="post-card-wrapper mb-4"
             data-lang={entry.data.lang || ""}
             data-hidden={entry.data.hidden || false}
         >
@@ -28,7 +28,7 @@ const interval = 50;
                     image={entry.data.image}
                     description={entry.data.description}
                     draft={entry.data.draft}
-                    class:list="onload-animation"
+                    class="onload-animation"
                     style={`animation-delay: calc(var(--content-delay) + ${delay++ * interval}ms);`}
             />
         </div>

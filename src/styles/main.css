@@ -17,7 +17,7 @@ html {
         @apply rounded-[var(--radius-large)]  backdrop-blur-sm bg-white/80 transition;
     }
     .card-base {
-        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition;
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] transition;
     }
     .card-small {
         @apply rounded-[var(--radius-small)] overflow-hidden bg-[var(--card-bg)] transition;
@@ -229,7 +229,7 @@ html {
 }
 
 /* 在桌面端隐藏分隔线 */
-@media (min-width: 768px) {
+@media (min-width: 0px) {
     .post-card-wrapper:not(.last-visible)::after {
         display: none;
     }

@@ -1,10 +1,10 @@
 <script lang="ts">
-	import Icon from "@iconify/svelte";
-	import { url } from "@utils/url-utils.ts";
-	import { onMount } from "svelte";
-	import DockSearch from "./DockSearch.svelte";
+import Icon from "@iconify/svelte";
+import { url } from "@utils/url-utils.ts";
+import { onMount } from "svelte";
+import DockSearch from "./DockSearch.svelte";
 
-	let props = $props();
+let props = $props();
 
 // Configurable options - can be customized based on site needs
 const config = {

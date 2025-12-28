@@ -1,327 +1,345 @@
 <script lang="ts">
-	import Icon from "@iconify/svelte";
-	import { onMount, onDestroy } from "svelte";
-	import { fly } from "svelte/transition";
-	import { cubicOut } from "svelte/easing";
-	let props = $props();
-	let { headings: propHeadings = [] } = props;
+import Icon from "@iconify/svelte";
+import { onDestroy, onMount } from "svelte";
+import { cubicOut } from "svelte/easing";
+import { fly } from "svelte/transition";
 
-	// Configuration
-	const CONFIG = {
-		SCROLL_THRESHOLD: 150,
-		PANEL_WIDTH: '20rem',
-		PANEL_BOTTOM_OFFSET: '5rem',
-		CENTER_OFFSET: '-10rem',
-		DOCK_LEFT_OFFSET: '10.625rem', // 距离 Dock 中心的偏移
-	};
+let props = $props();
+let { headings: propHeadings = [] } = props;
 
-	interface Heading {
-		depth: number;
-		text: string;
-		id: string;
+// Configuration
+const CONFIG = {
+	SCROLL_THRESHOLD: 150,
+	PANEL_WIDTH: "20rem",
+	PANEL_BOTTOM_OFFSET: "5rem",
+	CENTER_OFFSET: "-10rem",
+	DOCK_LEFT_OFFSET: "10.625rem", // 距离 Dock 中心的偏移
+};
+
+interface Heading {
+	depth: number;
+	text: string;
+	id: string;
+}
+
+// State
+let showDock = $state(false);
+let showPanel = $state(false);
+let showEmptyMessage = $state(false);
+let isPostPage = $state(false);
+let headings = $state<Heading[]>([]);
+let dockLeftOffset = $state(Number.parseFloat(CONFIG.DOCK_LEFT_OFFSET));
+
+// Refs
+let tocPanelElement = $state<HTMLDivElement>();
+let dockTocElement = $state<HTMLDivElement>();
+
+// Constants
+const TOC_HEADING_SELECTORS = ["h2", "h3", "h4"];
+const POST_CONTAINER_ID = "post-container";
+const POSTS_PATH = "/posts/";
+
+// Timers
+let scrollTimer: ReturnType<typeof setTimeout> | null = null;
+let resizeTimer: ReturnType<typeof setTimeout> | null = null;
+let swupHooksRegistered = false;
+
+// Layout utilities
+function updateDockPosition(): void {
+	if (resizeTimer) {
+		clearTimeout(resizeTimer);
 	}
 
-	// State
-	let showDock = $state(false);
-	let showPanel = $state(false);
-	let showEmptyMessage = $state(false);
-	let isPostPage = $state(false);
-	let headings = $state<Heading[]>([]);
-	let dockLeftOffset = $state(parseFloat(CONFIG.DOCK_LEFT_OFFSET));
+	resizeTimer = setTimeout(() => {
+		const dockElement = document.getElementById("dock");
 
-	// Refs
-	let tocPanelElement = $state<HTMLDivElement>();
-	let dockTocElement = $state<HTMLDivElement>();
+		if (dockElement) {
+			const dockRect = dockElement.getBoundingClientRect();
+			const dockCenterX = dockRect.left + dockRect.width / 2;
+			const screenCenterX = window.innerWidth / 2;
+			const dockShiftFromCenter = dockCenterX - screenCenterX;
+			const baseConfigOffset = Number.parseFloat(CONFIG.DOCK_LEFT_OFFSET);
 
-	// Constants
-	const TOC_HEADING_SELECTORS = ['h2', 'h3', 'h4'];
-	const POST_CONTAINER_ID = 'post-container';
-	const POSTS_PATH = '/posts/';
+			dockLeftOffset = baseConfigOffset + dockShiftFromCenter / 16;
+		}
+		resizeTimer = null;
+	}, 100);
+}
 
-	// Timers
-	let scrollTimer: ReturnType<typeof setTimeout> | null = null;
-	let resizeTimer: ReturnType<typeof setTimeout> | null = null;
-	let swupHooksRegistered = false;
+// Heading utilities
+function extractHeadings(retryCount = 0): void {
+	const maxRetries = 10;
+	const retryDelay = 200;
 
-	// Layout utilities
-    function updateDockPosition(): void {
-        if (resizeTimer) {
-            clearTimeout(resizeTimer);
-        }
+	const attemptExtraction = () => {
+		console.log("[DockTOC] extractHeadings called, retryCount:", retryCount);
+		console.log("[DockTOC] propHeadings:", propHeadings);
+		console.log("[DockTOC] __astroHeadings:", (window as any).__astroHeadings);
 
-        resizeTimer = setTimeout(() => {
-            const dockElement = document.getElementById('dock');
+		// 参考TOC.astro，优先使用传入的 headings 数据
+		if (propHeadings && propHeadings.length > 0) {
+			const extractedHeadings: Heading[] = propHeadings.map((h: any) => ({
+				depth: h.depth,
+				text: h.text.replace(/#$/, ""),
+				id: h.slug,
+			}));
+			headings = extractedHeadings;
+			console.log("[DockTOC] Using propHeadings:", extractedHeadings.length);
+			return true;
+		}
 
-            if (dockElement) {
-                const dockRect = dockElement.getBoundingClientRect();
-                const dockCenterX = dockRect.left + dockRect.width / 2;
-                const screenCenterX = window.innerWidth / 2;
-                const dockShiftFromCenter = dockCenterX - screenCenterX;
-                const baseConfigOffset = parseFloat(CONFIG.DOCK_LEFT_OFFSET);
-
-                dockLeftOffset = baseConfigOffset + (dockShiftFromCenter / 16);
-            }
-            resizeTimer = null;
-        }, 100);
-    }
-
-	// Heading utilities
-	function extractHeadings(retryCount: number = 0): void {
-		const maxRetries = 10;
-		const retryDelay = 200;
-
-		const attemptExtraction = () => {
-			console.log('[DockTOC] extractHeadings called, retryCount:', retryCount);
-			console.log('[DockTOC] propHeadings:', propHeadings);
-			console.log('[DockTOC] __astroHeadings:', (window as any).__astroHeadings);
-
-			// 参考TOC.astro，优先使用传入的 headings 数据
-			if (propHeadings && propHeadings.length > 0) {
-				const extractedHeadings: Heading[] = propHeadings.map((h: any) => ({
+		// 备选方案：从全局变量获取（与TOC.astro保持一致）
+		if ((window as any).__astroHeadings) {
+			const astroHeadings = (window as any).__astroHeadings as any[];
+			if (astroHeadings.length > 0) {
+				const extractedHeadings: Heading[] = astroHeadings.map((h) => ({
 					depth: h.depth,
-					text: h.text.replace(/#$/, ''),
+					text: h.text.replace(/#$/, ""),
 					id: h.slug,
 				}));
 				headings = extractedHeadings;
-				console.log('[DockTOC] Using propHeadings:', extractedHeadings.length);
+				console.log(
+					"[DockTOC] Using __astroHeadings:",
+					extractedHeadings.length,
+				);
 				return true;
 			}
+		}
 
-			// 备选方案：从全局变量获取（与TOC.astro保持一致）
-			if ((window as any).__astroHeadings) {
-				const astroHeadings = (window as any).__astroHeadings as any[];
-				if (astroHeadings.length > 0) {
-					const extractedHeadings: Heading[] = astroHeadings.map(h => ({
-						depth: h.depth,
-						text: h.text.replace(/#$/, ''),
-						id: h.slug,
-					}));
-					headings = extractedHeadings;
-					console.log('[DockTOC] Using __astroHeadings:', extractedHeadings.length);
-					return true;
-				}
-			}
+		// 如果都没找到，尝试从DOM提取（最后备用方案）
+		const postContainer = document.getElementById(POST_CONTAINER_ID);
+		if (postContainer) {
+			const headingElements = postContainer.querySelectorAll(
+				TOC_HEADING_SELECTORS.join(", "),
+			);
+			if (headingElements.length > 0) {
+				const extractedHeadings: Heading[] = [];
 
-			// 如果都没找到，尝试从DOM提取（最后备用方案）
-			const postContainer = document.getElementById(POST_CONTAINER_ID);
-			if (postContainer) {
-				const headingElements = postContainer.querySelectorAll(TOC_HEADING_SELECTORS.join(', '));
-				if (headingElements.length > 0) {
-					const extractedHeadings: Heading[] = [];
-					
-					headingElements.forEach((element) => {
-						const id = element.id;
-						if (id) {
-							const cloned = element.cloneNode(true) as HTMLElement;
-							cloned.removeAttribute('id');
-							let text = cloned.textContent || '';
-							const hashIndex = text.lastIndexOf('#');
-							if (hashIndex === text.length - 1) {
-								text = text.substring(0, hashIndex);
-							}
-							extractedHeadings.push({
-								depth: parseInt(element.tagName.charAt(1)),
-								text,
-								id,
-							});
+				headingElements.forEach((element) => {
+					const id = element.id;
+					if (id) {
+						const cloned = element.cloneNode(true) as HTMLElement;
+						cloned.removeAttribute("id");
+						let text = cloned.textContent || "";
+						const hashIndex = text.lastIndexOf("#");
+						if (hashIndex === text.length - 1) {
+							text = text.substring(0, hashIndex);
 						}
-					});
+						extractedHeadings.push({
+							depth: Number.parseInt(element.tagName.charAt(1), 10),
+							text,
+							id,
+						});
+					}
+				});
 
-					headings = extractedHeadings;
-					console.log('[DockTOC] Using DOM extraction:', extractedHeadings.length);
-					return true;
-				}
+				headings = extractedHeadings;
+				console.log(
+					"[DockTOC] Using DOM extraction:",
+					extractedHeadings.length,
+				);
+				return true;
 			}
-
-			return false;
-		};
-
-		// 立即尝试提取
-		if (attemptExtraction()) {
-			return;
 		}
 
-		// 如果失败且还有重试机会，继续重试
-		if (retryCount < maxRetries) {
-			setTimeout(() => extractHeadings(retryCount + 1), retryDelay);
-		} else {
-			// 最终失败，设置为空数组
-			headings = [];
-			console.log('[DockTOC] No headings found after all retries');
-		}
+		return false;
+	};
+
+	// 立即尝试提取
+	if (attemptExtraction()) {
+		return;
 	}
 
-	// Swup integration
-	function registerSwupHooks(): void {
-		if (swupHooksRegistered || !window.swup?.hooks) return;
+	// 如果失败且还有重试机会，继续重试
+	if (retryCount < maxRetries) {
+		setTimeout(() => extractHeadings(retryCount + 1), retryDelay);
+	} else {
+		// 最终失败，设置为空数组
+		headings = [];
+		console.log("[DockTOC] No headings found after all retries");
+	}
+}
 
-		window.swup.hooks.on('content:replace', checkPostPage);
-		window.swup.hooks.on('page:view', () => {
-			// 参考TOC.astro的实现，等待动画结束后再初始化
-			const element = document.querySelector('.prose');
-			if (element) {
-				element.addEventListener('animationend', () => {
+// Swup integration
+function registerSwupHooks(): void {
+	if (swupHooksRegistered || !window.swup?.hooks) return;
+
+	window.swup.hooks.on("content:replace", checkPostPage);
+	window.swup.hooks.on("page:view", () => {
+		// 参考TOC.astro的实现，等待动画结束后再初始化
+		const element = document.querySelector(".prose");
+		if (element) {
+			element.addEventListener(
+				"animationend",
+				() => {
 					setTimeout(() => {
 						checkPostPage();
 						handleScroll();
 						extractHeadings();
 					}, 100);
-				}, { once: true });
-			} else {
-				// 备用方案，直接执行
-				setTimeout(() => {
-					checkPostPage();
-					handleScroll();
-					extractHeadings();
-				}, 50);
-			}
-		});
-
-		swupHooksRegistered = true;
-	}
-
-	// Lifecycle
-	onMount(() => {
-		checkPostPage();
-		registerSwupHooks();
-		updateDockPosition(); // 初始化dock位置
-
-		if (!swupHooksRegistered) {
-			const checkSwup = setInterval(() => {
-				if (window.swup?.hooks) {
-					clearInterval(checkSwup);
-					registerSwupHooks();
-				}
-			}, 100);
-
-			setTimeout(() => clearInterval(checkSwup), 10000);
-		}
-
-		window.addEventListener('popstate', checkPostPage);
-		window.addEventListener("scroll", handleScroll, { passive: true });
-		window.addEventListener("resize", updateDockPosition, { passive: true });
-		document.addEventListener('click', handleClickOutside);
-		handleScroll();
-
-		// 初始化时也参考TOC.astro的方式，等待动画结束后提取标题
-		if (isPostPage) {
-			const element = document.querySelector('.prose');
-			if (element) {
-				element.addEventListener('animationend', () => {
-					setTimeout(extractHeadings, 100);
-				}, { once: true });
-			} else {
-				// 备用方案
-				setTimeout(extractHeadings, 300);
-			}
-		}
-
-		return () => {
-			window.removeEventListener("scroll", handleScroll);
-			window.removeEventListener("resize", updateDockPosition);
-			document.removeEventListener('click', handleClickOutside);
-			if (scrollTimer) {
-				clearTimeout(scrollTimer);
-			}
-			if (resizeTimer) {
-				clearTimeout(resizeTimer);
-			}
-		};
-	});
-
-	onDestroy(() => {
-		document.removeEventListener('click', handleClickOutside);
-	});
-
-	// Event handlers
-	function checkPostPage(): void {
-		const currentPath = window.location.pathname;
-		isPostPage = currentPath.includes(POSTS_PATH) && currentPath.length > POSTS_PATH.length;
-
-		if (isPostPage) {
-			extractHeadings();
+				},
+				{ once: true },
+			);
 		} else {
-			headings = [];
-			showPanel = false;
+			// 备用方案，直接执行
+			setTimeout(() => {
+				checkPostPage();
+				handleScroll();
+				extractHeadings();
+			}, 50);
+		}
+	});
+
+	swupHooksRegistered = true;
+}
+
+// Lifecycle
+onMount(() => {
+	checkPostPage();
+	registerSwupHooks();
+	updateDockPosition(); // 初始化dock位置
+
+	if (!swupHooksRegistered) {
+		const checkSwup = setInterval(() => {
+			if (window.swup?.hooks) {
+				clearInterval(checkSwup);
+				registerSwupHooks();
+			}
+		}, 100);
+
+		setTimeout(() => clearInterval(checkSwup), 10000);
+	}
+
+	window.addEventListener("popstate", checkPostPage);
+	window.addEventListener("scroll", handleScroll, { passive: true });
+	window.addEventListener("resize", updateDockPosition, { passive: true });
+	document.addEventListener("click", handleClickOutside);
+	handleScroll();
+
+	// 初始化时也参考TOC.astro的方式，等待动画结束后提取标题
+	if (isPostPage) {
+		const element = document.querySelector(".prose");
+		if (element) {
+			element.addEventListener(
+				"animationend",
+				() => {
+					setTimeout(extractHeadings, 100);
+				},
+				{ once: true },
+			);
+		} else {
+			// 备用方案
+			setTimeout(extractHeadings, 300);
 		}
 	}
 
-	function handleScroll(): void {
+	return () => {
+		window.removeEventListener("scroll", handleScroll);
+		window.removeEventListener("resize", updateDockPosition);
+		document.removeEventListener("click", handleClickOutside);
 		if (scrollTimer) {
 			clearTimeout(scrollTimer);
 		}
+		if (resizeTimer) {
+			clearTimeout(resizeTimer);
+		}
+	};
+});
 
-		scrollTimer = setTimeout(() => {
-			const currentScrollY = window.scrollY;
-			const wasShowingDock = showDock;
-			showDock = isPostPage && currentScrollY > CONFIG.SCROLL_THRESHOLD;
+onDestroy(() => {
+	document.removeEventListener("click", handleClickOutside);
+});
 
-			// dock显示状态改变时，更新TOC按钮位置
-			if (wasShowingDock !== showDock) {
-				setTimeout(updateDockPosition, 300); // 等待dock动画完成后更新位置
-			}
+// Event handlers
+function checkPostPage(): void {
+	const currentPath = window.location.pathname;
+	isPostPage =
+		currentPath.includes(POSTS_PATH) && currentPath.length > POSTS_PATH.length;
 
-			scrollTimer = null;
-		}, 16);
+	if (isPostPage) {
+		extractHeadings();
+	} else {
+		headings = [];
+		showPanel = false;
+	}
+}
+
+function handleScroll(): void {
+	if (scrollTimer) {
+		clearTimeout(scrollTimer);
 	}
 
-	function togglePanel(event: Event): void {
-		event?.preventDefault();
-		event?.stopPropagation();
+	scrollTimer = setTimeout(() => {
+		const currentScrollY = window.scrollY;
+		const wasShowingDock = showDock;
+		showDock = isPostPage && currentScrollY > CONFIG.SCROLL_THRESHOLD;
 
-		// 如果有面板打开，则关闭所有面板
-		if (showPanel || showEmptyMessage) {
-			showPanel = false;
-			showEmptyMessage = false;
-			return;
+		// dock显示状态改变时，更新TOC按钮位置
+		if (wasShowingDock !== showDock) {
+			setTimeout(updateDockPosition, 300); // 等待dock动画完成后更新位置
 		}
 
-		// 如果没有面板打开，则打开相应面板
-		if (headings.length === 0) {
-			showEmptyMessage = true;
-		} else {
-			showPanel = true;
-		}
-	}
+		scrollTimer = null;
+	}, 16);
+}
 
-	function closePanel(): void {
+function togglePanel(event: Event): void {
+	event?.preventDefault();
+	event?.stopPropagation();
+
+	// 如果有面板打开，则关闭所有面板
+	if (showPanel || showEmptyMessage) {
 		showPanel = false;
 		showEmptyMessage = false;
+		return;
 	}
 
-	function handleHeadingClick(event: Event, id: string): void {
-		event.preventDefault();
-		event.stopPropagation();
-
-		const element = document.getElementById(id);
-		if (element) {
-			element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-			closePanel();
-		}
+	// 如果没有面板打开，则打开相应面板
+	if (headings.length === 0) {
+		showEmptyMessage = true;
+	} else {
+		showPanel = true;
 	}
+}
 
-	function handleClickOutside(event: Event): void {
-		if (!showPanel && !showEmptyMessage) return;
+function closePanel(): void {
+	showPanel = false;
+	showEmptyMessage = false;
+}
 
-		const target = event.target as HTMLElement;
-		if (tocPanelElement && !tocPanelElement.contains(target)) {
-			closePanel();
-		}
+function handleHeadingClick(event: Event, id: string): void {
+	event.preventDefault();
+	event.stopPropagation();
+
+	const element = document.getElementById(id);
+	if (element) {
+		element.scrollIntoView({ behavior: "smooth", block: "start" });
+		closePanel();
 	}
+}
 
-	// Heading utilities
-	function getMinDepth(): number {
-		if (headings.length === 0) return 2;
-		return Math.min(...headings.map(h => h.depth));
-	}
+function handleClickOutside(event: Event): void {
+	if (!showPanel && !showEmptyMessage) return;
 
-	function getHeadingNumber(heading: Heading): string {
-		if (heading.depth === getMinDepth()) {
-			const level1Headings = headings.filter(h => h.depth === getMinDepth());
-			return (level1Headings.indexOf(heading) + 1).toString();
-		}
-		return '';
+	const target = event.target as HTMLElement;
+	if (tocPanelElement && !tocPanelElement.contains(target)) {
+		closePanel();
 	}
+}
+
+// Heading utilities
+function getMinDepth(): number {
+	if (headings.length === 0) return 2;
+	return Math.min(...headings.map((h) => h.depth));
+}
+
+function getHeadingNumber(heading: Heading): string {
+	if (heading.depth === getMinDepth()) {
+		const level1Headings = headings.filter((h) => h.depth === getMinDepth());
+		return (level1Headings.indexOf(heading) + 1).toString();
+	}
+	return "";
+}
 </script>
 
 <!-- Dock TOC Button -->
