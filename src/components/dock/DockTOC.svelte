@@ -72,10 +72,6 @@ function extractHeadings(retryCount = 0): void {
 	const retryDelay = 200;
 
 	const attemptExtraction = () => {
-		console.log("[DockTOC] extractHeadings called, retryCount:", retryCount);
-		console.log("[DockTOC] propHeadings:", propHeadings);
-		console.log("[DockTOC] __astroHeadings:", (window as any).__astroHeadings);
-
 		// 参考TOC.astro，优先使用传入的 headings 数据
 		if (propHeadings && propHeadings.length > 0) {
 			const extractedHeadings: Heading[] = propHeadings.map((h: any) => ({
@@ -84,7 +80,6 @@ function extractHeadings(retryCount = 0): void {
 				id: h.slug,
 			}));
 			headings = extractedHeadings;
-			console.log("[DockTOC] Using propHeadings:", extractedHeadings.length);
 			return true;
 		}
 
@@ -98,10 +93,6 @@ function extractHeadings(retryCount = 0): void {
 					id: h.slug,
 				}));
 				headings = extractedHeadings;
-				console.log(
-					"[DockTOC] Using __astroHeadings:",
-					extractedHeadings.length,
-				);
 				return true;
 			}
 		}
@@ -134,10 +125,6 @@ function extractHeadings(retryCount = 0): void {
 				});
 
 				headings = extractedHeadings;
-				console.log(
-					"[DockTOC] Using DOM extraction:",
-					extractedHeadings.length,
-				);
 				return true;
 			}
 		}
@@ -156,7 +143,6 @@ function extractHeadings(retryCount = 0): void {
 	} else {
 		// 最终失败，设置为空数组
 		headings = [];
-		console.log("[DockTOC] No headings found after all retries");
 	}
 }
 

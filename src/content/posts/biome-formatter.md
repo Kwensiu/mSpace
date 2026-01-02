@@ -1,8 +1,9 @@
 ---
 title: Biome | Formatter
-published: 2025-12-18T00:00:00.000Z
+published: 2025-12-18
+updated: 2026-01-03
 description: 记录使用于当前博客的 Biome 命令
-image: ''
+image: 'https://cdn-ak.f.st-hatena.com/images/fotolife/k/kentem_dev_maehata/20250602/20250602170647.png'
 tags:
   - Biome
   - 开发

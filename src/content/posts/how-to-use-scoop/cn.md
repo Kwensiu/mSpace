@@ -1,9 +1,9 @@
 ---
 title: 优雅地使用Scoop
 published: 2025-12-26
-updated: 2025-12-27
-description: '介绍一些近一年使用Scoop的心得'
-image: ''
+updated: 2026-01-03
+description: '分享一些使用Scoop的心得干货'
+image: 'cover.webp'
 tags: [Scoop, 软件, 开发]
 category: '软件'
 draft: false

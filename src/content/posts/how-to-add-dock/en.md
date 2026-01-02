@@ -1,9 +1,9 @@
 ---
 title: Dock Component Integration Guide
 published: 2025-12-19
-updated: 2025-12-28
+updated: 2026-01-03
 description: "Show how to add the Dock component into fuwari"
-image: ""
+image: "cover.webp"
 tags: [开发, 博客, Fuwari]
 category: "开发"
 draft: false

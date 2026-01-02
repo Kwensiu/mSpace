@@ -1,9 +1,9 @@
 ---
 title: 博客更新日志
 published: 2025-12-18
-updated: 2025-12-24
+updated: 2026-01-03
 description: 博客前后端更新记录
-image: ''
+image: 'cover.webp'
 tags:
   - 更新日志
   - 版本记录

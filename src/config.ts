@@ -50,8 +50,8 @@ export const navBarConfig: NavBarConfig = {
 
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
-	name: "Kwensiu",
-	bio: "苦命鸳鸯",
+	name: "萝卜馅松饼",
+	bio: "不愿回顾过往，不敢踏向未来",
 	links: [
 		{
 			name: "Netease",

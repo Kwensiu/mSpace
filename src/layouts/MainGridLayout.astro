@@ -1,7 +1,7 @@
 ---
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
-import Navbar from "@components/Navbar.astro";
+import NavCard from "@components/NavCard.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
 import { Icon } from "astro-icon/components";
@@ -56,12 +56,12 @@ const mainPanelTop = siteConfig.banner.enable
     class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto"
     class:list={[""]}
   >
-    <div
+<!--     <div
       id="navbar-wrapper"
       class="pointer-events-auto sticky top-0 transition-all"
     >
       <Navbar />
-    </div>
+    </div> -->
   </div>
 
   <!-- Banner -->
@@ -101,8 +101,7 @@ const mainPanelTop = siteConfig.banner.enable
     <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
       <div
         id="main-grid"
-        class="transition duration-700 w-full left-0 right-0 grid grid-cols-[17.5rem_auto] grid-rows-[auto_1fr_auto] lg:grid-rows-[auto]
-    mx-auto gap-6 px-0 md:px-4"
+        class="transition duration-700 w-full left-0 right-0 grid grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem] grid-rows-[auto_1fr_auto_auto] lg:grid-rows-[1fr_auto] mx-auto gap-6 px-0 md:px-4"
       >
         <!-- Banner image credit -->
         {
@@ -137,33 +136,30 @@ const mainPanelTop = siteConfig.banner.enable
           )
         }
 
+        <div class="col-span-1 row-start-2 row-end-3 lg:col-span-1 lg:row-start-1 flex flex-col gap-4">
+          <NavCard />
+          <main
+            id="swup-container"
+            class="transition-swup-fade overflow-hidden flex-1"
+          >
+            <div id="content-wrapper" class="onload-animation">
+              <!-- the overflow-hidden here prevent long text break the layout-->
+              <!-- make id different from windows.swup global property -->
+              <slot name="heading">
+                {title && <h1 class=""></h1>}
+              </slot>
+              <slot />
+            </div>
+          </main>
+        </div>
+
         <SideBar
-          class="mb-4 row-start-2 row-end-3 col-span-2 lg:row-start-1 lg:row-end-2 lg:col-span-1 lg:max-w-[17.5rem] onload-animation pl-2 pr- md:pr-0 md:pl-0"
+          class="mb-4 row-start-3 row-end-4 col-span-1 lg:row-start-1 lg:row-end-2 lg:col-span-1 lg:max-w-[17.5rem] onload-animation"
           headings={headings}
         />
 
-        <main
-          id="swup-container"
-          class="transition-swup-fade col-span-2 lg:col-span-1 overflow-hidden"
-        >
-          <div id="content-wrapper" class="onload-animation">
-            <!-- the overflow-hidden here prevent long text break the layout-->
-            <!-- make id different from windows.swup global property -->
-            <slot name="heading">
-              {title && <h1 class=""></h1>}
-            </slot>
-            <slot />
-            <div
-              class="footer col-span-2 onload-animation hidden lg:block"
-              style="padding-bottom: 60px"
-            >
-              <Footer />
-            </div>
-          </div>
-        </main>
-
         <div
-          class="footer col-span-2 onload-animation block lg:hidden"
+          class="footer col-span-1 lg:col-span-2 row-start-4 row-end-5 onload-animation"
           style="padding-bottom: 60px"
         >
           <Footer />
