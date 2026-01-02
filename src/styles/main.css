@@ -30,6 +30,12 @@
     .about-card {
         @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
     }
+    .profile-card {
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
+    }
+    .widget-card {
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
+    }
     .card-base {
         @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] transition;
     }
@@ -151,7 +157,7 @@
 
     /*我的自定义*/
     .postpage-post {
-        @apply rounded-[var(--radius-large)] overflow-hidden bg-[var(--card-bg)] transition relative;
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition relative;
     }
     /* PostCard 文章卡片水彩背景效果 */
     .postpage-post::before {

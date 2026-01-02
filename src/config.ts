@@ -20,7 +20,7 @@ export const siteConfig: SiteConfig = {
 		src: "assets/images/banner02.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
-			enable: true, // Display the credit text of the banner image
+			enable: false, // Display the credit text of the banner image
 			text: "プロセカ", // Credit text to be displayed
 			url: "https://projectsekai.fandom.com/wiki/Shinonome_Ena/Cards?file=Beyond_My_Boundaries_T.png", // (Optional) URL link to the original artwork or artist's page
 		},
@@ -51,7 +51,7 @@ export const navBarConfig: NavBarConfig = {
 export const profileConfig: ProfileConfig = {
 	avatar: "assets/images/avatar.webp", // Relative to the /src directory. Relative to the /public directory if it starts with '/'
 	name: "萝卜馅松饼",
-	bio: "不愿回顾过往，不敢踏向未来",
+	bio: "不堪回顾过往，不愿踏向未来",
 	links: [
 		{
 			name: "Netease",
