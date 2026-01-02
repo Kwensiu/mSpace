@@ -3,6 +3,7 @@ import { navBarConfig } from "../config";
 import { LinkPresets } from "../constants/link-presets";
 import { type NavBarLink, LinkPreset } from "../types/config";
 import { url } from "../utils/url-utils";
+import { Icon } from "astro-icon/components";
 
 let links: NavBarLink[] = navBarConfig.links.map(
 	(item: NavBarLink | LinkPreset): NavBarLink => {
@@ -14,7 +15,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
 );
 ---
 
-<div class="nav-card flex items-center gap-2 px-6 py-4 mx-4 mt-4 first:mt-0 rounded-[var(--radius-xxlarge)] bg-[var(--card-bg)]">
+<div class="nav-card relative flex items-center gap-2 px-6 py-4 mx-4 mt-4 first:mt-0 rounded-[var(--radius-xxlarge)] bg-[var(--card-bg)]">
 	{links.map((l) => (
 		<a
 			aria-label={l.name}
@@ -26,6 +27,16 @@ let links: NavBarLink[] = navBarConfig.links.map(
 			<span class="nav-link-text">{l.name}</span>
 		</a>
 	))}
+	<button
+		id="navcard-theme-switch"
+		aria-label="Toggle Theme"
+		class="absolute -top-3 -right-3 w-8 h-8 flex items-center justify-center bg-[var(--card-bg)] border border-black/10 dark:border-white/20 rounded-full shadow-md hover:scale-110 active:scale-95 transition-all"
+	>
+		<Icon id="theme-icon-light" name="material-symbols:light-mode" class="text-[1.25rem] text-black/70 hidden" />
+		<Icon id="theme-icon-dark" name="material-symbols:dark-mode" class="text-[1.25rem] text-white/70 hidden" />
+		<Icon id="theme-icon-auto-light" name="material-symbols:brightness-4" class="text-[1.25rem] text-black/70 hidden" />
+		<Icon id="theme-icon-auto-dark" name="material-symbols:brightness-4" class="text-[1.25rem] text-white/70 hidden" />
+	</button>
 </div>
 
 <script>
@@ -62,11 +73,117 @@ let links: NavBarLink[] = navBarConfig.links.map(
 			});
 		}
 
-		// 页面加载时标记
+		// 主题模式枚举
+		const THEME_MODES = ['light', 'dark', 'auto'] as const;
+		const THEME_ICONS = {
+			light: 'theme-icon-light',
+			dark: 'theme-icon-dark',
+			auto: ['theme-icon-auto-light', 'theme-icon-auto-dark']
+		} as const;
+
+		// 获取当前主题模式
+		function getCurrentThemeMode(): typeof THEME_MODES[number] {
+			const savedTheme = localStorage.theme;
+			if (THEME_MODES.includes(savedTheme as any)) {
+				return savedTheme as typeof THEME_MODES[number];
+			}
+			return 'auto'; // 默认跟随系统
+		}
+
+		// 获取系统是否偏好暗色
+		function isSystemDark(): boolean {
+			return window.matchMedia('(prefers-color-scheme: dark)').matches;
+		}
+
+		// 应用主题
+		function applyTheme(mode: typeof THEME_MODES[number]) {
+			const prefersDark = isSystemDark();
+
+			if (mode === 'light') {
+				document.documentElement.classList.remove('dark');
+			} else if (mode === 'dark') {
+				document.documentElement.classList.add('dark');
+			} else {
+				// auto 模式
+				if (prefersDark) {
+					document.documentElement.classList.add('dark');
+				} else {
+					document.documentElement.classList.remove('dark');
+				}
+			}
+		}
+
+		// 更新按钮图标
+		function updateThemeIcon(mode: typeof THEME_MODES[number]) {
+			const iconIds = ['theme-icon-light', 'theme-icon-dark', 'theme-icon-auto-light', 'theme-icon-auto-dark'];
+			iconIds.forEach(id => {
+				const icon = document.getElementById(id);
+				if (icon) {
+					icon.classList.add('hidden');
+				}
+			});
+
+			if (mode === 'auto') {
+				// auto 模式根据系统暗色偏好显示对应图标
+				const activeIcon = document.getElementById(isSystemDark() ? 'theme-icon-auto-dark' : 'theme-icon-auto-light');
+				if (activeIcon) {
+					activeIcon.classList.remove('hidden');
+				}
+			} else {
+				const activeIcon = document.getElementById(THEME_ICONS[mode] as string);
+				if (activeIcon) {
+					activeIcon.classList.remove('hidden');
+				}
+			}
+		}
+
+		// 监听系统主题变化
+		function watchSystemTheme() {
+			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+				const currentMode = getCurrentThemeMode();
+				if (currentMode === 'auto') {
+					applyTheme('auto');
+					updateThemeIcon('auto');
+				}
+			});
+		}
+
+		// 主题切换功能
+		function switchTheme() {
+			const currentMode = getCurrentThemeMode();
+			const currentIndex = THEME_MODES.indexOf(currentMode);
+			const nextIndex = (currentIndex + 1) % THEME_MODES.length;
+			const nextMode = THEME_MODES[nextIndex];
+
+			localStorage.theme = nextMode;
+			applyTheme(nextMode);
+			updateThemeIcon(nextMode);
+		}
+
+		// 初始化主题切换按钮
+		function initThemeSwitch() {
+			const currentMode = getCurrentThemeMode();
+			applyTheme(currentMode);
+			updateThemeIcon(currentMode);
+
+			// 监听系统主题变化
+			watchSystemTheme();
+
+			const themeSwitch = document.getElementById('navcard-theme-switch');
+			if (themeSwitch) {
+				themeSwitch.addEventListener('click', switchTheme);
+			}
+		}
+
+		// 页面加载时初始化
 		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', markActiveLink);
+			document.addEventListener('DOMContentLoaded', () => {
+				markActiveLink();
+				initThemeSwitch();
+			});
 		} else {
 			markActiveLink();
+			initThemeSwitch();
 		}
 
 		// 等待Swup初始化后注册钩子

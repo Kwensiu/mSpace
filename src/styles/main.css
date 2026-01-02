@@ -19,16 +19,16 @@
         @apply rounded-[var(--radius-large)]  backdrop-blur-sm bg-white/80 transition;
     }
     .post-card {
-        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-white/10 md:border-black/10 transition;
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
     }
     .archive-card {
-        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-white/10 md:border-black/10 transition;
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
     }
     .writing-card {
-        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-white/10 md:border-black/10 transition;
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
     }
     .about-card {
-        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-white/10 md:border-black/10 transition;
+        @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] border border-black/10 dark:border-white/10 transition;
     }
     .card-base {
         @apply rounded-[var(--radius-xxlarge)] overflow-hidden bg-[var(--card-bg)] transition;
