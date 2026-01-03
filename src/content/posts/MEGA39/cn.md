@@ -3,7 +3,7 @@ title: Project DIVA MM+
 published: 2025-12-24
 updated: 2026-01-03
 description: "整理与记录 MEGA39's + 的游玩历程"
-image: 'https://thenaturalaristocrat.com/wp-content/uploads/2022/05/Hatsune-Miku-Project-DIVA-Mega-Mix-Keyart.jpg'
+image: 'img/cover.webp'
 tags: [初音ミク, 音游, Mod]
 category: '游戏'
 draft: false 

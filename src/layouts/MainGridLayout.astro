@@ -136,13 +136,13 @@ const mainPanelTop = siteConfig.banner.enable
           )
         }
 
-        <div class="col-span-1 row-start-2 row-end-3 lg:col-span-1 lg:row-start-1 flex flex-col gap-4">
+        <div class="col-span-1 row-start-2 row-end-3 lg:col-span-1 lg:row-start-1 flex flex-col gap-4 w-full min-w-0">
           <NavCard />
           <main
             id="swup-container"
-            class="transition-swup-fade overflow-hidden flex-1"
+            class="transition-swup-fade overflow-hidden w-full"
           >
-            <div id="content-wrapper" class="onload-animation">
+            <div id="content-wrapper" class="onload-animation w-full">
               <!-- the overflow-hidden here prevent long text break the layout-->
               <!-- make id different from windows.swup global property -->
               <slot name="heading">

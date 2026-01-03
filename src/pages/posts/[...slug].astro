@@ -47,10 +47,9 @@ const jsonLd = {
 ---
 <MainGridLayout banner={entry.data.image} title={entry.data.title} description={entry.data.description} lang={entry.data.lang} setOGTypeArticle={true} headings={headings}>
     <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(jsonLd)}></script>
-    <div class="flex w-full rounded-[var(--radius-large)] overflow-hidden relative mb-4">
-        <div id="post-container" class:list={["postpage-post z-10 px-6 md:px-9 pt-8 pb-4 relative w-full ml-2 mr-2 md:ml-0 md:mr-0",
-            {}
-        ]}>
+    <div id="post-container" class:list={["postpage-post z-10 px-6 md:px-9 pt-8 pb-4 relative max-w-[calc(100%-1rem)] md:max-w-full mx-auto",
+        {}
+    ]}>
             <!-- word count and reading time -->
             <!-- <div class="flex flex-row text-black/30 dark:text-white/30 gap-5 mb-3 transition onload-animation">
                 <div class="flex flex-row items-center">
@@ -111,9 +110,8 @@ const jsonLd = {
             {licenseConfig.enable && <License title={entry.data.title} slug={entry.slug} pubDate={entry.data.published} class="mb-6 rounded-xl license-container onload-animation"></License>}
 
         </div>
-    </div>
 
-    <div class="flex flex-col md:flex-row justify-between gap-4 overflow-hidden w-full">
+    <div class="flex flex-col md:flex-row justify-between gap-4 pt-6 overflow-hidden w-full">
         <a href={entry.data.nextSlug ? getPostUrlBySlug(entry.data.nextSlug) : "#"}
            class:list={["w-full font-bold overflow-hidden active:scale-95 px-[7px] md:px-0", {"pointer-events-none": !entry.data.nextSlug}]}
            >
