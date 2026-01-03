@@ -81,23 +81,23 @@ onMount(() => {
 	// 重新定义 observer，因为需要在客户端环境中
 	if (isClient) {
 		observer = new MutationObserver(() => {
-			const new_hue = getHue();
-			const new_mode = document.documentElement.classList.contains("dark")
-				? "dark"
-				: "light";
-			if (hue !== new_hue || mode !== new_mode) {
-				hue = new_hue;
-				mode = new_mode;
-				updateGiscusTheme();
-			}
-		});
+	const new_hue = getHue();
+	const new_mode = document.documentElement.classList.contains("dark")
+		? "dark"
+		: "light";
+	if (hue !== new_hue || mode !== new_mode) {
+		hue = new_hue;
+		mode = new_mode;
+		updateGiscusTheme();
+	}
+});
 
-		findGiscusIframe();
+	findGiscusIframe();
 
-		observer.observe(document.documentElement, {
-			attributes: true,
-			attributeFilter: ["class", "style"],
-		});
+	observer.observe(document.documentElement, {
+		attributes: true,
+		attributeFilter: ["class", "style"],
+	});
 	}
 });
 
@@ -174,7 +174,8 @@ function updateGiscusTheme(retries = 0, maxRetries = 10) {
 			},
 		},
 	};
-	giscus_iframe.contentWindow.postMessage(message, "https://giscus.app");
+	// 修复：使用 * 作为目标 origin，这样可以避免跨域问题
+	giscus_iframe.contentWindow.postMessage(message, "*");
 }
 
 // 定义 Giscus 组件的类型
