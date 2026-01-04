@@ -15,7 +15,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
 );
 ---
 
-<div class="nav-card relative flex items-center gap-2 px-6 py-4 mx-4 mt-4 first:mt-0 rounded-[var(--radius-xxlarge)] bg-[var(--card-bg)]">
+<div class="nav-card flex relative items-center gap-2 px-6 py-4 mx-4 mt-4 first:mt-0">
 	{links.map((l) => (
 		<a
 			aria-label={l.name}
@@ -41,37 +41,8 @@ let links: NavBarLink[] = navBarConfig.links.map(
 
 <script>
 	// 防止重复执行
-	if ((window as any).__navCardInitialized) {
-	} else {
+	if (!(window as any).__navCardInitialized) {
 		(window as any).__navCardInitialized = true;
-
-		// 标记当前页面的链接
-		function markActiveLink() {
-			const currentPath = window.location.pathname;
-
-			const navLinks = document.querySelectorAll('.nav-link');
-
-			navLinks.forEach((link) => {
-				const href = (link as HTMLAnchorElement).getAttribute('href');
-				// 移除外部链接，它们不会匹配当前路径
-				const isExternal = (link as HTMLAnchorElement).target === '_blank';
-
-				if (!isExternal && href) {
-					// 精确匹配或子路径匹配
-					// 例如：主页'/'应该只匹配根路径，'/archive'应该匹配'/archive'或'/archive/xxx'
-					const isMatch = href === currentPath ||
-						(href !== '/' && (currentPath === href || currentPath.startsWith(href + '/')));
-
-					if (isMatch) {
-						link.classList.add('active');
-					} else {
-						link.classList.remove('active');
-					}
-				} else {
-					link.classList.remove('active');
-				}
-			});
-		}
 
 		// 主题模式枚举
 		const THEME_MODES = ['light', 'dark', 'auto'] as const;
@@ -84,10 +55,7 @@ let links: NavBarLink[] = navBarConfig.links.map(
 		// 获取当前主题模式
 		function getCurrentThemeMode(): typeof THEME_MODES[number] {
 			const savedTheme = localStorage.theme;
-			if (THEME_MODES.includes(savedTheme as any)) {
-				return savedTheme as typeof THEME_MODES[number];
-			}
-			return 'auto'; // 默认跟随系统
+			return THEME_MODES.includes(savedTheme as never) ? savedTheme : 'auto';
 		}
 
 		// 获取系统是否偏好暗色
@@ -97,113 +65,90 @@ let links: NavBarLink[] = navBarConfig.links.map(
 
 		// 应用主题
 		function applyTheme(mode: typeof THEME_MODES[number]) {
-			const prefersDark = isSystemDark();
-
-			if (mode === 'light') {
-				document.documentElement.classList.remove('dark');
-			} else if (mode === 'dark') {
-				document.documentElement.classList.add('dark');
-			} else {
-				// auto 模式
-				if (prefersDark) {
-					document.documentElement.classList.add('dark');
-				} else {
-					document.documentElement.classList.remove('dark');
-				}
-			}
+			const isDark = mode === 'dark' || (mode === 'auto' && isSystemDark());
+			document.documentElement.classList.toggle('dark', isDark);
 		}
 
 		// 更新按钮图标
 		function updateThemeIcon(mode: typeof THEME_MODES[number]) {
 			const iconIds = ['theme-icon-light', 'theme-icon-dark', 'theme-icon-auto-light', 'theme-icon-auto-dark'];
-			iconIds.forEach(id => {
-				const icon = document.getElementById(id);
-				if (icon) {
-					icon.classList.add('hidden');
-				}
-			});
+			let activeIconId: string;
 
 			if (mode === 'auto') {
-				// auto 模式根据系统暗色偏好显示对应图标
-				const activeIcon = document.getElementById(isSystemDark() ? 'theme-icon-auto-dark' : 'theme-icon-auto-light');
-				if (activeIcon) {
-					activeIcon.classList.remove('hidden');
-				}
+				activeIconId = isSystemDark() ? 'theme-icon-auto-dark' : 'theme-icon-auto-light';
 			} else {
-				const activeIcon = document.getElementById(THEME_ICONS[mode] as string);
-				if (activeIcon) {
-					activeIcon.classList.remove('hidden');
-				}
+				activeIconId = THEME_ICONS[mode] as string;
 			}
-		}
 
-		// 监听系统主题变化
-		function watchSystemTheme() {
-			window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
-				const currentMode = getCurrentThemeMode();
-				if (currentMode === 'auto') {
-					applyTheme('auto');
-					updateThemeIcon('auto');
-				}
+			iconIds.forEach(id => {
+				document.getElementById(id)?.classList.toggle('hidden', id !== activeIconId);
 			});
 		}
 
 		// 主题切换功能
 		function switchTheme() {
-			const currentMode = getCurrentThemeMode();
-			const currentIndex = THEME_MODES.indexOf(currentMode);
-			const nextIndex = (currentIndex + 1) % THEME_MODES.length;
-			const nextMode = THEME_MODES[nextIndex];
+			const currentIndex = THEME_MODES.indexOf(getCurrentThemeMode());
+			const nextMode = THEME_MODES[(currentIndex + 1) % THEME_MODES.length];
 
 			localStorage.theme = nextMode;
 			applyTheme(nextMode);
 			updateThemeIcon(nextMode);
 		}
 
-		// 初始化主题切换按钮
-		function initThemeSwitch() {
-			const currentMode = getCurrentThemeMode();
-			applyTheme(currentMode);
-			updateThemeIcon(currentMode);
+		// 标记当前页面的链接
+		function markActiveLink() {
+			const currentPath = window.location.pathname;
 
-			// 监听系统主题变化
-			watchSystemTheme();
+			document.querySelectorAll<HTMLAnchorElement>('.nav-link').forEach(link => {
+				const href = link.getAttribute('href');
+				const isExternal = link.target === '_blank';
 
-			const themeSwitch = document.getElementById('navcard-theme-switch');
-			if (themeSwitch) {
-				themeSwitch.addEventListener('click', switchTheme);
-			}
-		}
+				const shouldActive = !isExternal && href !== null && (
+					href === currentPath ||
+					(href !== '/' && (currentPath === href || currentPath.startsWith(href + '/')))
+				);
 
-		// 页面加载时初始化
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', () => {
-				markActiveLink();
-				initThemeSwitch();
+				link.classList.toggle('active', shouldActive);
 			});
-		} else {
-			markActiveLink();
-			initThemeSwitch();
 		}
 
-		// 等待Swup初始化后注册钩子
+		// 监听系统主题变化
+		const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
+		mediaQuery.addEventListener('change', () => {
+			if (getCurrentThemeMode() === 'auto') {
+				applyTheme('auto');
+				updateThemeIcon('auto');
+			}
+		});
+
+		// Swup钩子处理
+		let swupRegistered = false;
 		function registerSwupHooks() {
-			if (typeof window !== 'undefined' && (window as any).swup?.hooks) {
-				// 移除旧的钩子（避免重复注册）
-				(window as any).swup.hooks.off('content:replace', markActiveLink);
-				// 注册新钩子
-				(window as any).swup.hooks.on('content:replace', () => {
-					// 延迟执行，确保URL已更新
-					setTimeout(markActiveLink, 50);
-				});
-			} else {
-				// 如果Swup还没准备好，稍后重试
+			const swup = (window as any).swup?.hooks;
+			if (swup && !swupRegistered) {
+				swup.on('content:replace', () => setTimeout(markActiveLink, 50));
+				swupRegistered = true;
+			} else if (!swup) {
 				setTimeout(registerSwupHooks, 100);
 			}
 		}
 
-		// 立即尝试注册钩子
-		registerSwupHooks();
+		// 初始化
+		const init = () => {
+			const currentMode = getCurrentThemeMode();
+			applyTheme(currentMode);
+			updateThemeIcon(currentMode);
+			markActiveLink();
+
+			document.getElementById('navcard-theme-switch')?.addEventListener('click', switchTheme);
+			registerSwupHooks();
+		};
+
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			init();
+		}
 	}
 </script>
 
