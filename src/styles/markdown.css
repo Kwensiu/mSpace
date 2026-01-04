@@ -216,4 +216,29 @@
             opacity: 0 !important;
         }
     }
+
+    /* 更新标签样式 */
+    .update-tag-new,
+    .update-tag-imp,
+    .update-tag-fix,
+    .update-tag-post {
+        @apply inline-block px-2 py-0.5 rounded text-xs font-medium mr-1 -translate-y-[2px];
+        white-space: nowrap;
+    }
+
+    .update-tag-new {
+        @apply bg-emerald-300 text-black/80;
+    }
+
+    .update-tag-imp {
+        @apply bg-amber-300 text-black/80;
+    }
+
+    .update-tag-fix {
+        @apply bg-red-300 text-black/80;
+    }
+
+    .update-tag-post {
+        @apply bg-blue-300 text-black/80;
+    }
 }
