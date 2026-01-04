@@ -75,9 +75,9 @@ export function updateNavigationLinks() {
 			// Mapping from URL to translation key
 			const urlToKeyMap = {
 				"/": "home",
-				"/about/": "about",
 				"/archive/": "archive",
-				"/writing/": "writing", // Custom link - won't be translated dynamically
+				"/writing/": "writing",
+				"/about/": "about",
 			};
 
 			// Update all navigation links with translated text

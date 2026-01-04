@@ -16,7 +16,7 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 		url: "/archive/",
 	},
 	[LinkPreset.Writing]: {
-		name: "写作(Beta)",
+		name: "写作",
 		url: "/writing/",
 	},
 };
