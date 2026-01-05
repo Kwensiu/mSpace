@@ -153,6 +153,13 @@ let links: NavBarLink[] = navBarConfig.links.map(
 </script>
 
 <style>
+	/* 大屏幕下隐藏 NavCard */
+	@media (min-width: 768px) {
+		.nav-card {
+			display: none !important;
+		}
+	}
+
 	/* 链接的下划线动画 */
 	.nav-link {
 		position: relative;
