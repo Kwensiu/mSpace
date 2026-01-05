@@ -1,10 +1,10 @@
 ---
-title: 你好
+title: 公告
 published: 2025-12-16
 updated: 2026-01-03
 description: 快速跳转到推荐的页面
 tags: [置顶, 导航, 搜索]
-category: 导航
+category: 博客
 draft: false
 pin: true
 pinOrder: 1
