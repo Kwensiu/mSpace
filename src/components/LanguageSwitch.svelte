@@ -95,12 +95,12 @@ function hidePanel() {
 </script>
 
 <!-- z-50 make the panel higher than other float panels -->
-<div class="relative z-50" role="menu" tabindex="-1" onmouseleave={hidePanel}>
+<div class="z-50 relative" role="menu" tabindex="-1" onmouseleave={hidePanel}>
 	<button
 		id="language-switch"
 		aria-label={buttonLabel}
 		role="menuitem"
-		class="btn-plain scale-animation rounded-lg h-11 w-11 active:scale-90 flex items-center justify-center"
+		class="flex justify-center items-center rounded-lg w-11 h-11 scale-animation active:scale-90 btn-plain"
 		onmouseenter={showPanel}
 		onclick={togglePanel}
 	>
@@ -109,10 +109,10 @@ function hidePanel() {
 
 	<div
 		id="language-panel"
-		class="absolute transition float-panel-closed top-11 pt-5 z-50 lg:-right-2 right-0"
+		class="top-11 right-0 lg:-right-2 z-50 float-panel-closed absolute pt-5 transition"
 	>
-		<div class="card-base float-panel p-2 min-w-48">
-			<div class="font-bold text-neutral-900 dark:text-neutral-100 px-3 py-1 mb-1">
+		<div class="float-panel p-2 min-w-48 card-base">
+			<div class="mb-1 px-3 py-1 font-bold text-neutral-900 dark:text-neutral-100">
 				Languages
 			</div>
 			{#each languages as lang}
@@ -120,7 +120,7 @@ function hidePanel() {
 					class="flex transition whitespace-nowrap items-center !justify-start w-full btn-plain scale-animation rounded-lg h-9 px-3 font-medium active:scale-95 mb-0.5 z-100 {currentLang === lang.code ? '!bg-[var(--primary)] text-white' : ''}"
 					onclick={() => switchLanguage(lang.code)}
 				>
-					<span class="text-lg mr-3">{lang.flag}</span>
+					<span class="mr-3 text-lg">{lang.flag}</span>
 					<span>{lang.name}</span>
 				</button>
 			{/each}

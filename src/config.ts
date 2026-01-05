@@ -11,6 +11,10 @@ import { LinkPreset } from "./types/config";
 export const siteConfig: SiteConfig = {
 	title: "生存戰略",
 	subtitle: "CatchTheWave",
+	logo: {
+		light: "/src/assets/images/logos/kwensiu-logo-black-sm.webp",
+		dark: "/src/assets/images/logos/kwensiu-logo-white-sm.webp",
+	},
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.
 	themeColor: {
 		hue: 80, // Default hue for the theme color, from 0 to 360. e.g. red: 0, teal: 200, cyan: 250, pink: 345
@@ -22,8 +26,8 @@ export const siteConfig: SiteConfig = {
 		position: "center", // Equivalent to object-position, only supports 'top', 'center', 'bottom'. 'center' by default
 		credit: {
 			enable: true, // Display the credit text of the banner image
-			text: "プロセカ", // Credit text to be displayed
-			url: "https://projectsekai.fandom.com/wiki/Shinonome_Ena/Cards?file=Beyond_My_Boundaries_T.png", // (Optional) URL link to the original artwork or artist's page
+			text: "kieed", // Credit text to be displayed
+			url: "https://www.pixiv.net/artworks/138387160", // (Optional) URL link to the original artwork or artist's page
 		},
 	},
 	toc: {

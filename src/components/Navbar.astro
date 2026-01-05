@@ -26,10 +26,31 @@ let links: NavBarLink[] = navBarConfig.links.map(
     <div class:list={[
         className,
         "navbar !overflow-visible mx-auto flex items-center justify-between"]}>
-        <a href={url('/')} class="px-5 rounded-lg h-[3.25rem] font-bold scale-animation active:scale-95 btn-plain">
-            <div class="flex flex-row items-center text-[var(--primary)] text-lg">
-                {siteConfig.title}
-            </div>
+        <a href={url('/')} class="flex items-center px-5 rounded-lg h-[3.25rem] font-bold scale-animation active:scale-95 btn-plain">
+            {siteConfig.logo ? (
+                <>
+                    {typeof siteConfig.logo === 'string' ? (
+                        <img src={siteConfig.logo} alt={siteConfig.title} class="h-[2rem] md:h-[2.5rem] object-contain" />
+                    ) : (
+                        <>
+                            <img
+                                src={siteConfig.logo.light}
+                                alt={siteConfig.title}
+                                class="dark:hidden h-[2rem] md:h-[2.5rem] object-contain transition-opacity duration-300"
+                            />
+                            <img
+                                src={siteConfig.logo.dark}
+                                alt={siteConfig.title}
+                                class="hidden dark:block h-[2rem] md:h-[2.5rem] object-contain transition-opacity duration-300"
+                            />
+                        </>
+                    )}
+                </>
+            ) : (
+                <div class="flex flex-row items-center text-[var(--primary)] text-lg">
+                    {siteConfig.title}
+                </div>
+            )}
         </a>
         <div class="hidden md:flex">
             {links.map((l) => {
