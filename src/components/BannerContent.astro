@@ -6,14 +6,11 @@ import I18nKey from "@i18n/i18nKey";
 import { i18n } from "@i18n/translation";
 
 interface Props {
-  customTitle?: string;
-  customSubtitle?: string;
+	customTitle?: string;
+	customSubtitle?: string;
 }
 
-const {
-  customTitle,
-  customSubtitle,
-} = Astro.props;
+const { customTitle, customSubtitle } = Astro.props;
 ---
 
 <div class="banner-content absolute w-full flex flex-col items-center justify-center pointer-events-none" style="z-index: 50;">
@@ -33,13 +30,13 @@ const {
 <style>
   .banner-content {
     position: absolute;
-    top: calc(35vh - 18.5rem);
+    top: calc(17.5vh - 18.5rem);
   }
 
   /* 在大屏幕(1024px以上)上调整位置,适应sidebar出现和布局变化 */
   @media (min-width: 1024px) {
     .banner-content {
-      top: calc(35vh - 7rem);
+      top: calc(17.5vh - 7rem);
     }
   }
 
@@ -75,7 +72,7 @@ const {
 
   @media (max-width: 1024px) {
     .banner-content {
-      top: calc(35vh - 14rem);
+      top: calc(17.5vh - 14rem);
     }
 
     .banner-title {
@@ -89,7 +86,7 @@ const {
 
   @media (max-width: 768px) {
     .banner-content {
-      top: calc(35vh - 12rem);
+      top: calc(17.5vh - 12rem);
     }
 
     .banner-title {
