@@ -66,8 +66,8 @@ importers:
         specifier: ^1.2.6
         version: 1.2.6
       '@iconify/svelte':
-        specifier: ^5.1.0
-        version: 5.1.0(svelte@5.46.1)
+        specifier: ^5.2.1
+        version: 5.2.1(svelte@5.46.1)
       '@swup/astro':
         specifier: ^1.7.0
         version: 1.7.0(@types/babel__core@7.20.5)
@@ -1160,10 +1160,10 @@ packages:
   '@iconify-json/mingcute@1.2.6':
     resolution: {integrity: sha512-mXvLsBgsZz9jiAUKtU+EHsD5/tLzWAHQ0z0Qk255NjUnZqtbmIhSNoUHq59tO776K2Q48A4D+Y3LYce2niY3CQ==}
 
-  '@iconify/svelte@5.1.0':
-    resolution: {integrity: sha512-I14nSqo0pNXO5OKsT61ZO3XIPF4yRHA2ErgPsaZ1sPJdKXn80o7o8jOe1xpWphbb9FihdX6by9zlKKBss61mFw==}
+  '@iconify/svelte@5.2.1':
+    resolution: {integrity: sha512-zHmsIPmnIhGd5gc95bNN5FL+GifwMZv7M2rlZEpa7IXYGFJm/XGHdWf6PWQa6OBoC+R69WyiPO9NAj5wjfjbow==}
     peerDependencies:
-      svelte: '>4.0.0'
+      svelte: '>5.0.0'
 
   '@iconify/tools@4.1.2':
     resolution: {integrity: sha512-q6NzLQYEN9zkDfcyBqD3vItHcZw97w/s++3H3TBxUORr57EfHxj6tOW6fyufDjMq+Vl56WXWaPx1csBPYlI5CA==}
@@ -5386,6 +5386,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@4.0.0:
     resolution: {integrity: sha512-QaKxh0eNIi2mE9p2vEdzfagOKHCcj1pJ56EEHGQOVxp8r9/iszLUUV7v89x9O1p/T+NlTM5W7jW6+cz4Fq1YVg==}
@@ -6668,7 +6669,7 @@ snapshots:
     dependencies:
       '@iconify/types': 2.0.0
 
-  '@iconify/svelte@5.1.0(svelte@5.46.1)':
+  '@iconify/svelte@5.2.1(svelte@5.46.1)':
     dependencies:
       '@iconify/types': 2.0.0
       svelte: 5.46.1
