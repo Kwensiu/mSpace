@@ -1,6 +1,7 @@
 ---
 import BackToTop from "@components/control/BackToTop.astro";
 import Footer from "@components/Footer.astro";
+import Navbar from "@components/Navbar.astro";
 import NavCard from "@components/NavCard.astro";
 import SideBar from "@components/widget/SideBar.astro";
 import type { MarkdownHeading } from "astro";
@@ -40,7 +41,8 @@ const {
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;
-const isHomePage = Astro.url.pathname === "/" || Astro.url.pathname === "/blog/";
+const isHomePage =
+	Astro.url.pathname === "/" || Astro.url.pathname === "/blog/";
 
 const mainPanelTop = siteConfig.banner.enable
 	? `calc(${BANNER_HEIGHT}vh - ${MAIN_PANEL_OVERLAPS_BANNER_HEIGHT}rem)`
@@ -59,15 +61,15 @@ const mainPanelTop = siteConfig.banner.enable
   <slot slot="head" name="head" />
   <div
     id="top-row"
-    class="z-50 pointer-events-none relative transition-all duration-700 max-w-[var(--page-width)] px-0 md:px-4 mx-auto"
+    class="z-50 relative mx-auto max-w-full transition-all duration-700 pointer-events-none"
     class:list={[""]}
   >
-<!--     <div
+    <div
       id="navbar-wrapper"
-      class="pointer-events-auto sticky top-0 transition-all"
+      class="top-0 sticky transition-all pointer-events-auto"
     >
       <Navbar />
-    </div> -->
+    </div>
   </div>
 
   <!-- Banner -->
@@ -108,14 +110,14 @@ const mainPanelTop = siteConfig.banner.enable
 
   <!-- Main content -->
   <div
-    class="absolute w-full z-30 pointer-events-none"
+    class="z-30 absolute w-full pointer-events-none"
     style={`top: ${mainPanelTop}`}
   >
     <!-- The pointer-events-none here prevent blocking the click event of the TOC -->
-    <div class="relative max-w-[var(--page-width)] mx-auto pointer-events-auto">
+    <div class="relative mx-auto max-w-[var(--page-width)] pointer-events-auto">
       <div
         id="main-grid"
-        class="transition duration-700 w-full left-0 right-0 grid grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem] grid-rows-[auto_1fr_auto_auto] lg:grid-rows-[1fr_auto] mx-auto gap-6 px-0 md:px-4"
+        class="right-0 left-0 gap-6 grid grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem] grid-rows-[auto_1fr_auto_auto] lg:grid-rows-[1fr_auto] mx-auto px-0 md:px-4 w-full transition duration-700"
       >
         <!-- Banner image credit -->
         {
@@ -128,12 +130,12 @@ const mainPanelTop = siteConfig.banner.enable
               aria-label="Visit image source"
               class:list={[
                 "group onload-animation transition-all absolute flex justify-center items-center rounded-full " +
-                  "px-3 right-4 -top-[3.25rem] bg-black/60 hover:bg-black/70 h-9",
+                  "px-3 right-4 md:right-8 lg:right-4 -top-[1.25rem]  md:-top-[1.75rem] lg:-top-[3.25rem]  bg-black/60 hover:bg-black/70 h-9",
                 { "hover:pr-9 active:bg-black/80": hasBannerLink },
               ]}
             >
               <Icon
-                class="text-white/75 text-[1.25rem] mr-1"
+                class="mr-1 text-[1.25rem] text-white/75"
                 name="material-symbols:copyright-outline-rounded"
               />
               <div class="text-white/75 text-xs">
@@ -150,13 +152,13 @@ const mainPanelTop = siteConfig.banner.enable
           )
         }
 
-        <div class="col-span-1 row-start-2 row-end-3 lg:col-span-1 lg:row-start-1 flex flex-col gap-4 w-full min-w-0">
+        <div class="flex flex-col gap-4 col-span-1 lg:col-span-1 row-start-2 lg:row-start-1 row-end-3 w-full min-w-0">
           <NavCard />
           <main
             id="swup-container"
-            class="transition-swup-fade overflow-hidden w-full"
+            class="w-full overflow-hidden transition-swup-fade"
           >
-            <div id="content-wrapper" class="onload-animation w-full">
+            <div id="content-wrapper" class="w-full onload-animation">
               <!-- the overflow-hidden here prevent long text break the layout-->
               <!-- make id different from windows.swup global property -->
               <slot name="heading">
@@ -168,12 +170,12 @@ const mainPanelTop = siteConfig.banner.enable
         </div>
 
         <SideBar
-          class="mb-4 row-start-3 row-end-4 col-span-1 lg:row-start-1 lg:row-end-2 lg:col-span-1 lg:max-w-[17.5rem] onload-animation"
+          class="col-span-1 lg:col-span-1 row-start-3 lg:row-start-1 row-end-4 lg:row-end-2 mb-4 lg:max-w-[17.5rem] onload-animation"
           headings={headings}
         />
 
         <div
-          class="footer col-span-1 lg:col-span-2 row-start-4 row-end-5 onload-animation"
+          class="col-span-1 lg:col-span-2 row-start-4 row-end-5 footer onload-animation"
           style="padding-bottom: 60px"
         >
           <Footer />
@@ -185,8 +187,8 @@ const mainPanelTop = siteConfig.banner.enable
   </div>
 
   <!-- The things that should be under the banner, only the TOC for now -->
-  <div class="absolute w-full z-0 hidden 2xl:block">
-    <div class="relative max-w-[var(--page-width)] mx-auto">
+  <div class="hidden 2xl:block z-0 absolute w-full">
+    <div class="relative mx-auto max-w-[var(--page-width)]">
       <!-- TOC component -->
       {
         siteConfig.toc.enable && (
@@ -199,12 +201,12 @@ const mainPanelTop = siteConfig.banner.enable
           >
             <div
               id="toc-inner-wrapper"
-              class="fixed top-14 w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-y-scroll overflow-x-hidden hide-scrollbar"
+              class="top-14 fixed w-[var(--toc-width)] h-[calc(100vh_-_20rem)] overflow-x-hidden overflow-y-scroll hide-scrollbar"
             >
-              <div id="toc" class="w-full h-full transition-swup-fade ">
-                <div class="h-8 w-full" />
+              <div id="toc" class="w-full h-full transition-swup-fade">
+                <div class="w-full h-8" />
                 <TOC headings={headings} />
-                <div class="h-8 w-full" />
+                <div class="w-full h-8" />
               </div>
             </div>
           </div>
