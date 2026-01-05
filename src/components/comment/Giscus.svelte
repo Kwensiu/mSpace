@@ -7,34 +7,56 @@ import { commentConfig } from "@/config";
 // 类型定义
 // ============================================================================
 type MappingType =
-	| 'url'
-	| 'title'
-	| 'og:title'
-	| 'specific'
-	| 'number'
-	| 'pathname';
+	| "url"
+	| "title"
+	| "og:title"
+	| "specific"
+	| "number"
+	| "pathname";
 
-type BooleanString = '0' | '1';
-type InputPosition = 'top' | 'bottom';
+type BooleanString = "0" | "1";
+type InputPosition = "top" | "bottom";
 
 type Theme =
-	| 'light'
-	| 'light_high_contrast'
-	| 'light_protanopia'
-	| 'dark'
-	| 'dark_high_contrast'
-	| 'dark_protanopia'
-	| 'dark_dimmed'
-	| 'transparent_dark'
-	| 'preferred_color_scheme'
+	| "light"
+	| "light_high_contrast"
+	| "light_protanopia"
+	| "dark"
+	| "dark_high_contrast"
+	| "dark_protanopia"
+	| "dark_dimmed"
+	| "transparent_dark"
+	| "preferred_color_scheme"
 	| string;
 
 type AvailableLanguage =
-	| 'en' | 'ar' | 'ca' | 'da' | 'de' | 'el' | 'es' | 'fi' | 'fr'
-	| 'he' | 'id' | 'it' | 'ja' | 'ko' | 'nl' | 'pl' | 'pt'
-	| 'ro' | 'ru' | 'th' | 'tr' | 'uk' | 'vi' | 'zh-CN' | 'zh-TW';
+	| "en"
+	| "ar"
+	| "ca"
+	| "da"
+	| "de"
+	| "el"
+	| "es"
+	| "fi"
+	| "fr"
+	| "he"
+	| "id"
+	| "it"
+	| "ja"
+	| "ko"
+	| "nl"
+	| "pl"
+	| "pt"
+	| "ro"
+	| "ru"
+	| "th"
+	| "tr"
+	| "uk"
+	| "vi"
+	| "zh-CN"
+	| "zh-TW";
 
-type Loading = 'lazy' | 'eager';
+type Loading = "lazy" | "eager";
 
 // ============================================================================
 // 配置验证
@@ -44,7 +66,11 @@ if (!commentConfig || !commentConfig.giscus) {
 }
 const giscus = commentConfig.giscus;
 
-if (!giscus.repo || typeof giscus.repo !== 'string' || !giscus.repo.includes('/')) {
+if (
+	!giscus.repo ||
+	typeof giscus.repo !== "string" ||
+	!giscus.repo.includes("/")
+) {
 	throw new Error("Giscus repo must be in format 'owner/repo'");
 }
 
@@ -52,7 +78,7 @@ if (!giscus.repo || typeof giscus.repo !== 'string' || !giscus.repo.includes('/'
 // 状态变量
 // ============================================================================
 let hue = 80;
-let mode = 'light';
+let mode = "light";
 let isClient = false;
 let isLoading = true;
 let giscusReady = false;
@@ -79,7 +105,7 @@ onMount(async () => {
 
 onDestroy(() => {
 	observer?.disconnect();
-	cleanupFunctions.forEach(cleanup => cleanup());
+	cleanupFunctions.forEach((cleanup) => cleanup());
 	cleanupFunctions = [];
 });
 
@@ -111,7 +137,9 @@ async function loadStyles() {
 function setupObserver() {
 	observer = new MutationObserver(() => {
 		const newHue = getHue();
-		const newMode = document.documentElement.classList.contains("dark") ? "dark" : "light";
+		const newMode = document.documentElement.classList.contains("dark")
+			? "dark"
+			: "light";
 
 		if (hue !== newHue || mode !== newMode) {
 			hue = newHue;
@@ -153,20 +181,21 @@ function setupHeightObserver() {
 
 	const messageHandler = (event: MessageEvent) => {
 		if (event.source !== giscus_iframe?.contentWindow) return;
-		if (typeof event.data === 'object' && event.data?.giscus?.resize) {
-			giscus_iframe.style.height = 'auto';
-			giscus_iframe.style.height = event.data.giscus.resize.height + 'px';
+		if (typeof event.data === "object" && event.data?.giscus?.resize) {
+			giscus_iframe.style.height = "auto";
+			giscus_iframe.style.height = event.data.giscus.resize.height + "px";
 		}
 	};
 
 	const checkHeight = () => {
 		if (!giscus_iframe) return;
 		try {
-			const iframeDocument = giscus_iframe.contentDocument || giscus_iframe.contentWindow?.document;
+			const iframeDocument =
+				giscus_iframe.contentDocument || giscus_iframe.contentWindow?.document;
 			if (iframeDocument?.body) {
 				const bodyHeight = iframeDocument.body.scrollHeight;
 				if (bodyHeight > 0) {
-					giscus_iframe.style.height = bodyHeight + 20 + 'px';
+					giscus_iframe.style.height = bodyHeight + 20 + "px";
 				}
 			}
 		} catch (e) {
@@ -181,14 +210,14 @@ function setupHeightObserver() {
 		setTimeout(() => updateGiscusTheme(), 300);
 	};
 
-	giscus_iframe.addEventListener('load', loadHandler);
-	window.addEventListener('message', messageHandler);
+	giscus_iframe.addEventListener("load", loadHandler);
+	window.addEventListener("message", messageHandler);
 
 	cleanupFunctions.push(() => {
 		clearInterval(heightInterval);
-		window.removeEventListener('message', messageHandler);
+		window.removeEventListener("message", messageHandler);
 		if (giscus_iframe) {
-			giscus_iframe.removeEventListener('load', loadHandler);
+			giscus_iframe.removeEventListener("load", loadHandler);
 		}
 	});
 }
@@ -223,9 +252,10 @@ function getGiscusThemeValue(): string {
 	}
 
 	const hueStyle = `main { --hue: ${hue}; }`;
-	const css = mode === "dark"
-		? hueStyle + giscus_dark + giscus_base
-		: hueStyle + giscus_light + giscus_base;
+	const css =
+		mode === "dark"
+			? hueStyle + giscus_dark + giscus_base
+			: hueStyle + giscus_light + giscus_base;
 
 	return `data:text/css;base64,${btoa(css)}`;
 }
