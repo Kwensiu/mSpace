@@ -3,7 +3,7 @@ title: PicGo插件 - 闲鱼图床
 published: 2026-01-06
 updated: 2026-01-06
 description: ''
-image: ''
+image: 'https://img.alicdn.com/imgextra/i3/O1CN016HS0ab1ZXwVUAvXT3_!!2205575593205-2-fleamarket.png'
 tags: ["图床", "闲鱼", "PicGo",]
 category: '开发'
 draft: false 
@@ -20,8 +20,6 @@ hidden: none
 在 fuwari 的 [forks](https://github.com/saicaca/fuwari/forks) 闲逛，发现 [Tavre 的博客](https://blog.tavr.top/)有个很有意思的文章 :  
 [**《阿里图床 不死速度快无敌图床！》**](https://blog.tavr.top/posts/aliimg/)  
 
-Tavre 使用了 [“闲鱼创作者平台”](https://author.goofish.com/#/)  API 编写了一个自用图床，发布在了Github上。  
-
 ::github{repo="tavre/goofish_img"}  
 
 下载体验了一下，配置好后确实能正常使用，但是部分内容需要个性化处理。例如分类和网页结构。  
@@ -33,7 +31,7 @@ Tavre 使用了 [“闲鱼创作者平台”](https://author.goofish.com/#/)  AP
 
 ::github{repo="kwensiu/picgo-plugin-goofish"}
 
-我已将插件发布到了Github，也在PicGo提交了插件PR。
+插件已发布到Github，也在PicGo提交了插件PR。
 
 ## 功能特点
 

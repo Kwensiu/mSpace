@@ -3,7 +3,7 @@ title: Dock 组件集成指南
 published: 2025-12-19
 updated: 2026-01-03
 description: "展示如何集成我的 Dock 组件到 fuwari"
-image: "cover.webp"
+image: "cover.png"
 tags: [开发, 博客, Fuwari]
 category: "开发"
 draft: false
