@@ -1,52 +1,57 @@
 .custom-md {
-    h1 {
-        @apply text-3xl;
+  h1 {
+    @apply text-3xl;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    .anchor {
+      @apply -m-0.5 ml-[0.2ch] select-none p-0.5 no-underline opacity-20 transition !important;
+
+      .anchor-icon {
+        @apply mx-[0.45ch] !important;
+      }
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        .anchor {
-            @apply transition -m-0.5 ml-[0.2ch] p-0.5 select-none opacity-20 no-underline !important;
-
-            .anchor-icon {
-                @apply mx-[0.45ch] !important;
-            }
-        }
-
-        &:hover {
-            .anchor {
-                @apply opacity-100 !important;
-            }
-        }
+    &:hover {
+      .anchor {
+        @apply opacity-100 !important;
+      }
     }
+  }
 
-    /* 修改为文字下方横线效果，模仿记事本风格 */
-    p {
-        @apply relative leading-relaxed py-1;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
-        
-        /* 使用伪元素创建横线，只覆盖文字宽度 */
-        &::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0.5rem;
-            right: 0.5rem;
-            height: 1px;
-            background-color: var(--line-color);
-        }
+  /* 修改为文字下方横线效果，模仿记事本风格 */
+  p {
+    @apply relative py-1 leading-relaxed;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+
+    /* 使用伪元素创建横线，只覆盖文字宽度 */
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0.5rem;
+      right: 0.5rem;
+      height: 1px;
+      background-color: var(--line-color);
     }
-    
-    /* 为列表元素添加横线效果 */
-/*     ul, ol {
+  }
+
+  /* 为列表元素添加横线效果 */
+  /*     ul, ol {
         @apply leading-relaxed;
         li {
             @apply relative;
             padding-left: 0.5rem;
             padding-right: 0.5rem; */
-            
-            /* 使用伪元素创建横线，只覆盖文字宽度 */
-/*             &::after {
+
+  /* 使用伪元素创建横线，只覆盖文字宽度 */
+  /*             &::after {
                 content: '';
                 position: absolute;
                 bottom: 0;
@@ -56,189 +61,209 @@
                 background-color: var(--line-color);
             }
         } */
-/*     } */
+  /*     } */
 
-    /* 为标题添加横线效果 */
-    h1, h2, h3, h4, h5, h6 {
-        @apply py-1 my-4 relative;
-        padding-left: 0.5rem;
-        padding-right: 0.5rem;
+  /* 为标题添加横线效果 */
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply relative my-4 py-1;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
 
-        /* 使用text-decoration创建横线，只覆盖文字宽度 */
-        text-decoration-line: underline;
-        text-decoration-color: var(--line-color);
-        text-decoration-thickness: 1px;
-        text-decoration-skip-ink: none;
-        text-underline-offset: 10px;
+    /* 使用text-decoration创建横线，只覆盖文字宽度 */
+    text-decoration-line: underline;
+    text-decoration-color: var(--line-color);
+    text-decoration-thickness: 1px;
+    text-decoration-skip-ink: none;
+    text-underline-offset: 10px;
+  }
+
+  a:not(.no-styling) {
+    @apply relative font-medium text-[var(--primary)];
+    position: relative;
+    display: inline-block; /* 改为inline-block以支持padding */
+    text-decoration: none; /* 移除所有默认下划线 */
+    padding: 0.2rem 0.5rem; /* 添加内边距 */
+    margin: -0.25rem 0rem; /* 负外边距抵消内边距对布局的影响 */
+    border-radius: 0.375rem; /* 添加圆角 */
+    transition: background-color 0.2s ease;
+
+    /* 使用伪元素创建虚线效果 */
+    &::after {
+      content: "";
+      position: absolute;
+      left: 0.5rem; /* 调整位置以考虑padding */
+      right: 0.5rem;
+      bottom: 0.25rem; /* 调整位置以考虑padding */
+      height: 1px;
+      background-image: linear-gradient(
+        to right,
+        var(--link-underline) 50%,
+        transparent 50%
+      );
+      background-size: 8px 1px; /* 虚线长度和间距 */
+      background-repeat: repeat-x;
+      transition: opacity 0.2s ease;
+      opacity: 1;
     }
 
-    a:not(.no-styling) {
-        @apply relative font-medium text-[var(--primary)];
-        position: relative;
-        display: inline-block; /* 改为inline-block以支持padding */
-        text-decoration: none; /* 移除所有默认下划线 */
-        padding: 0.2rem 0.5rem; /* 添加内边距 */
-        margin: -0.25rem 0rem; /* 负外边距抵消内边距对布局的影响 */
-        border-radius: 0.375rem; /* 添加圆角 */
-        transition: background-color 0.2s ease;
-        
-        /* 使用伪元素创建虚线效果 */
-        &::after {
-            content: '';
-            position: absolute;
-            left: 0.5rem; /* 调整位置以考虑padding */
-            right: 0.5rem;
-            bottom: 0.25rem; /* 调整位置以考虑padding */
-            height: 1px;
-            background-image: linear-gradient(to right, var(--link-underline) 50%, transparent 50%);
-            background-size: 8px 1px; /* 虚线长度和间距 */
-            background-repeat: repeat-x;
-            transition: opacity 0.2s ease;
-            opacity: 1;
-        }
-    
-        &:hover, &:active {
-            background: var(--btn-plain-bg-hover);
-            
-            /* 隐藏默认虚线 */
-            &::after {
-                opacity: 0;
-            }
-        }
+    &:hover,
+    &:active {
+      background: var(--btn-plain-bg-hover);
+
+      /* 隐藏默认虚线 */
+      &::after {
+        opacity: 0;
+      }
+    }
+  }
+
+  code {
+    @apply overflow-hidden rounded-md bg-[var(--inline-code-bg)] px-1 py-0.5 text-[var(--inline-code-color)];
+
+    font-family:
+      "JetBrains Mono Variable",
+      ui-monospace,
+      SFMono-Regular,
+      Menlo,
+      Monaco,
+      Consolas,
+      Liberation Mono,
+      Courier New,
+      monospace;
+    &:before {
+      content: none;
+    }
+    &:after {
+      content: none;
     }
 
-    code {
-        @apply bg-[var(--inline-code-bg)] text-[var(--inline-code-color)] px-1 py-0.5 rounded-md overflow-hidden;
+    counter-reset: line;
+    span.line {
+      &:before {
+        @apply mr-4 inline-block w-4 text-white/25;
+        content: counter(line);
+        counter-increment: line;
+        direction: rtl;
+      }
+      &:last-child:empty,
+      &:last-child:has(> span:empty:only-child) {
+        display: none;
+      }
+    }
+  }
 
-        font-family: 'JetBrains Mono Variable', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, Liberation Mono, Courier New, monospace;
-        &:before {
-            content:none;
-        }
-        &:after {
-            content:none;
-        }
+  .copy-btn {
+    all: initial;
+    @apply btn-regular-dark absolute right-3 top-3 z-20 h-8 w-8 cursor-pointer rounded-lg text-sm opacity-0 shadow-lg shadow-black/50 transition-all ease-in-out active:scale-90;
+  }
+  .frame:hover .copy-btn {
+    opacity: 1;
+  }
 
-        counter-reset: line;
-        span.line {
-            &:before {
-                @apply text-white/25 mr-4 w-4 inline-block;
-                content: counter(line);
-                counter-increment: line;
-                direction: rtl;
-            }
-            &:last-child:empty, &:last-child:has(> span:empty:only-child) {
-                display: none;
-            }
-        }
-    }
+  .copy-btn-icon {
+    @apply pointer-events-none absolute left-1/2 top-1/2 h-4 w-4 -translate-x-1/2 -translate-y-1/2 fill-white transition;
+  }
+  .copy-btn .copy-icon {
+    @apply fill-white opacity-100 dark:fill-white/75;
+  }
+  .copy-btn.success .copy-icon {
+    @apply fill-[var(--deep-text)] opacity-0;
+  }
+  .copy-btn .success-icon {
+    @apply fill-white opacity-0;
+  }
+  .copy-btn.success .success-icon {
+    @apply opacity-100;
+  }
 
-    .copy-btn {
-        all: initial;
-        @apply btn-regular-dark opacity-0 shadow-lg shadow-black/50 absolute active:scale-90 h-8 w-8 top-3 right-3 text-sm rounded-lg transition-all ease-in-out z-20 cursor-pointer;
+  .expressive-code {
+    @apply my-4;
+    ::selection {
+      @apply bg-[var(--codeblock-selection)];
     }
-    .frame:hover .copy-btn {
-        opacity: 1;
-    }
+  }
 
-    .copy-btn-icon {
-        @apply absolute top-1/2 left-1/2 transition -translate-x-1/2 -translate-y-1/2 w-4 h-4 fill-white pointer-events-none;
+  ul,
+  ol {
+    li::marker {
+      @apply text-[var(--primary)];
     }
-    .copy-btn .copy-icon {
-        @apply opacity-100 fill-white dark:fill-white/75;
-    }
-    .copy-btn.success .copy-icon {
-        @apply opacity-0 fill-[var(--deep-text)]
-    }
-    .copy-btn .success-icon {
-        @apply opacity-0 fill-white;
-    }
-    .copy-btn.success .success-icon {
-        @apply opacity-100
-    }
+  }
 
-    .expressive-code {
-        @apply my-4;
-        ::selection {
-            @apply bg-[var(--codeblock-selection)];
-        }
-    }
+  blockquote {
+    @apply relative border-transparent not-italic;
+    font-weight: inherit;
 
-
-    ul, ol {
-        li::marker {
-            @apply text-[var(--primary)];
-        }
+    &:before {
+      @apply absolute -left-1 block h-full w-1 rounded-full bg-[var(--btn-regular-bg)] transition content-[''];
     }
 
-    blockquote {
-        @apply not-italic border-transparent relative;
-        font-weight: inherit;
-
-        &:before {
-            @apply content-[''] absolute -left-1 block transition bg-[var(--btn-regular-bg)] h-full w-1 rounded-full;
-        }
-
-        /* Remove the double quotes from default styles */
-        p:before, p:after {
-            @apply content-none;
-        }
-
+    /* Remove the double quotes from default styles */
+    p:before,
+    p:after {
+      @apply content-none;
     }
+  }
 
-    .katex-display-container {
-        max-width: 100%;
-        overflow-x: auto;
-        margin: 1em 0;
-    }
-    
-    .custom-bl {
-        position: relative;
-        height: 1px;
-        margin: 0.1rem 0;
-        background: transparent;
-        margin-left: 0.5rem;
-        margin-right: 0.5rem;
-    }
+  .katex-display-container {
+    max-width: 100%;
+    overflow-x: auto;
+    margin: 1em 0;
+  }
 
-    .custom-bl::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        right: 0;
-        height: 1px;
-        background-color: var(--line-color);
-    }
+  .custom-bl {
+    position: relative;
+    height: 1px;
+    margin: 0.1rem 0;
+    background: transparent;
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+  }
 
-    /* 专门针对anchor链接的样式，确保它不显示虚线效果 */
-    .anchor {
-        &::after {
-            opacity: 0 !important;
-        }
-    }
+  .custom-bl::after {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background-color: var(--line-color);
+  }
 
-    /* 更新标签样式 */
-    .update-tag-new,
-    .update-tag-imp,
-    .update-tag-fix,
-    .update-tag-post {
-        @apply inline-block px-2 py-0.5 rounded text-xs font-medium mr-1 -translate-y-[2px];
-        white-space: nowrap;
+  /* 专门针对anchor链接的样式，确保它不显示虚线效果 */
+  .anchor {
+    &::after {
+      opacity: 0 !important;
     }
+  }
 
-    .update-tag-new {
-        @apply bg-emerald-300 text-black/80;
-    }
+  /* 更新标签样式 */
+  .update-tag-new,
+  .update-tag-imp,
+  .update-tag-fix,
+  .update-tag-post {
+    @apply mr-1 inline-block -translate-y-[2px] rounded px-2 py-0.5 text-xs font-medium;
+    white-space: nowrap;
+  }
 
-    .update-tag-imp {
-        @apply bg-amber-300 text-black/80;
-    }
+  .update-tag-new {
+    @apply bg-emerald-300 text-black/80;
+  }
 
-    .update-tag-fix {
-        @apply bg-red-300 text-black/80;
-    }
+  .update-tag-imp {
+    @apply bg-amber-300 text-black/80;
+  }
 
-    .update-tag-post {
-        @apply bg-blue-300 text-black/80;
-    }
+  .update-tag-fix {
+    @apply bg-red-300 text-black/80;
+  }
+
+  .update-tag-post {
+    @apply bg-blue-300 text-black/80;
+  }
 }
