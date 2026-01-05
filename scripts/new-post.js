@@ -50,13 +50,13 @@ description: ''
 image: ''
 tags: []
 category: ''
-draft: false 
+draft: true 
 lang: 'zh_CN'
 pin: false
 pinOrder: 0
 hidden: none
-// en: ''
-// cn: ''
+# en: ''  # English version file path
+# cn: ''  # Chinese version file path
 ---
 `;
 
