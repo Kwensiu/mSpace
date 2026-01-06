@@ -1,5 +1,5 @@
 <script lang="ts">
-import Giscus from "@giscus/svelte";
+import GiscusComponent from "@giscus/svelte";
 import { onDestroy, onMount } from "svelte";
 import { commentConfig } from "@/config";
 
@@ -313,7 +313,7 @@ function updateGiscusTheme(retries = 0, maxRetries = 20) {
 		</div>
 	{/if}
 	<div class:visible={!isLoading && giscusReady} class:giscus-hidden={isLoading || !giscusReady}>
-		<Giscus
+		<GiscusComponent
 			id="giscus-comments"
 			repo={giscus.repo as `${string}/${string}`}
 			repoId={giscus.repoId as string}
