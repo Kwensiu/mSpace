@@ -19,4 +19,8 @@ export const LinkPresets: { [key in LinkPreset]: NavBarLink } = {
 		name: "写作",
 		url: "/writing/",
 	},
+	[LinkPreset.Gallery]: {
+		name: "画廊",
+		url: "/gallery/",
+	},
 };

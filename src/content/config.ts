@@ -33,7 +33,26 @@ const postsCollection = defineCollection({
 const specCollection = defineCollection({
 	schema: z.object({}),
 });
+
+const galleryCollection = defineCollection({
+	schema: z.object({
+		title: z.string(),
+		published: z.date(),
+		updated: z.date().optional(),
+		draft: z.boolean().optional().default(false),
+		description: z.string().optional().default(""),
+		image: z.string(),
+		location: z.string().optional().default(""),
+		tags: z.array(z.string()).optional().default([]),
+		category: z.string().optional().default(""),
+		lang: z.string().optional().default(""),
+		type: z.enum(["featured", "travel"]).optional().default("featured"),
+		logo: z.string().optional(), // 添加logo属性
+	}),
+});
+
 export const collections = {
 	posts: postsCollection,
 	spec: specCollection,
+	gallery: galleryCollection,
 };

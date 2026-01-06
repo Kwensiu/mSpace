@@ -1,0 +1,43 @@
+---
+import InteractiveGalleryView from "../components/gallery/InteractiveGalleryView.svelte";
+import { getGalleryEntries } from "../utils/gallery-utils";
+import MainGridLayout from "../layouts/MainGridLayout.astro";
+import { siteConfig } from "../config";
+
+const entries = await getGalleryEntries();
+---
+
+<MainGridLayout
+  title="画廊"
+  banner={siteConfig.banner.src}
+  description="精选摄影作品"
+  lang="zh"
+  showSidebar={false}
+>
+  <div class="gallery-container px-8 py-6 mb-2 ml-2 mr-2 md:ml-0 md:mr-0">
+    <div class="mb-4">
+      <h1 class="font-bold text-4xl p-2 dark:text-neutral-50 transition">画廊</h1>
+      <p class="pl-2 text-slate-600 dark:text-slate-400">我的精选摄影作品</p>
+    </div>
+    <InteractiveGalleryView {entries} client:load />
+  </div>
+</MainGridLayout>
+
+<style>
+  .gallery-container {
+    @apply overflow-hidden rounded-[var(--radius-xxlarge)] border border-black/10 bg-[var(--card-bg)] transition dark:border-white/10;
+    max-width: 800px;
+  }
+
+  @media (min-width: 1024px) {
+    .gallery-container {
+      margin-left: 10%;
+      margin-right: auto;
+    }
+  }
+  @media (max-width: 640px) {
+    .gallery-container {
+      @apply p-4;
+    }
+  }
+</style>

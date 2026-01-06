@@ -25,6 +25,9 @@ interface Props {
 	headings?: MarkdownHeading[];
 	bannerTitle?: string;
 	bannerSubtitle?: string;
+	showSidebar?: boolean;
+	transparentSidebar?: boolean;
+	showNavCard?: boolean;
 }
 
 const {
@@ -36,7 +39,15 @@ const {
 	headings = [],
 	bannerTitle,
 	bannerSubtitle,
+	showSidebar = true,
+	transparentSidebar = false,
+	showNavCard = true,
 } = Astro.props;
+
+// 根据是否显示侧边栏来设置 grid 布局
+const gridCols = showSidebar ? "grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem]" : "grid-cols-[1fr] lg:grid-cols-[1fr]";
+const mainColSpanClass = (showSidebar && !transparentSidebar) ? "" : "lg:mx-auto lg:max-w-[1000px]";
+const sidebarClass = transparentSidebar ? "opacity-0 pointer-events-none" : "";
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;
 const hasBannerLink = !!siteConfig.banner.credit.url;
@@ -108,7 +119,10 @@ const mainPanelTop = siteConfig.banner.enable
     <div class="relative mx-auto max-w-[var(--page-width)] pointer-events-auto">
       <div
         id="main-grid"
-        class="right-0 left-0 gap-6 grid grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem] grid-rows-[auto_1fr_auto_auto] lg:grid-rows-[1fr_auto] mx-auto px-0 md:px-4 w-full transition duration-700"
+        class:list={[
+          "right-0 left-0 gap-6 grid grid-rows-[auto_1fr_auto_auto] lg:grid-rows-[1fr_auto] mx-auto px-0 md:px-4 w-full transition duration-700",
+          gridCols
+        ]}
       >
         <!-- Banner image credit -->
         {
@@ -143,7 +157,7 @@ const mainPanelTop = siteConfig.banner.enable
           )
         }
 
-        <div class="flex flex-col gap-4 col-span-1 lg:col-span-1 row-start-2 lg:row-start-1 row-end-3 w-full min-w-0">
+        <div class:list={["flex flex-col gap-4 col-span-1 row-start-2 lg:row-start-1 row-end-3 w-full min-w-0", mainColSpanClass]}>
           <NavCard />
           <main
             id="swup-container"
@@ -160,13 +174,23 @@ const mainPanelTop = siteConfig.banner.enable
           </main>
         </div>
 
-        <SideBar
-          class="col-span-1 lg:col-span-1 row-start-3 lg:row-start-1 row-end-4 lg:row-end-2 mb-4 lg:max-w-[17.5rem] onload-animation"
-          headings={headings}
-        />
+        {
+          showSidebar && (
+            <SideBar
+              class:list={[
+                "col-span-1 lg:col-span-1 row-start-3 lg:row-start-1 row-end-4 lg:row-end-2 mb-4 lg:max-w-[17.5rem] onload-animation",
+                sidebarClass
+              ]}
+              headings={headings}
+            />
+          )
+        }
 
         <div
-          class="col-span-1 lg:col-span-2 row-start-4 row-end-5 footer onload-animation"
+          class:list={[
+            "col-span-1 row-start-4 row-end-5 footer onload-animation",
+            showSidebar ? "lg:col-span-2" : "lg:col-span-1 lg:mx-auto lg:max-w-[1000px]"
+          ]}
           style="padding-bottom: 60px"
         >
           <Footer />

@@ -1,0 +1,132 @@
+---
+import { getEntry } from "astro:content";
+import { siteConfig } from "../../config";
+import MainGridLayout from "@layouts/MainGridLayout.astro";
+import PostMeta from "@components/PostMeta.astro";
+import Markdown from "@components/misc/Markdown.astro";
+import ImageWrapper from "@components/misc/ImageWrapper.astro";
+import { getGalleryEntries } from "../../utils/gallery-utils";
+
+export async function getStaticPaths() {
+  const galleryEntries = await getGalleryEntries();
+  return galleryEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
+}
+
+const { slug } = Astro.params;
+
+// 获取当前画廊条目
+const galleryEntry = await getEntry('gallery', slug);
+
+// 如果找不到条目，抛出404错误
+if (!galleryEntry) {
+  throw new Error(`Gallery entry not found for slug: ${slug}`);
+}
+
+// 获取所有画廊条目，用于上一篇/下一篇文章导航
+const allGalleryEntries = await getGalleryEntries();
+const currentEntryIndex = allGalleryEntries.findIndex(entry => entry.slug === slug);
+const prevEntry = currentEntryIndex > 0 ? allGalleryEntries[currentEntryIndex - 1] : null;
+const nextEntry = currentEntryIndex < allGalleryEntries.length - 1 ? allGalleryEntries[currentEntryIndex + 1] : null;
+
+// 生成内容
+const { Content, headings } = await galleryEntry.render();
+
+// 为上一篇/下一篇文章设置元数据
+let prevTitle = null;
+let prevSlug = null;
+let nextTitle = null;
+let nextSlug = null;
+
+if (prevEntry) {
+  prevTitle = prevEntry.data.title;
+  prevSlug = `/gallery/${prevEntry.slug}/`;
+}
+if (nextEntry) {
+  nextTitle = nextEntry.data.title;
+  nextSlug = `/gallery/${nextEntry.slug}/`;
+}
+
+// 设置页面元数据
+const title = `${galleryEntry.data.title} - ${siteConfig.title}`;
+const description = galleryEntry.data.description || galleryEntry.data.title;
+---
+
+<MainGridLayout 
+  title={title} 
+  description={description} 
+  lang={galleryEntry.data.lang}
+  setOGTypeArticle={true}
+  headings={headings}
+  banner={galleryEntry.data.image}
+>
+  <div class="postpage-post z-10 px-6 md:px-9 pt-8 pb-4 relative max-w-[calc(100%-1rem)] md:max-w-full mx-auto">
+    <!-- title -->
+    <div class="relative onload-animation">
+      <div
+        data-pagefind-body data-pagefind-weight="10" data-pagefind-meta="title"
+        class="transition w-full block font-bold mb-3
+        text-3xl md:text-[2.25rem]/[2.75rem]
+        text-black/90 dark:text-white/90
+        md:before:w-1 before:h-5 before:rounded-md before:bg-[var(--primary)]
+        before:absolute before:top-[0.75rem] before:left-[-1.125rem]
+      ">
+        {galleryEntry.data.title}
+      </div>
+    </div>
+
+    <!-- metadata -->
+    <div class="onload-animation">
+      <PostMeta
+        class="mb-3"
+        published={galleryEntry.data.published}
+        updated={galleryEntry.data.updated}
+        tags={galleryEntry.data.tags}
+        category={galleryEntry.data.category}
+      ></PostMeta>
+      {!galleryEntry.data.image && <div class="border-[var(--line-divider)] border-dashed border-b-[1px] mb-5"></div>}
+    </div>
+
+    <!-- always show cover as long as it has one -->
+    {galleryEntry.data.image &&
+      <ImageWrapper id="post-cover" src={galleryEntry.data.image} class="mb-8 rounded-xl banner-container onload-animation"/>
+    }
+
+    <Markdown class="mb-6 markdown-content onload-animation">
+      <Content />
+    </Markdown>
+  </div>
+
+  <div class="flex flex-col md:flex-row justify-between gap-4 pt-6 overflow-hidden w-full">
+    <a href={nextSlug ? nextSlug : "#"}
+       class:list={["w-full font-bold overflow-hidden active:scale-95 px-[7px] md:px-0", {"pointer-events-none": !nextSlug}]}
+       >
+      {nextSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-start gap-4" >
+        <span>←</span>
+        <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+          {nextTitle}
+        </div>
+      </div>}
+    </a>
+
+    <a href="/gallery"
+       class="w-full font-bold overflow-hidden active:scale-95 px-[7px] md:px-0">
+      <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center justify-center gap-2 text-black/75 dark:text-white/75">
+        <span>📚</span>
+        <span>返回画廊</span>
+      </div>
+    </a>
+
+    <a href={prevSlug ? prevSlug : "#"}
+       class:list={["w-full font-bold overflow-hidden active:scale-95 px-[7px] md:px-0", {"pointer-events-none": !prevSlug}]}>
+      {prevSlug && <div class="btn-card rounded-2xl w-full h-[3.75rem] max-w-full px-4 flex items-center !justify-end gap-4">
+        <div class="overflow-hidden transition overflow-ellipsis whitespace-nowrap max-w-[calc(100%_-_3rem)] text-black/75 dark:text-white/75">
+          {prevTitle}
+        </div>
+        <span>→</span>
+      </div>}
+    </a>
+  </div>
+</MainGridLayout>
