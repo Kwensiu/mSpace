@@ -1,10 +1,18 @@
 ---
 import InteractiveGalleryView from "../components/gallery/InteractiveGalleryView.svelte";
+import Markdown from "@components/misc/Markdown.astro";
 import { getGalleryEntries } from "../utils/gallery-utils";
 import MainGridLayout from "../layouts/MainGridLayout.astro";
 import { siteConfig } from "../config";
 
 const entries = await getGalleryEntries();
+
+// 预渲染所有 Content 组件
+const entryContents = new Map();
+for (const entry of entries) {
+  const { Content } = await entry.render();
+  entryContents.set(entry.id, Content);
+}
 ---
 
 <MainGridLayout
@@ -19,6 +27,21 @@ const entries = await getGalleryEntries();
       <h1 class="font-bold text-4xl p-2 dark:text-neutral-50 transition">画廊</h1>
       <p class="pl-2 text-slate-600 dark:text-slate-400">我的精选摄影作品</p>
     </div>
+
+    <!-- 隐藏的 Content 渲染容器，用于为每个 entry 生成 HTML -->
+    <div id="gallery-content-templates" class="hidden">
+      {entries.map((entry) => {
+        const Content = entryContents.get(entry.id);
+        return (
+          <div data-gallery-id={entry.id} class="gallery-content-template">
+            <Markdown>
+              <Content />
+            </Markdown>
+          </div>
+        );
+      })}
+    </div>
+
     <InteractiveGalleryView {entries} client:load />
   </div>
 </MainGridLayout>

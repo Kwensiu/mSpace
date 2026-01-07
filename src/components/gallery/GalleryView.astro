@@ -74,7 +74,7 @@ for (const entry of entries) {
 									updated={entry.data.updated?.toISOString()}
 								/>
 							</div>
-							<div class="details-body flex-1 overflow-y-auto p-4 md:p-6 prose prose-slate dark:prose-invert max-w-none visible opacity-1">
+							<div class="details-body flex-1 overflow-y-auto p-4 md:p-6 prose prose-slate dark:prose-invert max-w-none">
 								{Content && <Content />}
 							</div>
 						</div>
@@ -258,9 +258,29 @@ for (const entry of entries) {
 		@apply hidden;
 	}
 
+	/* 使用Tailwind @layer定义自定义动画类 */
+	@layer components {
+		.gallery-transition {
+			@apply transition-gallery duration-gallery ease-gallery;
+		}
+
+		.gallery-transition-mobile {
+			@apply gallery-transition;
+			-webkit-transform-style: preserve-3d;
+			-webkit-backface-visibility: hidden;
+			-webkit-transform: translateZ(0);
+			-webkit-will-change: transform, opacity, max-height;
+		}
+	}
+
+	/* 内容区域过渡 */
+	.card-content-wrapper {
+		@apply max-h-0 opacity-0 overflow-hidden gallery-transition;
+	}
+
 	/* 展开状态 - 显示内容 */
 	.gallery-card.expanded .card-content-wrapper {
-		@apply max-h-[100vh] opacity-100 overflow-y-auto;
+		@apply max-h-[100vh] opacity-100 overflow-y-auto gallery-transition;
 	}
 
 	.details-body :global(.prose) {
@@ -268,8 +288,24 @@ for (const entry of entries) {
 	}
 
 	/* 确保内容区域的所有元素可见 */
+	.gallery-card.expanded .details-body {
+		visibility: visible !important;
+		opacity: 1 !important;
+	}
+
 	.gallery-card.expanded .details-body :global(*) {
 		visibility: visible !important;
 		opacity: 1 !important;
 	}
+  
+  /* 修复移动端动画问题 */
+  @media (max-width: 768px) {
+    .card-content-wrapper {
+      @apply gallery-transition-mobile;
+    }
+    
+    .gallery-card.expanded .card-content-wrapper {
+      @apply gallery-transition-mobile;
+    }
+  }
 </style>

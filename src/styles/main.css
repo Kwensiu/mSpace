@@ -265,6 +265,15 @@
   @apply cursor-zoom-in;
 }
 
+/* 表格横向滚动支持 - 让表格占满宽度且保持圆角 */
+.custom-md {
+  @apply overflow-x-auto;
+
+  table {
+    @apply block;
+  }
+}
+
 ::selection {
   background-color: var(--selection-bg);
 }

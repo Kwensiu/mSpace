@@ -1,5 +1,57 @@
 .custom-md
 
+  // 表格卡片样式
+  table
+    display: table
+    width: 100%
+    min-width: 100%
+    margin: 0.75rem 0
+    border-radius: 0.75rem
+    background: var(--license-block-bg)
+    border-collapse: separate
+    border-spacing: 0
+    table-layout: fixed
+
+    // 确保内容不会超出导致圆角失效
+    th, td
+      overflow: hidden
+
+  th, td
+    border-right: 1px solid var(--line-divider)
+    padding: 0.75rem 1rem
+    min-width: 120px
+    white-space: nowrap
+
+  th:last-child, td:last-child
+    border-right: none
+
+  th
+    background: transparent
+    color: var(--tw-prose-headings)
+    font-weight: 600
+    border-bottom: none
+    text-align: center
+
+  td
+    border-bottom: none
+
+  tr
+    border-bottom: none
+
+  // 隐藏 Markdown 表格分隔线（第一行下方的横线）
+  > thead
+    border-bottom: none
+
+  > thead > tr
+    border-bottom: none
+
+  > thead > tr > th
+    border-bottom: none
+
+  // 隐藏表格底部可能存在的横线
+  > tbody
+    border-top: none
+
   blockquote.admonition
     .bdm-title
       display: flex
