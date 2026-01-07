@@ -2,18 +2,18 @@
 import { getCollection, getEntry } from "astro:content";
 
 export async function getStaticPaths() {
-  const galleryEntries = await getCollection('gallery');
-  return galleryEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+	const galleryEntries = await getCollection("gallery");
+	return galleryEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry },
+	}));
 }
 
 const { entry: galleryEntry } = Astro.props;
 
 // 设置响应头和返回 HTML
 const headers = new Headers();
-headers.set('Content-Type', 'text/html; charset=utf-8');
+headers.set("Content-Type", "text/html; charset=utf-8");
 ---
 
 {galleryEntry.body}
