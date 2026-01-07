@@ -1,35 +1,37 @@
 <script>
-  export let entries = [];
-  let expandedImages = new Set();
-  let contentCache = new Map();
+export let entries = [];
+let expandedImages = new Set();
+let contentCache = new Map();
 
-  // 从隐藏的模板中获取渲染好的 HTML
-  const getCachedContent = (entryId) => {
-    if (contentCache.has(entryId)) {
-      return contentCache.get(entryId);
-    }
-    const template = document.querySelector(`#gallery-content-templates [data-gallery-id="${entryId}"]`);
-    const html = template?.innerHTML || '';
-    contentCache.set(entryId, html);
-    return html;
-  };
+// 从隐藏的模板中获取渲染好的 HTML
+const getCachedContent = (entryId) => {
+	if (contentCache.has(entryId)) {
+		return contentCache.get(entryId);
+	}
+	const template = document.querySelector(
+		`#gallery-content-templates [data-gallery-id="${entryId}"]`,
+	);
+	const html = template?.innerHTML || "";
+	contentCache.set(entryId, html);
+	return html;
+};
 
-  const toggleImage = (entry) => {
-    if (expandedImages.has(entry.id)) {
-      expandedImages.delete(entry.id);
-    } else {
-      expandedImages.add(entry.id);
-    }
-    expandedImages = new Set(expandedImages);
-  };
+const toggleImage = (entry) => {
+	if (expandedImages.has(entry.id)) {
+		expandedImages.delete(entry.id);
+	} else {
+		expandedImages.add(entry.id);
+	}
+	expandedImages = new Set(expandedImages);
+};
 
-  // 键盘事件处理函数
-  const handleKey = (event, entry) => {
-    if (event.key === 'Enter' || event.key === ' ') {
-      event.preventDefault();
-      toggleImage(entry);
-    }
-  };
+// 键盘事件处理函数
+const handleKey = (event, entry) => {
+	if (event.key === "Enter" || event.key === " ") {
+		event.preventDefault();
+		toggleImage(entry);
+	}
+};
 </script>
 
 <div class="interactive-gallery">
