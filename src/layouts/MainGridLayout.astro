@@ -45,8 +45,11 @@ const {
 } = Astro.props;
 
 // 根据是否显示侧边栏来设置 grid 布局
-const gridCols = showSidebar ? "grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem]" : "grid-cols-[1fr] lg:grid-cols-[1fr]";
-const mainColSpanClass = (showSidebar && !transparentSidebar) ? "" : "lg:mx-auto lg:max-w-[1000px]";
+const gridCols = showSidebar
+	? "grid-cols-[1fr] lg:grid-cols-[1fr_17.5rem]"
+	: "grid-cols-[1fr] lg:grid-cols-[1fr]";
+const mainColSpanClass =
+	showSidebar && !transparentSidebar ? "" : "lg:mx-auto lg:max-w-[1000px]";
 const sidebarClass = transparentSidebar ? "opacity-0 pointer-events-none" : "";
 const hasBannerCredit =
 	siteConfig.banner.enable && siteConfig.banner.credit.enable;

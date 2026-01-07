@@ -478,6 +478,14 @@ const setup = () => {
 		}
 
 		// Handle sidebar visibility based on current page
+		applySidebarAndLayoutChanges();
+	})
+	
+	// 初始化页面时也要处理侧边栏显示逻辑
+	applySidebarAndLayoutChanges();
+	
+	function applySidebarAndLayoutChanges() {
+		// Handle sidebar visibility based on current page
 		const sidebar = document.getElementById('sidebar');
 		const mainGrid = document.getElementById('main-grid');
 		const bannerCredit = document.getElementById('banner-credit');
@@ -536,51 +544,93 @@ const setup = () => {
 		} else {
 			console.log('Main grid not found');
 		}
-	})
-	window.swup.hooks.on('visit:start', (visit: {to: {url: string}}) => {
-		// change banner height immediately when a link is clicked
-		const bodyElement = document.querySelector('body')
-		if (pathsEqual(visit.to.url, url('/'))) {
-			bodyElement!.classList.add('lg:is-home');
-		} else {
-			bodyElement!.classList.remove('lg:is-home');
-		}
+	}
 
-		// increase the page height during page transition to prevent the scrolling animation from jumping
-		const heightExtend = document.getElementById('page-height-extend')
-		if (heightExtend) {
-			heightExtend.classList.remove('hidden')
-		}
+	// 确保在页面加载完成时执行sidebar处理逻辑
+	if (document.readyState === 'loading') {
+		document.addEventListener('DOMContentLoaded', applySidebarAndLayoutChanges);
+	} else {
+		// 如果文档已经加载完成，直接执行
+		applySidebarAndLayoutChanges();
+	}
 
-		// Hide the TOC while scrolling back to top
-		let toc = document.getElementById('toc-wrapper');
-		if (toc) {
-			toc.classList.add('toc-not-ready')
-		}
+	// 添加一个定时器以确保在所有页面内容渲染完成后再次执行
+	// 这样可以处理某些情况下DOMContentLoaded不够及时的问题
+	setTimeout(() => {
+		applySidebarAndLayoutChanges();
+	}, 100);
 
+	// 添加页面显示事件监听器，确保页面从缓存恢复时也能正确处理sidebar
+	if ('onpageshow' in window) {
+		window.addEventListener('pageshow', (event) => {
+			if (event.persisted) { // 页面是从缓存中恢复的
+				applySidebarAndLayoutChanges();
+			}
+		});
+	}
+	
+	// 添加visibilitychange事件监听，处理标签页切换的情况
+	document.addEventListener('visibilitychange', () => {
+		if (document.visibilityState === 'visible') {
+			applySidebarAndLayoutChanges();
+		}
 	});
-	window.swup.hooks.on('page:view', () => {
-		// hide the temp high element when the transition is done
-		const heightExtend = document.getElementById('page-height-extend')
-		if (heightExtend) {
-			heightExtend.classList.remove('hidden')
-		}
-	});
-	window.swup.hooks.on('visit:end', (_visit: {to: {url: string}}) => {
-		setTimeout(() => {
-			const heightExtend = document.getElementById('page-height-extend')
-			if (heightExtend) {
-				heightExtend.classList.add('hidden')
+
+	// 在Swup的content:replace钩子中添加额外的延迟，确保DOM完全更新后再处理
+	const originalContentReplaceHook = window.swup.hooks.get('content:replace')[0];
+	if (originalContentReplaceHook) {
+		// 移除原始钩子
+		window.swup.hooks.off('content:replace', originalContentReplaceHook);
+		
+		// 注册一个新的钩子，增加延迟确保DOM完全更新
+		window.swup.hooks.on('content:replace', () => {
+			// 更新全局headings变量，确保DockTOC能获取到最新的标题数据
+			if (typeof window !== 'undefined') {
+				// 这里需要从新的页面内容中提取headings
+				const newContent = document.getElementById('swup-container');
+				if (newContent) {
+					const headingElements = newContent.querySelectorAll('h2, h3, h4');
+					const extractedHeadings: Array<{depth: number, text: string, slug: string}> = [];
+
+					headingElements.forEach((element) => {
+						const id = element.id;
+						if (id) {
+							const cloned = element.cloneNode(true) as HTMLElement;
+							(cloned as Element).removeAttribute('id');
+							let text = cloned.textContent || '';
+							const hashIndex = text.lastIndexOf('#');
+							if (hashIndex === text.length - 1) {
+								text = text.substring(0, hashIndex);
+							}
+							extractedHeadings.push({
+								depth: parseInt(element.tagName.charAt(1)),
+								text,
+								slug: id,
+							});
+						}
+					});
+
+					// 现在可以安全地设置全局变量，因为类型已在global.d.ts中定义
+					window.__astroHeadings = extractedHeadings;
+				}
 			}
 
-            // Just make the transition looks better
-            const toc = document.getElementById('toc-wrapper');
-            if (toc) {
-                toc.classList.remove('toc-not-ready')
-            }
-        }, 200)
+			// 使用setTimeout确保在DOM完全更新后再处理sidebar
+			setTimeout(() => {
+				applySidebarAndLayoutChanges();
+			}, 50);
+		});
+	}
+	
+	// 在visit:end钩子中再次确保sidebar状态正确
+	window.swup.hooks.on('visit:end', () => {
+		// 添加一点延迟以确保页面完全加载完成
+		setTimeout(() => {
+			applySidebarAndLayoutChanges();
+		}, 100);
 	});
 }
+
 if (window?.swup?.hooks) {
 	setup()
 } else {
@@ -722,4 +772,3 @@ if (window.swup) {
 } else {
 	document.addEventListener("swup:enable", setup)
 }
-</script>
