@@ -12,7 +12,8 @@ export const siteConfig: SiteConfig = {
 	title: "生存戰略",
 	subtitle: "CatchTheWave",
 	logo: {
-		light: "https://img.alicdn.com/imgextra/i1/O1CN01O517We1ZXwVOQahMD_!!2205575593205-49-fleamarket.webp",
+		light:
+			"https://img.alicdn.com/imgextra/i1/O1CN01O517We1ZXwVOQahMD_!!2205575593205-49-fleamarket.webp",
 		dark: "https://img.alicdn.com/imgextra/i3/O1CN01ArV0wP1ZXwVTEnL0N_!!2205575593205-49-fleamarket.webp",
 	},
 	lang: "zh_CN", // Language code, e.g. 'en', 'zh_CN', 'ja', etc.

@@ -13,6 +13,7 @@ declare global {
 			}>;
 		};
 		pageHeadings?: MarkdownHeading[];
+		__astroHeadings?: Array<{ depth: number; text: string; slug: string }>;
 	}
 }
 
