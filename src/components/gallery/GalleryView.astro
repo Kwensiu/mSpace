@@ -258,19 +258,17 @@ for (const entry of entries) {
 		@apply hidden;
 	}
 
-	/* 使用Tailwind @layer定义自定义动画类 */
-	@layer components {
-		.gallery-transition {
-			@apply transition-gallery duration-gallery ease-gallery;
-		}
+	/* 定义自定义动画类 */
+	.gallery-transition {
+		@apply transition-gallery duration-gallery ease-gallery;
+	}
 
-		.gallery-transition-mobile {
-			@apply gallery-transition;
-			-webkit-transform-style: preserve-3d;
-			-webkit-backface-visibility: hidden;
-			-webkit-transform: translateZ(0);
-			-webkit-will-change: transform, opacity, max-height;
-		}
+	.gallery-transition-mobile {
+		@apply gallery-transition;
+		-webkit-transform-style: preserve-3d;
+		-webkit-backface-visibility: hidden;
+		-webkit-transform: translateZ(0);
+		-webkit-will-change: transform, opacity, max-height;
 	}
 
 	/* 内容区域过渡 */

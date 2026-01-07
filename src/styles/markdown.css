@@ -159,7 +159,23 @@
 
   .copy-btn {
     all: initial;
-    @apply btn-regular-dark absolute right-3 top-3 z-20 h-8 w-8 cursor-pointer rounded-lg text-sm opacity-0 shadow-lg shadow-black/50 transition-all ease-in-out active:scale-90;
+    @apply flex items-center justify-center absolute right-3 top-3 z-20 h-8 w-8 cursor-pointer rounded-lg text-sm opacity-0 shadow-lg shadow-black/50 transition-all ease-in-out active:scale-90;
+    background-color: oklch(0.45_0.01_var(--hue));
+    &:hover {
+      background-color: oklch(0.50_0.01_var(--hue));
+    }
+    &:active {
+      background-color: oklch(0.55_0.01_var(--hue));
+    }
+    .dark & {
+      background-color: oklch(0.30_0.02_var(--hue));
+      &:hover {
+        background-color: oklch(0.35_0.03_var(--hue));
+      }
+      &:active {
+        background-color: oklch(0.40_0.03_var(--hue));
+      }
+    }
   }
   .frame:hover .copy-btn {
     opacity: 1;
