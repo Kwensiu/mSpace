@@ -8,28 +8,34 @@ import ImageWrapper from "@components/misc/ImageWrapper.astro";
 import { getGalleryEntries } from "../../utils/gallery-utils";
 
 export async function getStaticPaths() {
-  const galleryEntries = await getGalleryEntries();
-  return galleryEntries.map((entry) => ({
-    params: { slug: entry.slug },
-    props: { entry },
-  }));
+	const galleryEntries = await getGalleryEntries();
+	return galleryEntries.map((entry) => ({
+		params: { slug: entry.slug },
+		props: { entry },
+	}));
 }
 
 const { slug } = Astro.params;
 
 // 获取当前画廊条目
-const galleryEntry = await getEntry('gallery', slug);
+const galleryEntry = await getEntry("gallery", slug);
 
 // 如果找不到条目，抛出404错误
 if (!galleryEntry) {
-  throw new Error(`Gallery entry not found for slug: ${slug}`);
+	throw new Error(`Gallery entry not found for slug: ${slug}`);
 }
 
 // 获取所有画廊条目，用于上一篇/下一篇文章导航
 const allGalleryEntries = await getGalleryEntries();
-const currentEntryIndex = allGalleryEntries.findIndex(entry => entry.slug === slug);
-const prevEntry = currentEntryIndex > 0 ? allGalleryEntries[currentEntryIndex - 1] : null;
-const nextEntry = currentEntryIndex < allGalleryEntries.length - 1 ? allGalleryEntries[currentEntryIndex + 1] : null;
+const currentEntryIndex = allGalleryEntries.findIndex(
+	(entry) => entry.slug === slug,
+);
+const prevEntry =
+	currentEntryIndex > 0 ? allGalleryEntries[currentEntryIndex - 1] : null;
+const nextEntry =
+	currentEntryIndex < allGalleryEntries.length - 1
+		? allGalleryEntries[currentEntryIndex + 1]
+		: null;
 
 // 生成内容
 const { Content, headings } = await galleryEntry.render();
@@ -41,12 +47,12 @@ let nextTitle = null;
 let nextSlug = null;
 
 if (prevEntry) {
-  prevTitle = prevEntry.data.title;
-  prevSlug = `/gallery/${prevEntry.slug}/`;
+	prevTitle = prevEntry.data.title;
+	prevSlug = `/gallery/${prevEntry.slug}/`;
 }
 if (nextEntry) {
-  nextTitle = nextEntry.data.title;
-  nextSlug = `/gallery/${nextEntry.slug}/`;
+	nextTitle = nextEntry.data.title;
+	nextSlug = `/gallery/${nextEntry.slug}/`;
 }
 
 // 设置页面元数据

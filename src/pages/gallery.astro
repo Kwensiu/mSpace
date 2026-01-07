@@ -10,8 +10,8 @@ const entries = await getGalleryEntries();
 // 预渲染所有 Content 组件
 const entryContents = new Map();
 for (const entry of entries) {
-  const { Content } = await entry.render();
-  entryContents.set(entry.id, Content);
+	const { Content } = await entry.render();
+	entryContents.set(entry.id, Content);
 }
 ---
 
