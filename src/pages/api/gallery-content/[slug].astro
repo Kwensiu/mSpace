@@ -1,73 +1,19 @@
 ---
 import { getCollection, getEntry } from "astro:content";
 
-export const prerender = false;
-
-const { slug } = Astro.params;
-
-console.log('API received slug:', slug);
-
-// 验证 slug 参数
-if (!slug) {
-  console.error('Slug parameter is missing');
-  return new Response('Bad request: slug is required', { status: 400 });
+export async function getStaticPaths() {
+  const galleryEntries = await getCollection('gallery');
+  return galleryEntries.map((entry) => ({
+    params: { slug: entry.slug },
+    props: { entry },
+  }));
 }
 
-// 获取画廊条目的完整列表以调试
-const allGalleryEntries = await getCollection('gallery');
-console.log('Available gallery entries:', allGalleryEntries.map(entry => entry.id));
-
-// 尝试获取画廊条目
-let galleryEntry = null;
-try {
-  galleryEntry = await getEntry('gallery', slug);
-} catch (error) {
-  console.error('Error getting entry with getEntry:', error);
-}
-
-// 如果没找到，尝试使用slug的最后部分
-if (!galleryEntry) {
-  const slugPart = slug.split('/').pop();
-  if (slugPart && slugPart !== slug) {
-    try {
-      galleryEntry = await getEntry('gallery', slugPart);
-      console.log('Found entry using slug part:', slugPart);
-    } catch (error) {
-      console.error('Error getting entry with slug part:', error);
-    }
-  }
-}
-
-// 如果还是没找到，尝试匹配ID
-if (!galleryEntry) {
-  galleryEntry = allGalleryEntries.find(entry => entry.id === slug || entry.slug === slug || entry.slug.endsWith(slug));
-  if (galleryEntry) {
-    console.log('Found entry by matching:', galleryEntry.id);
-  }
-}
-
-if (!galleryEntry) {
-  console.error('Gallery entry not found for slug:', slug);
-  return new Response('Not found', { status: 404 });
-}
-
-// 检查是否可以访问渲染内容
-let html = '';
-try {
-  if (galleryEntry.rendered && galleryEntry.rendered.html) {
-    html = galleryEntry.rendered.html;
-  } else {
-    // 如果无法直接获取渲染的HTML，使用body内容
-    html = `<div class="gallery-content-body">${galleryEntry.body}</div>`;
-  }
-} catch (error) {
-  console.error('Error rendering content:', error);
-  html = `<div class="gallery-content-body">${galleryEntry.body}</div>`;
-}
+const { entry: galleryEntry } = Astro.props;
 
 // 设置响应头和返回 HTML
 const headers = new Headers();
 headers.set('Content-Type', 'text/html; charset=utf-8');
 ---
 
-{html}
+{galleryEntry.body}
