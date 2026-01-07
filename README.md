@@ -8,7 +8,9 @@ A static blog template built with [Astro](https://astro.build).
 
 [**🖥️ Blog Website**](https://kwensiu.github.io/blog/)
 
-![Preview Image](https://raw.githubusercontent.com/Kwensiu/IMG/main/picgo/web/blog-home.png)
+<div align="center">
+    <img src="https://img.alicdn.com/imgextra/i4/O1CN01zLskIl1ZXwVUxRbLR_!!2205575593205-2-fleamarket.png"  width="75.4%"/><img src="https://img.alicdn.com/imgextra/i4/O1CN01nGwcSD1ZXwVVHalUt_!!2205575593205-0-fleamarket.jpg" width="24.6%" />
+</div>
 
 🌏 README in
 [**中文**](https://github.com/saicaca/fuwari/blob/main/docs/README.zh-CN.md)
@@ -19,7 +21,10 @@ A static blog template built with [Astro](https://astro.build).
 - [x] Full support i18n
 - [x] Posts Pinned
 - [x] Posts Hidden
+- [x] Github User Card 
+- [x] Gallery Page
 - [x] Writing Page (Beta)
+- [x] Mobile-friendly
 - [x] More refined UI
 
 ## 🚀 Getting Started
