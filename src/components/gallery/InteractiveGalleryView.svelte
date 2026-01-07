@@ -109,9 +109,13 @@
     .gallery-image-wrapper,
     .logo-overlay,
     .article-content {
+      transform-style: preserve-3d;
       -webkit-transform-style: preserve-3d;
+      backface-visibility: hidden;
       -webkit-backface-visibility: hidden;
+      transform: translateZ(0);
       -webkit-transform: translateZ(0);
+      will-change: transform, opacity, max-height;
       -webkit-will-change: transform, opacity, max-height;
     }
     
