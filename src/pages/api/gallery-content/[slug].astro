@@ -7,6 +7,12 @@ const { slug } = Astro.params;
 
 console.log('API received slug:', slug);
 
+// 验证 slug 参数
+if (!slug) {
+  console.error('Slug parameter is missing');
+  return new Response('Bad request: slug is required', { status: 400 });
+}
+
 // 获取画廊条目的完整列表以调试
 const allGalleryEntries = await getCollection('gallery');
 console.log('Available gallery entries:', allGalleryEntries.map(entry => entry.id));
