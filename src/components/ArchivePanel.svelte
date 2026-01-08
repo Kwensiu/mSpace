@@ -155,7 +155,7 @@ onMount(async () => {
 });
 </script>
 
-<div class="archive-card px-8 py-6 ml-2 mr-2 md:ml-0 md:mr-0">
+<div class="archive-card px-8 py-6 mx-2 md:mx-0">
     {#each groups as group}
         <div>
             <div class="flex flex-row w-full items-center h-[3.75rem]">
