@@ -1,7 +1,6 @@
 ---
 import type { GalleryEntry } from "../../utils/gallery-utils";
-import ImageWrapper from "../misc/ImageWrapper.astro";
-import GalleryMeta from "./GalleryMeta.astro";
+import InteractiveGalleryView from "./InteractiveGalleryView.svelte";
 
 interface Props {
 	entries: GalleryEntry[];
@@ -9,7 +8,7 @@ interface Props {
 
 const { entries } = Astro.props;
 
-// 预渲染所有文章内容
+// 预渲染所有文章内容,用于 Svelte 组件使用
 const entryContents = new Map<string, any>();
 for (const entry of entries) {
 	const { Content } = await entry.render();
@@ -17,293 +16,19 @@ for (const entry of entries) {
 }
 ---
 
-<div class="featured-view flex flex-col gap-[100px] relative z-1 overflow-visible">
-	{entries.length === 0 && (
-		<div class="text-center py-12 text-slate-500 dark:text-slate-400">
-			<p>暂无精选内容</p>
-		</div>
-	)}
+<!-- 使用 Svelte 组件处理所有交互逻辑 -->
+<InteractiveGalleryView {entries} client:load />
 
+<!-- 隐藏的 Content 渲染容器,用于为每个 entry 生成 HTML -->
+<div id="gallery-content-templates" class="hidden">
 	{entries.map((entry) => {
 		const Content = entryContents.get(entry.id);
-		const logo = entry.data.logo || null;
 		return (
-			<article class="gallery-card relative bg-white dark:bg-slate-800 rounded-xl overflow-hidden shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer" data-gallery-id={entry.id}>
-				<div class="card-image-wrapper w-full relative z-1 transition-opacity duration-300 ease">
-					<div class="card-image w-full relative z-1">
-						<ImageWrapper
-							src={entry.data.image}
-							alt={entry.data.title}
-							position="contain"
-							enablePhotoswipe={false}
-							fetchpriority="low"
-						/>
-						{logo && (
-							<div class="logo-overlay">
-								<img
-									src={`${logo}`}
-									alt="Logo"
-									class="logo-image"
-								/>
-							</div>
-						)}
-					</div>
+			<div data-gallery-id={entry.id} class="gallery-content-template">
+				<div class="prose prose-slate dark:prose-invert prose-base !max-w-none custom-md">
+					<Content />
 				</div>
-
-				<div class="card-content-wrapper max-h-0 opacity-0 overflow-hidden transition-all duration-700 ease-[cubic-bezier(0.34,1.56,0.64,1)]">
-					<div class="card-content relative w-full flex flex-col">
-						<div class="content-image hidden">
-							<ImageWrapper
-								src={entry.data.image}
-								alt={entry.data.title}
-								position="contain"
-								enablePhotoswipe={false}
-								fetchpriority="high"
-							/>
-						</div>
-						<div class="content-details flex-1 overflow-hidden flex flex-col min-h-0">
-							<div class="details-header p-4 md:p-6 pb-4 border-b border-slate-200 dark:border-slate-700 flex-shrink-0">
-								<h3 class="details-title text-xl md:text-2xl font-bold text-slate-800 dark:text-slate-100 mb-2">{entry.data.title}</h3>
-								{entry.data.location && (
-									<div class="inline-flex items-center gap-2 px-3 py-1.5 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full text-sm mb-3">
-										<span>📍 {entry.data.location}</span>
-									</div>
-								)}
-								<GalleryMeta
-									published={entry.data.published.toISOString()}
-									updated={entry.data.updated?.toISOString()}
-								/>
-							</div>
-							<div class="details-body flex-1 overflow-y-auto p-4 md:p-6 prose prose-slate dark:prose-invert max-w-none">
-								{Content && <Content />}
-							</div>
-						</div>
-					</div>
-				</div>
-			</article>
+			</div>
 		);
 	})}
 </div>
-
-<script>
-  console.log('GalleryView script started');
-
-  // 为每个卡片添加点击事件，简单的展开/收起
-  function initGalleryCards() {
-    console.log('initGalleryCards called');
-    document.querySelectorAll('.gallery-card').forEach(card => {
-      // 避免重复添加事件监听器
-      if (!card.hasAttribute('data-click-initialized')) {
-        card.setAttribute('data-click-initialized', 'true');
-        card.addEventListener('click', () => {
-          // 切换展开状态
-          card.classList.toggle('expanded');
-
-		  // 为确保动画正确触发，强制重排
-		  (card as HTMLElement).offsetHeight;
-        });
-      }
-    });
-  }
-
-  // Logo 大小调整逻辑
-  function adjustLogoSize() {
-    console.log('adjustLogoSize called');
-
-    // 调试:打印所有带logo的卡片
-    const cardsWithLogo = document.querySelectorAll('[data-gallery-id]');
-    console.log('Found cards:', cardsWithLogo.length);
-    cardsWithLogo.forEach(card => {
-      const id = card.getAttribute('data-gallery-id');
-      const logoOverlay = card.querySelector('.logo-overlay');
-      console.log(`Card ${id}: has logo =`, !!logoOverlay);
-      if (logoOverlay) {
-        const logoImg = logoOverlay.querySelector('.logo-image');
-        console.log(`Logo image:`, logoImg, (logoImg as HTMLImageElement)?.src, (logoImg as HTMLImageElement)?.style);
-      }
-    });
-
-    // 直接查找所有 logo-overlay 元素
-    const logoOverlays = document.querySelectorAll('.logo-overlay');
-    console.log('Total logo overlays found:', logoOverlays.length);
-
-    if (window.ResizeObserver) {
-      const resizeObserver = new ResizeObserver(entries => {
-        for (let entry of entries) {
-          const imageContainer = entry.target;
-          const containerHeight = entry.contentRect.height;
-
-          // 查找该容器内的logo-overlay
-          const logoOverlay = imageContainer.querySelector('.logo-overlay');
-          if (logoOverlay) {
-            const logoImg = logoOverlay.querySelector('.logo-image');
-            if (logoImg) {
-              // 设置Logo的最大高度为图片高度的6%
-              const maxHeight = containerHeight * 0.06;
-              (logoImg as HTMLElement).style.maxHeight = maxHeight + 'px';
-
-              // 设置Logo与底部的间距为图片高度的1%
-              const bottomPadding = containerHeight * 0.01;
-              (logoOverlay as HTMLElement).style.bottom = bottomPadding + 'px';
-            }
-          }
-        }
-      });
-
-      // 观察所有card-image容器
-      document.querySelectorAll('.card-image').forEach(imageContainer => {
-        resizeObserver.observe(imageContainer);
-      });
-    } else {
-      // 如果不支持ResizeObserver，则使用原始方法
-      logoOverlays.forEach(overlay => {
-        // 获取父级图片容器
-        const imageContainer = overlay.closest('.card-image');
-        if (imageContainer) {
-          const imgElement = imageContainer.querySelector('img');
-          if (imgElement && imgElement.offsetHeight > 0) {
-            // 计算图片高度的6%作为Logo的最大高度
-            const maxHeight = imgElement.offsetHeight * 0.06;
-            // 设置Logo的最大高度
-            const logoImg = overlay.querySelector('.logo-image');
-            if (logoImg) {
-              (logoImg as HTMLElement).style.maxHeight = maxHeight + 'px';
-            }
-
-            // 计算图片高度的1%作为底部间距
-            const bottomPadding = imgElement.offsetHeight * 0.01;
-            (overlay as HTMLElement).style.bottom = bottomPadding + 'px';
-          }
-        }
-      });
-    }
-  }
-
-  // 页面加载完成后初始化
-  function init() {
-    console.log('init called, readyState:', document.readyState);
-    initGalleryCards();
-    // 延迟执行,确保 DOM 完全渲染
-    setTimeout(() => adjustLogoSize(), 100);
-  }
-
-  console.log('About to check readyState, readyState:', document.readyState);
-  if (document.readyState === 'loading') {
-    console.log('Adding DOMContentLoaded listener');
-    document.addEventListener('DOMContentLoaded', init);
-  } else {
-    console.log('Calling init immediately');
-    init();
-  }
-
-  // 图片加载后再次调整Logo大小和位置
-  window.addEventListener('load', () => {
-    console.log('window load event');
-    setTimeout(() => adjustLogoSize(), 200);
-  });
-</script>
-
-<style>
-	.featured-view {
-		@apply flex flex-col gap-[100px];
-		position: relative;
-		z-index: 1;
-		overflow: visible !important;
-	}
-
-	.empty-state {
-		@apply text-center py-12 text-slate-500 dark:text-slate-400;
-	}
-
-	.card-image-wrapper {
-		@apply w-full;
-		transition: opacity 0.3s ease;
-		position: relative;
-		z-index: 1;
-	}
-
-	.card-image {
-		@apply w-full;
-		position: relative;
-		z-index: 1;
-	}
-
-	.card-image :global(img) {
-		@apply w-full h-auto object-contain;
-		display: block;
-	}
-
-	/* Logo覆盖层 */
-	.logo-overlay {
-		position: absolute;
-		bottom: 10px;
-		left: 50%;
-		transform: translateX(-50%);
-		z-index: 10;
-		border-radius: 8px;
-		padding: 4px;
-		width: auto;
-		background: rgba(255, 255, 255, 0.8);
-		backdrop-filter: blur(4px);
-	}
-
-	.logo-image {
-		max-width: 80px;
-		object-fit: contain;
-		display: block;
-		opacity: 0.9;
-	}
-
-	.content-image {
-		@apply hidden;
-	}
-
-	/* 定义自定义动画类 */
-	.gallery-transition {
-		@apply transition-gallery duration-gallery ease-gallery;
-	}
-
-	.gallery-transition-mobile {
-		@apply gallery-transition;
-		-webkit-transform-style: preserve-3d;
-		-webkit-backface-visibility: hidden;
-		-webkit-transform: translateZ(0);
-		-webkit-will-change: transform, opacity, max-height;
-	}
-
-	/* 内容区域过渡 */
-	.card-content-wrapper {
-		@apply max-h-0 opacity-0 overflow-hidden gallery-transition;
-	}
-
-	/* 展开状态 - 显示内容 */
-	.gallery-card.expanded .card-content-wrapper {
-		@apply max-h-[100vh] opacity-100 overflow-y-auto gallery-transition;
-	}
-
-	.details-body :global(.prose) {
-		@apply max-w-none;
-	}
-
-	/* 确保内容区域的所有元素可见 */
-	.gallery-card.expanded .details-body {
-		visibility: visible !important;
-		opacity: 1 !important;
-	}
-
-	.gallery-card.expanded .details-body :global(*) {
-		visibility: visible !important;
-		opacity: 1 !important;
-	}
-  
-  /* 修复移动端动画问题 */
-  @media (max-width: 768px) {
-    .card-content-wrapper {
-      @apply gallery-transition-mobile;
-    }
-    
-    .gallery-card.expanded .card-content-wrapper {
-      @apply gallery-transition-mobile;
-    }
-  }
-</style>
